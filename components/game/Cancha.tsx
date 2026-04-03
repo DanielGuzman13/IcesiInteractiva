@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { jugadoresData } from '../../lib/jugadores';
 import { Jugador } from './Jugador';
 
@@ -42,12 +43,42 @@ export const Cancha: React.FC = () => {
           {/* Área chica Derecha */}
           <div className="absolute top-1/2 right-0 w-[6%] h-[30%] border-t-4 border-l-4 border-b-4 border-white/60 -translate-y-1/2 pointer-events-none"></div>
 
-          {/* Jugadores */}
-          {jugadoresData.map(jugador => (
+          {/* Jugadores dentro de la cancha */}
+          {jugadoresData.filter(j => !j.fueraDeCampo).map(jugador => (
             <Jugador key={jugador.id} jugador={jugador} />
           ))}
         </div>
       </div>
+
+      {/* Técnicos / Roles fuera de campo */}
+      {jugadoresData.some(j => j.fueraDeCampo) && (
+        <div className="mt-4 flex flex-wrap items-center gap-4 px-2">
+          {jugadoresData.filter(j => j.fueraDeCampo).map(jugador => (
+            jugador.ruta ? (
+              <Link
+                key={jugador.id}
+                href={jugador.ruta}
+                className="flex items-center gap-2 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 hover:border-indigo-400 transition-colors rounded-lg px-3 py-2 group cursor-pointer"
+                title={`${jugador.rol} — Fuera de campo`}
+              >
+                <div className={`w-8 h-8 rounded-full ${jugador.color} border-2 border-white shadow flex items-center justify-center group-hover:scale-110 transition-transform`} />
+                <div>
+                  <div className="text-xs font-bold text-indigo-800">{jugador.rol}</div>
+                  <div className="text-[10px] text-indigo-500">Arquitecto de Software</div>
+                </div>
+              </Link>
+            ) : (
+              <div
+                key={jugador.id}
+                className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2"
+              >
+                <div className={`w-8 h-8 rounded-full ${jugador.color} border-2 border-white shadow`} />
+                <div className="text-xs font-semibold text-gray-700">{jugador.rol}</div>
+              </div>
+            )
+          ))}
+        </div>
+      )}
     </div>
   );
 };

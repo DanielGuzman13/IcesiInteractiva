@@ -39,3 +39,24 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# --- IDEs y Editores ---
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# --- Herramientas de IA y Agentes ---
+.cursor/
+.windsurf/
+.gemini/
+.antigravity/
+.ai-history/
+.aider*
+.claude/
+brain/
+logs/
+*.prompt.md
+*.ai.md
+AI_NOTES.md
+PROMPT_HISTORY.md

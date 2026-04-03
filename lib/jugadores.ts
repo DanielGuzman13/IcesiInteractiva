@@ -9,6 +9,7 @@ export interface JugadorType {
   };
   esCapitan: boolean;
   ruta: string | null; // Solo Equipo A tiene ruta de reto
+  fueraDeCampo?: boolean; // El Técnico/Arquitecto aparece fuera de la cancha
 }
 
 // EQUIPO A - Roles de ingeniería de software (azul, clickeables)
@@ -20,7 +21,7 @@ const equipoA: JugadorType[] = [
     color: "bg-blue-600",
     posicion: { top: "50%", left: "5%" },
     esCapitan: false,
-    ruta: "/game/reto/product-owner",
+    ruta: "/game/reto/portero",
   },
   {
     id: "a-defensa-central-1",
@@ -29,7 +30,7 @@ const equipoA: JugadorType[] = [
     color: "bg-blue-600",
     posicion: { top: "22%", left: "18%" },
     esCapitan: false,
-    ruta: "/game/reto/qa-tester",
+    ruta: "/game/reto/qa",
   },
   {
     id: "a-defensa-central-2",
@@ -38,7 +39,7 @@ const equipoA: JugadorType[] = [
     color: "bg-blue-600",
     posicion: { top: "78%", left: "18%" },
     esCapitan: false,
-    ruta: "/game/reto/qa-tester",
+    ruta: "/game/reto/qa",
   },
   {
     id: "a-lateral-izquierdo",
@@ -111,6 +112,16 @@ const equipoA: JugadorType[] = [
     posicion: { top: "80%", left: "58%" },
     esCapitan: false,
     ruta: "/game/reto/frontend",
+  },
+  {
+    id: "a-tecnico",
+    rol: "Técnico",
+    equipo: "A",
+    color: "bg-indigo-700",
+    posicion: { top: "50%", left: "50%" }, // no se usa dentro de la cancha
+    esCapitan: false,
+    ruta: "/game/reto/arquitecto",
+    fueraDeCampo: true,
   },
 ];
 
