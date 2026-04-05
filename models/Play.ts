@@ -28,7 +28,7 @@ export type GameRole =
   | 'qa-tester'
   | 'devops'
   | 'backend'
-  | 'tech-lead'
+  | 'team-manager'
   | 'frontend'
   | 'architect';
 

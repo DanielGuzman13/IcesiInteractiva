@@ -1,0 +1,110 @@
+
+> icesi-interactiva@0.1.0 build
+> next build
+
+▲ Next.js 16.2.1 (Turbopack)
+
+  Creating an optimized production build ...
+
+> Build error occurred
+Error: Turbopack build failed with 4 errors:
+./components/game/reto/manager/Actividad1PaseFiltrado.tsx:60:175
+Expression expected
+  [90m58 |[0m ...
+  [90m59 |[0m ...
+[31m[1m>[0m [90m60 |[0m ...[32mt-amber-500"[0m>→<[35m/</div[0m>
+  [90m   |[0m                    [31m[1m^[0m
+  [90m61 |[0m ...
+  [90m62 |[0m ...
+  [90m63 |[0m ...
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/game/reto/manager/Actividad1PaseFiltrado.tsx [Client Component Browser]
+    ./app/game/reto/manager/page.tsx [Client Component Browser]
+    ./app/game/reto/manager/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/game/reto/manager/Actividad1PaseFiltrado.tsx [Client Component SSR]
+    ./app/game/reto/manager/page.tsx [Client Component SSR]
+    ./app/game/reto/manager/page.tsx [Server Component]
+
+
+./components/game/reto/manager/Actividad2CambioFrente.tsx:60:175
+Expression expected
+  [90m58 |[0m ...
+  [90m59 |[0m ...
+[31m[1m>[0m [90m60 |[0m ...[32mt-amber-500"[0m>→<[35m/</div[0m>
+  [90m   |[0m                    [31m[1m^[0m
+  [90m61 |[0m ...
+  [90m62 |[0m ...
+  [90m63 |[0m ...
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/game/reto/manager/Actividad2CambioFrente.tsx [Client Component Browser]
+    ./app/game/reto/manager/page.tsx [Client Component Browser]
+    ./app/game/reto/manager/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/game/reto/manager/Actividad2CambioFrente.tsx [Client Component SSR]
+    ./app/game/reto/manager/page.tsx [Client Component SSR]
+    ./app/game/reto/manager/page.tsx [Server Component]
+
+
+./components/game/reto/manager/Actividad1PaseFiltrado.tsx:60:176
+Unterminated regexp literal
+  [90m58 |[0m ...
+  [90m59 |[0m ...
+[31m[1m>[0m [90m60 |[0m ...[32mmber-500"[0m>→<[35m/</div[0m>
+  [90m   |[0m                  [31m[1m^^^^^[0m
+  [90m61 |[0m ...
+  [90m62 |[0m ...
+  [90m63 |[0m ...
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/game/reto/manager/Actividad1PaseFiltrado.tsx [Client Component Browser]
+    ./app/game/reto/manager/page.tsx [Client Component Browser]
+    ./app/game/reto/manager/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/game/reto/manager/Actividad1PaseFiltrado.tsx [Client Component SSR]
+    ./app/game/reto/manager/page.tsx [Client Component SSR]
+    ./app/game/reto/manager/page.tsx [Server Component]
+
+
+./components/game/reto/manager/Actividad2CambioFrente.tsx:60:176
+Unterminated regexp literal
+  [90m58 |[0m ...
+  [90m59 |[0m ...
+[31m[1m>[0m [90m60 |[0m ...[32mmber-500"[0m>→<[35m/</div[0m>
+  [90m   |[0m                  [31m[1m^^^^^[0m
+  [90m61 |[0m ...
+  [90m62 |[0m ...
+  [90m63 |[0m ...
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/game/reto/manager/Actividad2CambioFrente.tsx [Client Component Browser]
+    ./app/game/reto/manager/page.tsx [Client Component Browser]
+    ./app/game/reto/manager/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/game/reto/manager/Actividad2CambioFrente.tsx [Client Component SSR]
+    ./app/game/reto/manager/page.tsx [Client Component SSR]
+    ./app/game/reto/manager/page.tsx [Server Component]
+
+
+    at <unknown> (./components/game/reto/manager/Actividad1PaseFiltrado.tsx:60:175)
+    at <unknown> (./components/game/reto/manager/Actividad2CambioFrente.tsx:60:175)
+    at <unknown> (./components/game/reto/manager/Actividad1PaseFiltrado.tsx:60:176)
+    at <unknown> (./components/game/reto/manager/Actividad2CambioFrente.tsx:60:176)

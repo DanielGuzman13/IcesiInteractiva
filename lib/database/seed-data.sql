@@ -34,7 +34,7 @@ INSERT INTO play_steps (id, play_id, "order", role, challenge_id, ball_top, ball
 ('step-001-4', 'play-001', 4, 'frontend', 'chal-fe-001', '25%', '50%', 'Frontend construye la interfaz', 'Los desarrolladores Frontend crean la interfaz de usuario que interactuará con las APIs del Backend.', 120),
 ('step-001-5', 'play-001', 5, 'qa-tester', 'chal-qa-001', '35%', '70%', 'QA prueba la funcionalidad', 'Los testers verifican que todo funcione correctamente y detectan errores antes del lanzamiento.', 90),
 ('step-001-6', 'play-001', 6, 'devops', 'chal-devops-001', '50%', '85%', 'DevOps prepara el despliegue', 'DevOps automatiza el proceso de despliegue y asegura que todo esté listo para producción.', 60),
-('step-001-7', 'play-001', 7, 'tech-lead', 'chal-tl-001', '50%', '95%', 'Tech Lead da el visto bueno final', 'El Tech Lead revisa que todo cumpla con los estándares de calidad y autoriza el lanzamiento.', 60);
+('step-001-7', 'play-001', 7, 'team-manager', 'chal-tm-001', '50%', '95%', 'Team Manager da el visto bueno final', 'El Team Manager revisa que todo cumpla con los estándares de calidad y autoriza el lanzamiento.', 60);
 
 -- ============= RETOS/EJEMPLOS =============
 
@@ -92,9 +92,9 @@ INSERT INTO challenges (id, role, title, description, type, content, correct_ans
 '["Piensa en el flujo: código → compilar → ? → desplegar"]',
 'Después de construir (build) se deben ejecutar pruebas (test) antes de desplegar (deploy)');
 
--- Retos Tech Lead
+-- Retos Team Manager
 INSERT INTO challenges (id, role, title, description, type, content, correct_answer, points, hints, explanation) VALUES
-('chal-tl-001', 'tech-lead', 'Code Review', '¿Qué es más importante en un code review?', 'quiz',
+('chal-tm-001', 'team-manager', 'Code Review', '¿Qué es más importante en un code review?', 'quiz',
 '{"question": "Prioridad principal en code review", "options": ["Estilo de código", "Performance", "Lógica correcta", "Comentarios"]}',
 2, -- Lógica correcta
 100,

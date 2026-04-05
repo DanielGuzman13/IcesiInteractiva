@@ -69,7 +69,7 @@ game_config             -- Configuración global
 ```
 🥅 Portero (Product Owner)
 🛡️ Defensas (QA/Tester x2, DevOps x2)
-⚙️ Mediocampo (Backend x2, Tech Lead)
+⚙️ Mediocampo (Backend x2, Team Manager)
 🎯 Delantera (Frontend x3)
 🧠 Técnico (Arquitecto) - Fuera de campo
 ```
