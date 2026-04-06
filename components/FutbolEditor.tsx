@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { inject, Workspace, Xml, utils } from 'blockly';
+import { inject, Workspace, Events } from 'blockly';
 import { futbolToolbox } from '@/lib/toolbox/futbol-toolbox';
 import { defineFutbolBlocks, registerFutbolGenerators } from '@/lib/blocks/futbol-blocks';
 
@@ -12,6 +12,12 @@ interface FutbolEditorProps {
 export default function FutbolEditor({ onWorkspaceChange }: FutbolEditorProps) {
   const futbolDiv = useRef<HTMLDivElement>(null);
   const workspace = useRef<Workspace | null>(null);
+
+  const resetFlyoutScroll = () => {
+    window.setTimeout(() => {
+      workspace.current?.getToolbox()?.getFlyout()?.scrollToStart();
+    }, 0);
+  };
 
   useEffect(() => {
     if (futbolDiv.current && !workspace.current) {
@@ -42,10 +48,19 @@ export default function FutbolEditor({ onWorkspaceChange }: FutbolEditorProps) {
 
       // Agregar listener para cambios en el workspace
       if (onWorkspaceChange) {
-        workspace.current.addChangeListener(() => {
+        workspace.current.addChangeListener((event) => {
           onWorkspaceChange(workspace.current!);
+
+          if (
+            event.type === Events.TOOLBOX_ITEM_SELECT ||
+            event.type === Events.BLOCK_CREATE
+          ) {
+            resetFlyoutScroll();
+          }
         });
       }
+
+      resetFlyoutScroll();
     }
 
     // Cleanup

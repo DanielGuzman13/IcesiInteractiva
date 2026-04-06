@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import FutbolEditor from '@/components/FutbolEditor';
-import { JugadaValidator } from '@/lib/validation/jugada-validator';
+import { JugadaValidator, ValidationMode } from '@/lib/validation/jugada-validator';
 import { Workspace } from 'blockly';
 
 interface ValidationResult {
@@ -12,6 +12,7 @@ interface ValidationResult {
 }
 
 export default function FutbolPage() {
+  const [validationMode, setValidationMode] = useState<ValidationMode>('logica_disparo');
   const [validationResult, setValidationResult] = useState<ValidationResult>({
     isValid: false,
     messages: [],
@@ -19,15 +20,15 @@ export default function FutbolPage() {
   });
   const workspaceRef = useRef<Workspace | null>(null);
 
-  const handleWorkspaceChange = (workspace: Workspace) => {
+  const handleWorkspaceChange = useCallback((workspace: Workspace) => {
     workspaceRef.current = workspace;
-  };
+  }, []);
 
   const validarJugada = () => {
     if (workspaceRef.current) {
       try {
         const validator = new JugadaValidator(workspaceRef.current);
-        const result = validator.validarJugada();
+        const result = validator.validarJugada(validationMode);
         setValidationResult(result);
       } catch (error) {
         console.error('Error validando la jugada:', error);
@@ -65,7 +66,7 @@ export default function FutbolPage() {
         {/* Header */}
         <div className="bg-white rounded-lg shadow-lg p-6 mb-4">
           <h1 className="text-4xl font-bold text-gray-800 mb-2 flex items-center">
-            ⚽ Editor de Jugadas de Fútbol
+            Jugadas de Fútbol
           </h1>
           <p className="text-gray-600">
             Construye jugadas usando lógica de programación. Arrastra bloques para crear tu estrategia.
@@ -73,12 +74,21 @@ export default function FutbolPage() {
         </div>
 
         {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* Editor Blockly */}
-          <div className="bg-white rounded-lg shadow-lg p-4">
+          <div className="bg-white rounded-lg shadow-lg p-4 lg:col-span-2">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold text-gray-800">Editor Visual</h2>
-              <div className="space-x-2">
+              <div className="flex items-center gap-2">
+                <select
+                  value={validationMode}
+                  onChange={(event) => setValidationMode(event.target.value as ValidationMode)}
+                  className="border border-gray-300 rounded px-3 py-2 text-sm text-gray-700 bg-white"
+                >
+                  <option value="logica_disparo">Lógica 1: Disparo por distancia</option>
+                  <option value="logica_ciclo">Lógica 2: Contraataque con ciclo</option>
+                  <option value="logica_triangulacion">Lógica 3: Triangulación de pases</option>
+                </select>
                 <button
                   onClick={validarJugada}
                   className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded transition-colors"
@@ -97,7 +107,7 @@ export default function FutbolPage() {
           </div>
 
           {/* Results Panel */}
-          <div className="space-y-4">
+          <div className="space-y-4 lg:col-span-1">
             {/* Messages */}
             <div className={`bg-white rounded-lg shadow-lg p-4 border-2 ${getBorderColor(validationResult.isValid)}`}>
               <h2 className="text-xl font-semibold text-gray-800 mb-3">Resultados</h2>
@@ -124,7 +134,7 @@ export default function FutbolPage() {
             {/* Pseudocode */}
             <div className="bg-gray-900 text-green-400 rounded-lg shadow-lg p-4">
               <h2 className="text-xl font-semibold text-white mb-3">Pseudocódigo</h2>
-              <pre className="font-mono text-sm h-64 overflow-auto">
+              <pre className="font-mono text-sm h-48 overflow-auto">
                 {validationResult.pseudocode}
               </pre>
             </div>
@@ -138,9 +148,24 @@ export default function FutbolPage() {
             <div>
               <h3 className="font-semibold text-gray-700 mb-2">Bloques Disponibles:</h3>
               <ul className="space-y-1 text-sm text-gray-600">
-                <li><span className="text-orange-600 font-medium">Control:</span> INICIO, FIN, SI, SINO</li>
-                <li><span className="text-green-600 font-medium">Condiciones:</span> hay defensa cerca, distancia al arco &lt; 20</li>
-                <li><span className="text-blue-600 font-medium">Acciones:</span> avanzar, pasar balón, disparar</li>
+                <li>
+                  <span className="inline-block rounded-md bg-orange-100 px-2 py-1 text-base font-bold text-orange-800">
+                    Control:
+                  </span>{' '}
+                  INICIO, FIN, SI, SINO, REPETIR 4 VECES
+                </li>
+                <li>
+                  <span className="inline-block rounded-md bg-green-100 px-2 py-1 text-base font-bold text-green-800">
+                    Condiciones:
+                  </span>{' '}
+                  hay defensa cerca, distancia al arco &lt; 20, hay compañero libre
+                </li>
+                <li>
+                  <span className="inline-block rounded-md bg-blue-100 px-2 py-1 text-base font-bold text-blue-800">
+                    Acciones:
+                  </span>{' '}
+                  avanzar, pasar balón, disparar
+                </li>
               </ul>
             </div>
             <div>
@@ -148,9 +173,26 @@ export default function FutbolPage() {
               <ul className="space-y-1 text-sm text-gray-600">
                 <li>• Máximo 6 bloques de acción</li>
                 <li>• Debe incluir un bloque "disparar"</li>
-                <li>• Siempre evaluar distancia antes de disparar</li>
-                <li>• No ignorar la condición de defensa</li>
-                <li>• Usar estructura SI/SINO correctamente</li>
+                {validationMode === 'logica_ciclo' ? (
+                  <>
+                    <li>• Debes usar "REPETIR 4 VECES" para representar 20 metros en tramos de 5</li>
+                    <li>• Dentro del ciclo, evalúa "hay defensa cerca" con SI/SINO</li>
+                    <li>• Cierra la jugada con: SI distancia al arco &lt; 20 → disparar, SINO → pasar balón</li>
+                  </>
+                ) : validationMode === 'logica_triangulacion' ? (
+                  <>
+                    <li>• Debes usar al menos 2 bloques "pasar balón" para triangular</li>
+                    <li>• Incluye un SI con la condición "hay compañero libre"</li>
+                    <li>• Cierra con: SI distancia al arco &lt; 20 → disparar, SINO → pasar balón</li>
+                  </>
+                ) : (
+                  <>
+                    <li>• Evalúa la distancia al arco antes de disparar</li>
+                    <li>• Si usas "hay defensa cerca", debes manejarla con SI/SINO</li>
+                    <li>• No es obligatorio usar el ciclo en este modo</li>
+                  </>
+                )}
+                <li>• Usa estructuras SI/SINO de forma ordenada (máximo 3)</li>
               </ul>
             </div>
           </div>

@@ -20,6 +20,10 @@ export const futbolToolbox = {
         },
         {
           kind: 'block',
+          type: 'futbol_repetir_4'
+        },
+        {
+          kind: 'block',
           type: 'futbol_fin_si'
         }
       ]
@@ -36,6 +40,10 @@ export const futbolToolbox = {
         {
           kind: 'block',
           type: 'futbol_distancia_arco'
+        },
+        {
+          kind: 'block',
+          type: 'futbol_companero_libre'
         }
       ]
     },

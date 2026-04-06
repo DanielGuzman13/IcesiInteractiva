@@ -46,6 +46,18 @@ export function defineFutbolBlocks() {
       this.setPreviousStatement(true, null);
       this.setColour(270); // Naranja
       this.setTooltip('Fin del bloque condicional');
+      //this.setNextStatement(true, null); //-------------------------------------
+    }
+  };
+
+  Blocks['futbol_repetir_4'] = {
+    init: function() {
+      this.appendStatementInput('DO')
+        .appendField('REPETIR 4 VECES');
+      this.setPreviousStatement(true, null);
+      this.setNextStatement(true, null);
+      this.setColour(270); // Naranja
+      this.setTooltip('Repite las acciones internas 4 veces (20 metros en tramos de 5).');
     }
   };
 
@@ -67,6 +79,16 @@ export function defineFutbolBlocks() {
       this.setOutput(true, 'Boolean');
       this.setColour(120); // Verde
       this.setTooltip('Verifica si está a menos de 20 metros del arco');
+    }
+  };
+
+  Blocks['futbol_companero_libre'] = {
+    init: function() {
+      this.appendDummyInput()
+        .appendField('hay compañero libre');
+      this.setOutput(true, 'Boolean');
+      this.setColour(120); // Verde
+      this.setTooltip('Verifica si hay un compañero libre para triangular.');
     }
   };
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import BlocklyEditor from '@/components/BlocklyEditor';
 import { CustomGenerator } from '@/lib/generators/custom-generator';
 import { Workspace, Xml } from 'blockly';
@@ -9,9 +9,9 @@ export default function BlocklyPage() {
   const [generatedCode, setGeneratedCode] = useState<string>('// Tu código generado aparecerá aquí');
   const workspaceRef = useRef<Workspace | null>(null);
 
-  const handleWorkspaceChange = (workspace: Workspace) => {
+  const handleWorkspaceChange = useCallback((workspace: Workspace) => {
     workspaceRef.current = workspace;
-  };
+  }, []);
 
   const generateCode = () => {
     if (workspaceRef.current) {
