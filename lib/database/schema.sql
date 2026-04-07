@@ -4,7 +4,7 @@
 CREATE TABLE users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL,
+    name_normalized VARCHAR(255) UNIQUE NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     last_login_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     total_score INTEGER DEFAULT 0,
@@ -28,7 +28,7 @@ CREATE TABLE play_steps (
     play_id UUID REFERENCES plays(id) ON DELETE CASCADE,
     "order" INTEGER NOT NULL,
     role VARCHAR(50) NOT NULL,
-    challenge_id UUID REFERENCES challenges(id),
+    challenge_id UUID,
     ball_top VARCHAR(10) NOT NULL,
     ball_left VARCHAR(10) NOT NULL,
     message TEXT NOT NULL,
@@ -51,6 +51,10 @@ CREATE TABLE challenges (
     explanation TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+ALTER TABLE play_steps
+ADD CONSTRAINT fk_play_steps_challenge
+FOREIGN KEY (challenge_id) REFERENCES challenges(id);
 
 -- Sesiones de juego
 CREATE TABLE game_sessions (
@@ -133,7 +137,7 @@ CREATE TABLE game_config (
 
 -- ============= ÍNDICES =============
 
-CREATE INDEX idx_users_email ON users(email);
+CREATE INDEX idx_users_name_normalized ON users(name_normalized);
 CREATE INDEX idx_game_sessions_user ON game_sessions(user_id);
 CREATE INDEX idx_game_sessions_status ON game_sessions(status);
 CREATE INDEX idx_play_steps_play ON play_steps(play_id);

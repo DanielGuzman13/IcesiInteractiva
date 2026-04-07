@@ -48,6 +48,17 @@ npm install
 
 ## ¿Cómo ejecutarlo?
 
+Antes de iniciar, configura tu conexión a PostgreSQL:
+
+1. Crea el archivo `.env.local` con base en `.env.example`.
+2. Define `DATABASE_URL` apuntando a tu base de datos.
+3. Ejecuta el esquema y datos iniciales:
+
+```bash
+psql "$DATABASE_URL" -f lib/database/schema.sql
+psql "$DATABASE_URL" -f lib/database/seed-data.sql
+```
+
 ```bash
 npm run dev
 ```
@@ -125,7 +136,6 @@ GET /api/ranking?limit=10         # Ranking top jugadores
 
 ## Próximos Pasos
 
-- [ ] Implementar repositories con Prisma/Drizzle
 - [ ] Retos reales por rol dentro de `app/game/reto/[rol]/page.tsx`
 - [ ] Balón dinámico que fluye entre roles
 - [ ] Animaciones (Framer Motion)

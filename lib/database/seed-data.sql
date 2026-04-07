@@ -103,9 +103,9 @@ INSERT INTO challenges (id, role, title, description, type, content, correct_ans
 
 -- ============= USUARIOS DE PRUEBA =============
 
-INSERT INTO users (id, name, email, total_score, current_level) VALUES
-('user-001', 'Estudiante Demo', 'demo@icesi.edu', 0, 1),
-('user-002', 'Profesor Guía', 'profesor@icesi.edu', 500, 3);
+INSERT INTO users (id, name, name_normalized, total_score, current_level) VALUES
+('user-001', 'Estudiante Demo', 'estudiante demo', 0, 1),
+('user-002', 'Profesor Guía', 'profesor guía', 500, 3);
 
 -- ============= SESIONES DE EJEMPLO =============
 

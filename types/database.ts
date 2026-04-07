@@ -4,7 +4,7 @@
 export interface User {
   id: string;
   name: string;
-  email: string;
+  nameNormalized?: string;
   createdAt: Date;
   lastLoginAt: Date;
   totalScore: number;
@@ -58,7 +58,7 @@ export interface Challenge {
   description: string;
   type: 'quiz' | 'code' | 'simulation' | 'drag-drop';
   content: ChallengeContent;
-  correctAnswer: any;
+  correctAnswer: unknown;
   points: number;
   hints: string[];
   explanation: string; // explicación después de responder
@@ -114,7 +114,7 @@ export interface UserAnswer {
   userId: string;
   challengeId: string;
   playStepId: string;
-  answer: any;
+  answer: unknown;
   isCorrect: boolean;
   responseTime: number; // segundos
   attempts: number;

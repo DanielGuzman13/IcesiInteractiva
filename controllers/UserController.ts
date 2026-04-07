@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { UserRepository } from '../repositories/UserRepository';
-import { CreateUserInput, UpdateUserInput } from '../models/User';
 
 export class UserController {
   private userRepository: UserRepository;
@@ -15,9 +14,16 @@ export class UserController {
       const body = await request.json();
       const { name } = body;
 
-      if (!name || name.trim().length === 0) {
+      if (typeof name !== 'string' || name.trim().length === 0) {
         return NextResponse.json(
           { error: 'El nombre de usuario es requerido' },
+          { status: 400 }
+        );
+      }
+
+      if (name.trim().length > 60) {
+        return NextResponse.json(
+          { error: 'El nombre de usuario no puede superar 60 caracteres' },
           { status: 400 }
         );
       }
@@ -33,7 +39,7 @@ export class UserController {
       // Actualizar último login
       await this.userRepository.updateLastLogin(user.id);
 
-      return NextResponse.json({
+      const response = NextResponse.json({
         user: {
           id: user.id,
           name: user.name,
@@ -41,6 +47,19 @@ export class UserController {
           currentLevel: user.currentLevel
         }
       });
+
+      const cookieOptions = {
+        httpOnly: true,
+        sameSite: 'lax' as const,
+        secure: process.env.NODE_ENV === 'production',
+        path: '/',
+        maxAge: 60 * 60 * 8,
+      };
+
+      response.cookies.set('player_id', user.id, cookieOptions);
+      response.cookies.set('player_name', user.name, cookieOptions);
+
+      return response;
     } catch (error) {
       console.error('Error en login:', error);
       return NextResponse.json(
@@ -85,9 +104,16 @@ export class UserController {
       const body = await request.json();
       const { score } = body;
 
-      if (typeof score !== 'number') {
+      if (typeof score !== 'number' || !Number.isFinite(score)) {
         return NextResponse.json(
           { error: 'El score debe ser un número' },
+          { status: 400 }
+        );
+      }
+
+      if (Math.abs(score) > 10000) {
+        return NextResponse.json(
+          { error: 'El score excede el límite permitido por operación' },
           { status: 400 }
         );
       }
