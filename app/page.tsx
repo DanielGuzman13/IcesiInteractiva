@@ -69,7 +69,8 @@ export default function Home() {
             onChange={(event) => setName(event.target.value)}
             placeholder="Tu nombre"
             maxLength={60}
-            className="w-full rounded-xl border border-gray-300 px-4 py-3 text-lg outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-xl border border-gray-300 px-4 py-3 text-lg font-bold outline-none focus:ring-2 focus:ring-blue-500 bg-white text-black"
+            style={{ zIndex: 10, position: 'relative' }}
           />
 
           {error && <p className="text-red-600 text-sm text-left">{error}</p>}
