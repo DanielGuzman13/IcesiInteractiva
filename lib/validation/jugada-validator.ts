@@ -8,6 +8,19 @@ interface ValidationResult {
 
 export type ValidationMode = 'logica_disparo' | 'logica_ciclo' | 'logica_triangulacion';
 
+type ActionType = 'avanzar' | 'pasar' | 'disparar' | 'fin';
+type ConditionType = 'futbol_defensa_cerca' | 'futbol_distancia_arco' | 'futbol_companero_libre';
+
+type ProgramNode =
+  | { kind: 'action'; action: ActionType }
+  | { kind: 'if'; condition: ConditionType; thenBranch: ProgramNode[]; elseBranch: ProgramNode[] }
+  | { kind: 'repeat4'; body: ProgramNode[] };
+
+interface StrictTemplate {
+  id: string;
+  sequence: ProgramNode[];
+}
+
 export class JugadaValidator {
   private workspace: Workspace;
 
@@ -33,10 +46,7 @@ export class JugadaValidator {
       ? [this.validarCicloContraataque(blocks)]
       : mode === 'logica_triangulacion'
         ? [this.validarLogicaTriangulacion(blocks)]
-        : [
-            this.validarLogicaDisparo(blocks),
-            this.validarCondicionDefensa(blocks)
-          ];
+        : [this.validarLogicaDisparo(blocks)];
 
     const validationResults = [
       ...baseValidationResults,
@@ -115,31 +125,7 @@ export class JugadaValidator {
   }
 
   private validarLogicaDisparo(blocks: any[]): { isValid: boolean; messages: string[] } {
-    const messages: string[] = [];
-    let isValid = true;
-
-    // Buscar el bloque disparar
-    const disparoBlock = blocks.find(block => block.type === 'futbol_disparar');
-    
-    if (disparoBlock) {
-      // Verificar si está dentro de una estructura condicional
-      const parentBlock = disparoBlock.getParent();
-      if (!parentBlock || parentBlock.type !== 'futbol_si') {
-        messages.push('Falta condición antes de disparar');
-        isValid = false;
-      }
-
-      // Verificar si la condición incluye distancia al arco
-      if (parentBlock && parentBlock.type === 'futbol_si') {
-        const conditionBlock = parentBlock.getInputTargetBlock('CONDITION');
-        if (!conditionBlock || conditionBlock.type !== 'futbol_distancia_arco') {
-          messages.push('Debes verificar la distancia al arco antes de disparar');
-          isValid = false;
-        }
-      }
-    }
-
-    return { isValid, messages };
+    return this.validarContraPlantillas(blocks, 'logica_disparo');
   }
 
   private validarCondicionDefensa(blocks: any[]): { isValid: boolean; messages: string[] } {
@@ -186,102 +172,397 @@ export class JugadaValidator {
   }
 
   private validarCicloContraataque(blocks: any[]): { isValid: boolean; messages: string[] } {
-    const messages: string[] = [];
-    let isValid = true;
-
-    const cicloBlocks = blocks.filter(block => block.type === 'futbol_repetir_4');
-
-    if (cicloBlocks.length === 0) {
-      messages.push('Debes usar el bloque "REPETIR 4 VECES" para avanzar 20 metros en intervalos de 5.');
-      return { isValid: false, messages };
-    }
-
-    if (cicloBlocks.length > 1) {
-      messages.push('Usa solo un bloque "REPETIR 4 VECES" para esta jugada.');
-      isValid = false;
-    }
-
-    const ciclo = cicloBlocks[0];
-    const bloqueInicialCiclo = ciclo.getInputTargetBlock('DO');
-
-    if (!bloqueInicialCiclo) {
-      messages.push('El ciclo debe contener acciones en su interior.');
-      return { isValid: false, messages };
-    }
-
-    const tieneAvanzar = this.secuenciaContieneTipo(bloqueInicialCiclo, 'futbol_avanzar');
-    if (!tieneAvanzar) {
-      messages.push('Dentro del ciclo debes incluir "avanzar" (cada iteración representa 5 metros).');
-      isValid = false;
-    }
-
-    const tieneDecisionDefensa = this.existeSiConCondicion(bloqueInicialCiclo, 'futbol_defensa_cerca');
-    if (!tieneDecisionDefensa) {
-      messages.push('Dentro del ciclo debes evaluar "hay defensa cerca" con un bloque SI.');
-      isValid = false;
-    }
-
-    const tieneCierrePorDistancia = blocks.some(block => {
-      if (block.type !== 'futbol_si') return false;
-
-      const condicion = block.getInputTargetBlock('CONDITION');
-      if (!condicion || condicion.type !== 'futbol_distancia_arco') return false;
-
-      const thenBlock = block.getInputTargetBlock('THEN');
-      const elseBlock = block.getInputTargetBlock('ELSE');
-
-      return this.secuenciaContieneTipo(thenBlock, 'futbol_disparar') &&
-        this.secuenciaContieneTipo(elseBlock, 'futbol_pasar');
-    });
-
-    if (!tieneCierrePorDistancia) {
-      messages.push('Después del ciclo debes cerrar con: SI distancia al arco < 20 ENTONCES disparar, SINO pasar balón.');
-      isValid = false;
-    }
-
-    return { isValid, messages };
+    return this.validarContraPlantillas(blocks, 'logica_ciclo');
   }
 
   private validarLogicaTriangulacion(blocks: any[]): { isValid: boolean; messages: string[] } {
+    return this.validarContraPlantillas(blocks, 'logica_triangulacion');
+  }
+
+  private validarContraPlantillas(blocks: any[], mode: ValidationMode): { isValid: boolean; messages: string[] } {
+    const parseResult = this.construirProgramaEstructurado(blocks);
+    if (!parseResult.isValid) {
+      return { isValid: false, messages: parseResult.messages };
+    }
+
+    const templates = this.obtenerPlantillasEstrictas(mode);
+    const coincide = templates.some(template => this.coincideSecuencia(parseResult.sequence, template.sequence));
+
+    if (coincide) {
+      return { isValid: true, messages: [] };
+    }
+
+    return {
+      isValid: false,
+      messages: [
+        'La jugada no coincide con una opción estricta permitida para esta lógica.',
+        ...this.obtenerMensajesPlantillasPermitidas(mode)
+      ]
+    };
+  }
+
+  private construirProgramaEstructurado(blocks: any[]): { isValid: boolean; messages: string[]; sequence: ProgramNode[] } {
     const messages: string[] = [];
-    let isValid = true;
 
-    const pases = blocks.filter(block => block.type === 'futbol_pasar');
-    if (pases.length < 2) {
-      messages.push('La triangulación requiere al menos 2 bloques "pasar balón" antes del remate.');
-      isValid = false;
+    const inicioBlocks = blocks.filter(block => block.type === 'futbol_inicio');
+    if (inicioBlocks.length !== 1) {
+      messages.push('Debe existir exactamente un bloque INICIO.');
+      return { isValid: false, messages, sequence: [] };
     }
 
-    const siConCompaneroLibre = blocks.some(block => {
-      if (block.type !== 'futbol_si') return false;
-      const conditionBlock = block.getInputTargetBlock('CONDITION');
-      return conditionBlock && conditionBlock.type === 'futbol_companero_libre';
-    });
-
-    if (!siConCompaneroLibre) {
-      messages.push('Debes usar un bloque SI con la condición "hay compañero libre".');
-      isValid = false;
+    const finBlocks = blocks.filter(block => block.type === 'futbol_fin');
+    if (finBlocks.length !== 1) {
+      messages.push('Debe existir exactamente un bloque FIN.');
+      return { isValid: false, messages, sequence: [] };
     }
 
-    const tieneCierrePorDistancia = blocks.some(block => {
-      if (block.type !== 'futbol_si') return false;
+    const inicio = inicioBlocks[0];
+    const sequence = this.parsearSecuencia(inicio.getNextBlock(), messages);
 
-      const condicion = block.getInputTargetBlock('CONDITION');
-      if (!condicion || condicion.type !== 'futbol_distancia_arco') return false;
-
-      const thenBlock = block.getInputTargetBlock('THEN');
-      const elseBlock = block.getInputTargetBlock('ELSE');
-
-      return this.secuenciaContieneTipo(thenBlock, 'futbol_disparar') &&
-        this.secuenciaContieneTipo(elseBlock, 'futbol_pasar');
-    });
-
-    if (!tieneCierrePorDistancia) {
-      messages.push('Cierra la jugada con: SI distancia al arco < 20 ENTONCES disparar, SINO pasar balón.');
-      isValid = false;
+    if (messages.length > 0) {
+      return { isValid: false, messages, sequence: [] };
     }
 
-    return { isValid, messages };
+    if (sequence.length === 0) {
+      messages.push('La jugada no tiene pasos después de INICIO.');
+      return { isValid: false, messages, sequence: [] };
+    }
+
+    const ultimo = sequence[sequence.length - 1];
+    if (!(ultimo.kind === 'action' && ultimo.action === 'fin')) {
+      messages.push('La jugada debe terminar con FIN como último paso principal.');
+      return { isValid: false, messages, sequence: [] };
+    }
+
+    const finTopLevel = sequence.filter(node => node.kind === 'action' && node.action === 'fin').length;
+    if (finTopLevel !== 1) {
+      messages.push('Solo se permite un bloque FIN en la secuencia principal.');
+      return { isValid: false, messages, sequence: [] };
+    }
+
+    if (this.contieneFinAnidado(sequence.slice(0, -1))) {
+      messages.push('FIN no puede estar dentro de ramas SI/SINO ni dentro de REPETIR.');
+      return { isValid: false, messages, sequence: [] };
+    }
+
+    const visitados = new Set<string>();
+    this.recorrerConexiones(inicio, visitados);
+
+    const noConectados = blocks.filter(block => !visitados.has(block.id));
+    if (noConectados.length > 0) {
+      messages.push('Hay bloques sueltos o fuera del flujo principal. Elimina los bloques no conectados.');
+      return { isValid: false, messages, sequence: [] };
+    }
+
+    return { isValid: true, messages, sequence };
+  }
+
+  private parsearSecuencia(startBlock: any, messages: string[]): ProgramNode[] {
+    const sequence: ProgramNode[] = [];
+    let actual = startBlock;
+
+    while (actual) {
+      const node = this.parsearNodo(actual, messages);
+      if (!node) {
+        return [];
+      }
+
+      sequence.push(node);
+      actual = actual.getNextBlock();
+    }
+
+    return sequence;
+  }
+
+  private parsearNodo(block: any, messages: string[]): ProgramNode | null {
+    switch (block.type) {
+      case 'futbol_avanzar':
+        return { kind: 'action', action: 'avanzar' };
+      case 'futbol_pasar':
+        return { kind: 'action', action: 'pasar' };
+      case 'futbol_disparar':
+        return { kind: 'action', action: 'disparar' };
+      case 'futbol_fin':
+        return { kind: 'action', action: 'fin' };
+      case 'futbol_si': {
+        const conditionBlock = block.getInputTargetBlock('CONDITION');
+        if (!conditionBlock || !this.esCondicionValida(conditionBlock.type)) {
+          messages.push('Cada bloque SI debe tener una condición válida (defensa cerca, distancia al arco o compañero libre).');
+          return null;
+        }
+
+        const thenBranch = this.parsearSecuencia(block.getInputTargetBlock('THEN'), messages);
+        const elseBranch = this.parsearSecuencia(block.getInputTargetBlock('ELSE'), messages);
+        if (messages.length > 0) {
+          return null;
+        }
+
+        return {
+          kind: 'if',
+          condition: conditionBlock.type,
+          thenBranch,
+          elseBranch
+        };
+      }
+      case 'futbol_repetir_4': {
+        const body = this.parsearSecuencia(block.getInputTargetBlock('DO'), messages);
+        if (messages.length > 0) {
+          return null;
+        }
+
+        return {
+          kind: 'repeat4',
+          body
+        };
+      }
+      case 'futbol_inicio':
+        messages.push('INICIO no puede estar anidado dentro de la secuencia.');
+        return null;
+      default:
+        messages.push(`Bloque no permitido en validación estricta: ${block.type}`);
+        return null;
+    }
+  }
+
+  private recorrerConexiones(block: any, visitados: Set<string>): void {
+    if (!block || visitados.has(block.id)) {
+      return;
+    }
+
+    visitados.add(block.id);
+
+    this.recorrerConexiones(block.getNextBlock(), visitados);
+    this.recorrerConexiones(block.getInputTargetBlock('CONDITION'), visitados);
+    this.recorrerConexiones(block.getInputTargetBlock('THEN'), visitados);
+    this.recorrerConexiones(block.getInputTargetBlock('ELSE'), visitados);
+    this.recorrerConexiones(block.getInputTargetBlock('DO'), visitados);
+  }
+
+  private contieneFinAnidado(sequence: ProgramNode[]): boolean {
+    for (const node of sequence) {
+      if (node.kind === 'action' && node.action === 'fin') {
+        return true;
+      }
+
+      if (node.kind === 'if') {
+        if (this.contieneFinAnidado(node.thenBranch) || this.contieneFinAnidado(node.elseBranch)) {
+          return true;
+        }
+      }
+
+      if (node.kind === 'repeat4') {
+        if (this.contieneFinAnidado(node.body)) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  private coincideSecuencia(actual: ProgramNode[], expected: ProgramNode[]): boolean {
+    if (actual.length !== expected.length) {
+      return false;
+    }
+
+    for (let index = 0; index < actual.length; index += 1) {
+      if (!this.coincideNodo(actual[index], expected[index])) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  private coincideNodo(actual: ProgramNode, expected: ProgramNode): boolean {
+    if (actual.kind !== expected.kind) {
+      return false;
+    }
+
+    if (actual.kind === 'action' && expected.kind === 'action') {
+      return actual.action === expected.action;
+    }
+
+    if (actual.kind === 'if' && expected.kind === 'if') {
+      return actual.condition === expected.condition &&
+        this.coincideSecuencia(actual.thenBranch, expected.thenBranch) &&
+        this.coincideSecuencia(actual.elseBranch, expected.elseBranch);
+    }
+
+    if (actual.kind === 'repeat4' && expected.kind === 'repeat4') {
+      return this.coincideSecuencia(actual.body, expected.body);
+    }
+
+    return false;
+  }
+
+  private esCondicionValida(conditionType: string): conditionType is ConditionType {
+    return ['futbol_defensa_cerca', 'futbol_distancia_arco', 'futbol_companero_libre'].includes(conditionType);
+  }
+
+  private accion(action: ActionType): ProgramNode {
+    return { kind: 'action', action };
+  }
+
+  private si(condition: ConditionType, thenBranch: ProgramNode[], elseBranch: ProgramNode[]): ProgramNode {
+    return { kind: 'if', condition, thenBranch, elseBranch };
+  }
+
+  private repetir4(body: ProgramNode[]): ProgramNode {
+    return { kind: 'repeat4', body };
+  }
+
+  private obtenerPlantillasEstrictas(mode: ValidationMode): StrictTemplate[] {
+    if (mode === 'logica_disparo') {
+      return [
+        {
+          id: 'A1.1',
+          sequence: [
+            this.si('futbol_defensa_cerca', [this.accion('pasar')], [this.accion('avanzar')]),
+            this.si('futbol_distancia_arco', [this.accion('disparar')], [this.accion('pasar')]),
+            this.accion('fin')
+          ]
+        },
+        {
+          id: 'A1.2',
+          sequence: [
+            this.si('futbol_defensa_cerca', [this.accion('pasar')], [this.accion('avanzar')]),
+            this.accion('avanzar'),
+            this.si('futbol_distancia_arco', [this.accion('disparar')], [this.accion('pasar')]),
+            this.accion('fin')
+          ]
+        },
+        {
+          id: 'A1.3',
+          sequence: [
+            this.si('futbol_defensa_cerca', [this.accion('pasar')], [this.accion('avanzar')]),
+            this.accion('pasar'),
+            this.si('futbol_distancia_arco', [this.accion('disparar')], [this.accion('avanzar')]),
+            this.accion('fin')
+          ]
+        },
+        {
+          id: 'A1.4',
+          sequence: [
+            this.si(
+              'futbol_defensa_cerca',
+              [this.accion('pasar')],
+              [
+                this.accion('avanzar'),
+                this.si('futbol_distancia_arco', [this.accion('disparar')], [this.accion('pasar')])
+              ]
+            ),
+            this.accion('fin')
+          ]
+        }
+      ];
+    }
+
+    if (mode === 'logica_ciclo') {
+      return [
+        {
+          id: 'A2.1',
+          sequence: [
+            this.repetir4([
+              this.si('futbol_defensa_cerca', [this.accion('pasar')], [this.accion('avanzar')])
+            ]),
+            this.si('futbol_distancia_arco', [this.accion('disparar')], [this.accion('pasar')]),
+            this.accion('fin')
+          ]
+        },
+        {
+          id: 'A2.2',
+          sequence: [
+            this.repetir4([
+              this.si('futbol_defensa_cerca', [this.accion('avanzar')], [this.accion('avanzar')])
+            ]),
+            this.si('futbol_distancia_arco', [this.accion('disparar')], [this.accion('pasar')]),
+            this.accion('fin')
+          ]
+        },
+        {
+          id: 'A2.3',
+          sequence: [
+            this.repetir4([
+              this.si('futbol_defensa_cerca', [this.accion('pasar')], [this.accion('avanzar')])
+            ]),
+            this.accion('pasar'),
+            this.si('futbol_distancia_arco', [this.accion('disparar')], [this.accion('pasar')]),
+            this.accion('fin')
+          ]
+        },
+        {
+          id: 'A2.4',
+          sequence: [
+            this.repetir4([
+              this.si('futbol_defensa_cerca', [this.accion('avanzar')], [this.accion('pasar')])
+            ]),
+            this.si('futbol_distancia_arco', [this.accion('disparar')], [this.accion('pasar')]),
+            this.accion('fin')
+          ]
+        }
+      ];
+    }
+
+    return [
+      {
+        id: 'A3.1',
+        sequence: [
+          this.si('futbol_companero_libre', [this.accion('pasar')], [this.accion('avanzar')]),
+          this.accion('pasar'),
+          this.si('futbol_distancia_arco', [this.accion('disparar')], [this.accion('pasar')]),
+          this.accion('fin')
+        ]
+      },
+      {
+        id: 'A3.2',
+        sequence: [
+          this.si('futbol_companero_libre', [this.accion('pasar')], [this.accion('pasar')]),
+          this.accion('pasar'),
+          this.si('futbol_distancia_arco', [this.accion('disparar')], [this.accion('pasar')]),
+          this.accion('fin')
+        ]
+      },
+      {
+        id: 'A3.3',
+        sequence: [
+          this.si('futbol_companero_libre', [this.accion('pasar')], [this.accion('avanzar')]),
+          this.accion('pasar'),
+          this.accion('avanzar'),
+          this.si('futbol_distancia_arco', [this.accion('disparar')], [this.accion('pasar')]),
+          this.accion('fin')
+        ]
+      }
+    ];
+  }
+
+  private obtenerMensajesPlantillasPermitidas(mode: ValidationMode): string[] {
+    if (mode === 'logica_disparo') {
+      return [
+        'Opciones válidas Lógica 1:',
+        'A1.1: SI defensa_cerca (pasar / avanzar) -> SI distancia<20 (disparar / pasar) -> FIN',
+        'A1.2: SI defensa_cerca (pasar / avanzar) -> avanzar -> SI distancia<20 (disparar / pasar) -> FIN',
+        'A1.3: SI defensa_cerca (pasar / avanzar) -> pasar -> SI distancia<20 (disparar / avanzar) -> FIN',
+        'A1.4: SI defensa_cerca (pasar / [avanzar -> SI distancia<20 (disparar / pasar)]) -> FIN'
+      ];
+    }
+
+    if (mode === 'logica_ciclo') {
+      return [
+        'Opciones válidas Lógica 2:',
+        'A2.1: REPETIR 4 { SI defensa_cerca (pasar / avanzar) } -> SI distancia<20 (disparar / pasar) -> FIN',
+        'A2.2: REPETIR 4 { SI defensa_cerca (avanzar / avanzar) } -> SI distancia<20 (disparar / pasar) -> FIN',
+        'A2.3: REPETIR 4 { SI defensa_cerca (pasar / avanzar) } -> pasar -> SI distancia<20 (disparar / pasar) -> FIN',
+        'A2.4: REPETIR 4 { SI defensa_cerca (avanzar / pasar) } -> SI distancia<20 (disparar / pasar) -> FIN'
+      ];
+    }
+
+    return [
+      'Opciones válidas Lógica 3:',
+      'A3.1: SI compañero_libre (pasar / avanzar) -> pasar -> SI distancia<20 (disparar / pasar) -> FIN',
+      'A3.2: SI compañero_libre (pasar / pasar) -> pasar -> SI distancia<20 (disparar / pasar) -> FIN',
+      'A3.3: SI compañero_libre (pasar / avanzar) -> pasar -> avanzar -> SI distancia<20 (disparar / pasar) -> FIN'
+    ];
   }
 
   private secuenciaContieneTipo(block: any, blockType: string): boolean {

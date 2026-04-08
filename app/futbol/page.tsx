@@ -60,6 +60,18 @@ export default function FutbolPage() {
     return isValid ? 'border-green-500' : 'border-red-500';
   };
 
+  const getChallengeStatement = (mode: ValidationMode) => {
+    if (mode === 'logica_ciclo') {
+      return 'Lógica 2 – Construye una jugada de contraataque que avance 20 metros en tramos de 5 metros usando un bloque de repetición de 4 veces. En cada repetición, evalúa si hay defensa cerca para decidir entre pasar o seguir avanzando. Al finalizar el ciclo, cierra la jugada con una decisión por distancia al arco: si es menor a 20, dispara; si no, pasa el balón. La secuencia debe comenzar con INICIO y terminar con FIN.';
+    }
+
+    if (mode === 'logica_triangulacion') {
+      return 'Lógica 3 – Construye una jugada ofensiva basada en triangulación de pases. Primero, evalúa si hay un compañero libre para decidir la acción inicial. Luego, realiza al menos dos pases antes del remate. Finalmente, decide por distancia al arco si dispara o si mantiene la posesión con otro pase. La jugada debe comenzar con INICIO y terminar con FIN, manteniendo una estructura ordenada.';
+    }
+
+    return 'Lógica 1 – Construye una jugada ofensiva que comience en INICIO y termine en FIN. Primero, evalúa si hay defensa cerca para decidir la acción inicial: si hay defensa, pasa el balón; si no hay defensa, avanza. Luego, toma una decisión final según la distancia al arco: si la distancia es menor a 20, debes disparar; si no, debes mantener la jugada con un pase. Organiza la secuencia con bloques SI/SINO de forma clara y en el orden correcto.';
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-4">
       <div className="max-w-7xl mx-auto">
@@ -103,6 +115,14 @@ export default function FutbolPage() {
                 </button>
               </div>
             </div>
+
+            <div className="mb-4 rounded-lg border border-blue-200 bg-blue-50 p-4">
+              <h3 className="mb-2 text-base font-semibold text-blue-900">Enunciado de la lógica seleccionada</h3>
+              <p className="text-sm leading-relaxed text-blue-900">
+                {getChallengeStatement(validationMode)}
+              </p>
+            </div>
+
             <FutbolEditor onWorkspaceChange={handleWorkspaceChange} />
           </div>
 
