@@ -349,8 +349,8 @@ export const Cancha: React.FC = () => {
           <div className="absolute top-0 left-1/2 w-1 h-full bg-white/60 -translate-x-1/2"></div>
           <div className="absolute top-1/2 left-0 w-[13%] h-[55%] border-t-4 border-r-4 border-b-4 border-white/60 -translate-y-1/2 pointer-events-none"></div>
 
-          {/* Jugadores */}
-          {jugadoresData.filter(j => !j.fueraDeCampo).map(jugador => {
+          {/* Jugadores y Zona Técnica */}
+          {jugadoresData.map(jugador => {
              let isTarget = false;
              let isDimmed = false;
              let top = jugador.posicion.top;
@@ -387,16 +387,28 @@ export const Cancha: React.FC = () => {
                 else isDimmed = true;
              }
 
+             // Ajuste para la Zona Técnica (Fuera de la Cancha)
+             if (jugador.fueraDeCampo) {
+               top = '92%'; // Posición cerca del borde inferior
+               left = '50%'; // Centro
+             }
+
              return (
                <motion.div key={jugador.id} 
                   animate={{ top, left, opacity: isDimmed ? 0.3 : 1 }}
                   transition={{ duration: 1.5, type: 'spring' }}
                   className="absolute" style={{ transform: 'translate(-50%, -50%)', zIndex: isTarget ? 50 : 10 }}
                >
-                 <div className="relative">
+                 <div className="relative flex flex-col items-center">
                     {isTarget && (
                       <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 1.5, repeat: Infinity }}
                         className="absolute inset-0 bg-yellow-400 rounded-full blur-md opacity-60 z-[-1]" />
+                    )}
+                    {/* Indicador de Zona Técnica justo debajo del jugador si está fuera del campo */}
+                    {jugador.fueraDeCampo && (
+                      <div className="absolute top-10 whitespace-nowrap text-[10px] font-black text-white/70 tracking-widest bg-black/40 px-2 py-0.5 rounded border border-white/20">
+                        ZONA TÉCNICA
+                      </div>
                     )}
                     {/* Render estricto del visual */}
                     <div className="pointer-events-none">
