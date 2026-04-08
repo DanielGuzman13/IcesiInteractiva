@@ -6,10 +6,12 @@ import { UserRepository } from '../../../../repositories/UserRepository';
 const userRepository = new UserRepository();
 const userController = new UserController(userRepository);
 
-export async function GET(request: NextRequest, { params }: { params: { userId: string } }) {
-  return userController.getProfile(request, params.userId);
+export async function GET(request: NextRequest, { params }: { params: Promise<{ userId: string }> }) {
+  const { userId } = await params;
+  return userController.getProfile(request, userId);
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { userId: string } }) {
-  return userController.updateScore(request, params.userId);
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ userId: string }> }) {
+  const { userId } = await params;
+  return userController.updateScore(request, userId);
 }
