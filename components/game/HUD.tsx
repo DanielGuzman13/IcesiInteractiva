@@ -48,7 +48,7 @@ export const HUD: React.FC = () => {
   };
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: 'spring', stiffness: 200, damping: 20 }}
@@ -76,7 +76,7 @@ export const HUD: React.FC = () => {
           <div className="text-xs text-blue-300 font-bold uppercase tracking-widest mb-1">Squad A</div>
           <div className="text-lg font-bold">Ingeniería</div>
         </div>
-        
+
         <div className="flex items-center gap-3 bg-black/50 border border-gray-700 px-6 py-3 rounded-xl shadow-inner">
           <span className="text-4xl font-mono font-black text-blue-500">0</span>
           <span className="text-xl text-gray-500">:</span>

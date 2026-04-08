@@ -83,7 +83,7 @@ export default function Home() {
           </button>
         </form>
 
-        <div className="flex flex-wrap justify-center gap-3">
+        {/* <div className="flex flex-wrap justify-center gap-3">
           <Link
             href="/futbol"
             className="inline-block bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-full transition-all hover:scale-105 active:scale-95 shadow-lg"
@@ -97,7 +97,7 @@ export default function Home() {
           >
             Blockly Editor
           </Link>
-        </div>
+        </div> */}
       </div>
     </main>
   );

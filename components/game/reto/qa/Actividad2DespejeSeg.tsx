@@ -200,14 +200,19 @@ export const Actividad2DespejeSeg: React.FC<Props> = ({ onComplete }) => {
           </defs>
 
           {/* Balón animado */}
-          <motion.text
-            textAnchor="middle"
-            fontSize="4"
-            animate={{ x: ballPos.x, y: ballPos.y }}
+          <motion.g
+            animate={{ x: ballPos.x - BALL_POS.x, y: ballPos.y - BALL_POS.y }}
             transition={{ duration: 1.2, ease: 'easeOut' }}
           >
-            ⚽
-          </motion.text>
+            <text
+              x={BALL_POS.x}
+              y={BALL_POS.y}
+              textAnchor="middle"
+              fontSize="4"
+            >
+              ⚽
+            </text>
+          </motion.g>
 
           {/* GOL si intercepta el rival */}
           <AnimatePresence>
