@@ -72,9 +72,10 @@ export const Actividad1ClaridadArco: React.FC<Props> = ({ onComplete }) => {
     setFase('animar');
 
     if (typeof window !== 'undefined') {
-      const answers = JSON.parse(localStorage.getItem('frontend_answers') || '{}');
+      const pre = localStorage.getItem('currentPlayer') || 'guest';
+      const answers = JSON.parse(localStorage.getItem(`${pre}_frontend_answers`) || '{}');
       answers['actividad1'] = { opcion: pasillo.id, label: pasillo.label, score: pasillo.score, resultado: pasillo.resultado };
-      localStorage.setItem('frontend_answers', JSON.stringify(answers));
+      localStorage.setItem(`${pre}_frontend_answers`, JSON.stringify(answers));
     }
 
     setTimeout(() => {

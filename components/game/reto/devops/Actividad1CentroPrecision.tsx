@@ -77,9 +77,10 @@ export const Actividad1CentroPrecision: React.FC<Props> = ({ onComplete }) => {
 
     // Persistir UserAnswer
     if (typeof window !== 'undefined') {
-      const answers = JSON.parse(localStorage.getItem('devops_answers') || '{}');
+      const pre = localStorage.getItem('currentPlayer') || 'guest';
+      const answers = JSON.parse(localStorage.getItem(`${pre}_devops_answers`) || '{}');
       answers['actividad1'] = { opcion: dest.id, label: dest.label, score: dest.score, resultado: dest.resultado };
-      localStorage.setItem('devops_answers', JSON.stringify(answers));
+      localStorage.setItem(`${pre}_devops_answers`, JSON.stringify(answers));
     }
 
     // 1. Lateral sube por la banda

@@ -69,9 +69,10 @@ export const Actividad2RegateEfectivo: React.FC<Props> = ({ onComplete }) => {
     setFase(mov.id);
 
     if (typeof window !== 'undefined') {
-      const answers = JSON.parse(localStorage.getItem('frontend_answers') || '{}');
+      const pre = localStorage.getItem('currentPlayer') || 'guest';
+      const answers = JSON.parse(localStorage.getItem(`${pre}_frontend_answers`) || '{}');
       answers['actividad2'] = { opcion: mov.id, label: mov.label, score: mov.score, resultado: mov.resultado };
-      localStorage.setItem('frontend_answers', JSON.stringify(answers));
+      localStorage.setItem(`${pre}_frontend_answers`, JSON.stringify(answers));
     }
 
     setTimeout(() => setFase('modal'), 2500);

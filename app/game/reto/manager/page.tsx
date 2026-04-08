@@ -8,9 +8,10 @@ import { Actividad2CambioFrente } from '../../../../components/game/reto/manager
 // Score persistido en localStorage (simula UserAnswer hasta que BD esté conectada)
 const guardarScore = (actividad: string, score: number) => {
   if (typeof window === 'undefined') return;
-  const prev = JSON.parse(localStorage.getItem('manager_scores') || '{}');
+  const pre = localStorage.getItem('currentPlayer') || 'guest';
+  const prev = JSON.parse(localStorage.getItem(`${pre}_manager_scores`) || '{}');
   prev[actividad] = score;
-  localStorage.setItem('manager_scores', JSON.stringify(prev));
+  localStorage.setItem(`${pre}_manager_scores`, JSON.stringify(prev));
 };
 
 type Paso = 'intro' | 'actividad1' | 'actividad2' | 'resultado';

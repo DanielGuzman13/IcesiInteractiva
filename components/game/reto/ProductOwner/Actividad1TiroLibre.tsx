@@ -72,9 +72,10 @@ export const Actividad1TiroLibre: React.FC<Props> = ({ onComplete }) => {
     setFase('prepara');
 
     if (typeof window !== 'undefined') {
-      const answers = JSON.parse(localStorage.getItem('po_answers') || '{}');
+      const pre = localStorage.getItem('currentPlayer') || 'guest';
+      const answers = JSON.parse(localStorage.getItem(`${pre}_po_answers`) || '{}');
       answers['actividad1'] = { opcion: opt.id, label: opt.label, score: opt.score, resultado: opt.resultado };
-      localStorage.setItem('po_answers', JSON.stringify(answers));
+      localStorage.setItem(`${pre}_po_answers`, JSON.stringify(answers));
     }
 
     // El rival patea después de organizar la barrera

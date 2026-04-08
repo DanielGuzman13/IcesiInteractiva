@@ -73,9 +73,10 @@ export const Actividad2DespejeSeg: React.FC<Props> = ({ onComplete }) => {
 
     // Persistir UserAnswer en localStorage
     if (typeof window !== 'undefined') {
-      const answers = JSON.parse(localStorage.getItem('qa_answers') || '{}');
+      const pre = localStorage.getItem('currentPlayer') || 'guest';
+      const answers = JSON.parse(localStorage.getItem(`${pre}_qa_answers`) || '{}');
       answers['actividad2'] = { opcion: dir.id, label: dir.label, score: dir.score, resultado: dir.resultado };
-      localStorage.setItem('qa_answers', JSON.stringify(answers));
+      localStorage.setItem(`${pre}_qa_answers`, JSON.stringify(answers));
     }
 
     setTimeout(() => {

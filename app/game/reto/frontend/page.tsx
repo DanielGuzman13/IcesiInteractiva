@@ -7,9 +7,10 @@ import { Actividad2RegateEfectivo } from '@/components/game/reto/frontend/Activi
 
 const guardarScore = (score: number) => {
   if (typeof window === 'undefined') return;
-  const prev = JSON.parse(localStorage.getItem('frontend_scores') || '{}');
+  const pre = localStorage.getItem('currentPlayer') || 'guest';
+  const prev = JSON.parse(localStorage.getItem(`${pre}_frontend_scores`) || '{}');
   prev['total'] = score;
-  localStorage.setItem('frontend_scores', JSON.stringify(prev));
+  localStorage.setItem(`${pre}_frontend_scores`, JSON.stringify(prev));
 };
 
 type Paso = 'intro' | 'actividad1' | 'actividad2' | 'resultado';

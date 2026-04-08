@@ -7,9 +7,10 @@ import { Actividad2RegresoHeroico } from '@/components/game/reto/devops/Activida
 
 const guardarScore = (score: number) => {
   if (typeof window === 'undefined') return;
-  const prev = JSON.parse(localStorage.getItem('devops_scores') || '{}');
+  const pre = localStorage.getItem('currentPlayer') || 'guest';
+  const prev = JSON.parse(localStorage.getItem(`${pre}_devops_scores`) || '{}');
   prev['total'] = score;
-  localStorage.setItem('devops_scores', JSON.stringify(prev));
+  localStorage.setItem(`${pre}_devops_scores`, JSON.stringify(prev));
 };
 
 type Paso = 'intro' | 'actividad1' | 'actividad2' | 'resultado';

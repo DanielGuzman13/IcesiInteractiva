@@ -10,6 +10,7 @@ export interface JugadorType {
   esCapitan: boolean;
   ruta: string | null; // Solo Equipo A tiene ruta de reto
   fueraDeCampo?: boolean; // El Técnico/Arquitecto aparece fuera de la cancha
+  imagen?: string; // Avatar opcional del jugador
 }
 
 // EQUIPO A - Roles de ingeniería de software (azul, clickeables)
@@ -66,7 +67,7 @@ const equipoA: JugadorType[] = [
     color: "bg-blue-600",
     posicion: { top: "28%", left: "36%" },
     esCapitan: false,
-    ruta: "/game/reto/backend",
+    ruta: "/futbol",
   },
   {
     id: "a-medio-centro-2",

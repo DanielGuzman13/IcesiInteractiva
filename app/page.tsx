@@ -21,7 +21,10 @@ export default function Home() {
       return;
     }
 
-    setIsLoading(true);
+    // Guardar el identificador del jugador actual para aislar sus puntajes
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('currentPlayer', trimmedName);
+    }
 
     try {
       const response = await fetch('/api/auth/login', {

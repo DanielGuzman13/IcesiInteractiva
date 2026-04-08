@@ -72,6 +72,13 @@ export const Actividad2Salida: React.FC<Props> = ({ onComplete }) => {
     setElegido(comp);
     setAnimating(true);
 
+    if (typeof window !== 'undefined') {
+      const pre = localStorage.getItem('currentPlayer') || 'guest';
+      const answers = JSON.parse(localStorage.getItem(`${pre}_po_answers`) || '{}');
+      answers['actividad2'] = { opcion: comp.id, label: comp.label, score: comp.score };
+      localStorage.setItem(`${pre}_po_answers`, JSON.stringify(answers));
+    }
+
     const steps = 25;
     const dx = (comp.cx - PO.cx) / steps;
     const dy = (comp.cy - PO.cy) / steps;

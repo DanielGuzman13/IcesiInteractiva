@@ -77,9 +77,10 @@ export const Actividad1BloqueoAngulo: React.FC<Props> = ({ onComplete }) => {
 
     // Persistir UserAnswer en localStorage
     if (typeof window !== 'undefined') {
-      const answers = JSON.parse(localStorage.getItem('qa_answers') || '{}');
+      const pre = localStorage.getItem('currentPlayer') || 'guest';
+      const answers = JSON.parse(localStorage.getItem(`${pre}_qa_answers`) || '{}');
       answers['actividad1'] = { opcion: zona.id, label: zona.label, score: zona.score, resultado: zona.resultado };
-      localStorage.setItem('qa_answers', JSON.stringify(answers));
+      localStorage.setItem(`${pre}_qa_answers`, JSON.stringify(answers));
     }
 
     setDefensaPos(zona.defensaTarget);

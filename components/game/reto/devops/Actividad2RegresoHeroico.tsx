@@ -73,9 +73,10 @@ export const Actividad2RegresoHeroico: React.FC<Props> = ({ onComplete }) => {
 
     // Persistir UserAnswer
     if (typeof window !== 'undefined') {
-      const answers = JSON.parse(localStorage.getItem('devops_answers') || '{}');
+      const pre = localStorage.getItem('currentPlayer') || 'guest';
+      const answers = JSON.parse(localStorage.getItem(`${pre}_devops_answers`) || '{}');
       answers['actividad2'] = { opcion: accion.id, label: accion.label, score: accion.score, resultado: accion.resultado };
-      localStorage.setItem('devops_answers', JSON.stringify(answers));
+      localStorage.setItem(`${pre}_devops_answers`, JSON.stringify(answers));
     }
 
     setRivalAnimate(true);
