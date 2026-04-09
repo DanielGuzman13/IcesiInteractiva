@@ -29,6 +29,9 @@ export const HUD: React.FC = () => {
       const m = JSON.parse(localStorage.getItem(`${pre}_manager_scores`) || '{}');
       if (m.actividad1_pase) sum += m.actividad1_pase;
       if (m.actividad2_cambio) sum += m.actividad2_cambio;
+
+      const futbol = JSON.parse(localStorage.getItem(`${pre}_futbol_scores`) || '{}');
+      if (futbol.total) sum += futbol.total;
     } catch (e) {
       console.error(e);
     }

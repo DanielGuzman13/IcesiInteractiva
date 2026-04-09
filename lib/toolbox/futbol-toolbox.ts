@@ -40,10 +40,6 @@ export const futbolToolbox = {
         {
           kind: 'block',
           type: 'futbol_distancia_arco'
-        },
-        {
-          kind: 'block',
-          type: 'futbol_companero_libre'
         }
       ]
     },

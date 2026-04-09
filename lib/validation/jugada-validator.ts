@@ -6,10 +6,10 @@ interface ValidationResult {
   pseudocode: string;
 }
 
-export type ValidationMode = 'logica_disparo' | 'logica_ciclo' | 'logica_triangulacion';
+export type ValidationMode = 'logica_disparo' | 'logica_ciclo';
 
 type ActionType = 'avanzar' | 'pasar' | 'disparar' | 'fin';
-type ConditionType = 'futbol_defensa_cerca' | 'futbol_distancia_arco' | 'futbol_companero_libre';
+type ConditionType = 'futbol_defensa_cerca' | 'futbol_distancia_arco';
 
 type ProgramNode =
   | { kind: 'action'; action: ActionType }
@@ -44,9 +44,7 @@ export class JugadaValidator {
 
     const modeValidationResults = mode === 'logica_ciclo'
       ? [this.validarCicloContraataque(blocks)]
-      : mode === 'logica_triangulacion'
-        ? [this.validarLogicaTriangulacion(blocks)]
-        : [this.validarLogicaDisparo(blocks)];
+      : [this.validarLogicaDisparo(blocks)];
 
     const validationResults = [
       ...baseValidationResults,
@@ -68,8 +66,6 @@ export class JugadaValidator {
     if (isValid && messages.length === 0) {
       if (mode === 'logica_ciclo') {
         messages.push('¡Excelente! La lógica de contraataque con ciclo está bien estructurada.');
-      } else if (mode === 'logica_triangulacion') {
-        messages.push('¡Excelente! La lógica de triangulación de pases está bien estructurada.');
       } else {
         messages.push('¡Excelente! La lógica de disparo por distancia está bien estructurada.');
       }
@@ -173,10 +169,6 @@ export class JugadaValidator {
 
   private validarCicloContraataque(blocks: any[]): { isValid: boolean; messages: string[] } {
     return this.validarContraPlantillas(blocks, 'logica_ciclo');
-  }
-
-  private validarLogicaTriangulacion(blocks: any[]): { isValid: boolean; messages: string[] } {
-    return this.validarContraPlantillas(blocks, 'logica_triangulacion');
   }
 
   private validarContraPlantillas(blocks: any[], mode: ValidationMode): { isValid: boolean; messages: string[] } {
@@ -287,7 +279,7 @@ export class JugadaValidator {
       case 'futbol_si': {
         const conditionBlock = block.getInputTargetBlock('CONDITION');
         if (!conditionBlock || !this.esCondicionValida(conditionBlock.type)) {
-          messages.push('Cada bloque SI debe tener una condición válida (defensa cerca, distancia al arco o compañero libre).');
+          messages.push('Cada bloque SI debe tener una condición válida (defensa cerca o distancia al arco).');
           return null;
         }
 
@@ -397,7 +389,7 @@ export class JugadaValidator {
   }
 
   private esCondicionValida(conditionType: string): conditionType is ConditionType {
-    return ['futbol_defensa_cerca', 'futbol_distancia_arco', 'futbol_companero_libre'].includes(conditionType);
+    return ['futbol_defensa_cerca', 'futbol_distancia_arco'].includes(conditionType);
   }
 
   private accion(action: ActionType): ProgramNode {
@@ -504,36 +496,7 @@ export class JugadaValidator {
       ];
     }
 
-    return [
-      {
-        id: 'A3.1',
-        sequence: [
-          this.si('futbol_companero_libre', [this.accion('pasar')], [this.accion('avanzar')]),
-          this.accion('pasar'),
-          this.si('futbol_distancia_arco', [this.accion('disparar')], [this.accion('pasar')]),
-          this.accion('fin')
-        ]
-      },
-      {
-        id: 'A3.2',
-        sequence: [
-          this.si('futbol_companero_libre', [this.accion('pasar')], [this.accion('pasar')]),
-          this.accion('pasar'),
-          this.si('futbol_distancia_arco', [this.accion('disparar')], [this.accion('pasar')]),
-          this.accion('fin')
-        ]
-      },
-      {
-        id: 'A3.3',
-        sequence: [
-          this.si('futbol_companero_libre', [this.accion('pasar')], [this.accion('avanzar')]),
-          this.accion('pasar'),
-          this.accion('avanzar'),
-          this.si('futbol_distancia_arco', [this.accion('disparar')], [this.accion('pasar')]),
-          this.accion('fin')
-        ]
-      }
-    ];
+    return [];
   }
 
   private obtenerMensajesPlantillasPermitidas(mode: ValidationMode): string[] {
@@ -557,12 +520,7 @@ export class JugadaValidator {
       ];
     }
 
-    return [
-      'Opciones válidas Lógica 3:',
-      'A3.1: SI compañero_libre (pasar / avanzar) -> pasar -> SI distancia<20 (disparar / pasar) -> FIN',
-      'A3.2: SI compañero_libre (pasar / pasar) -> pasar -> SI distancia<20 (disparar / pasar) -> FIN',
-      'A3.3: SI compañero_libre (pasar / avanzar) -> pasar -> avanzar -> SI distancia<20 (disparar / pasar) -> FIN'
-    ];
+    return [];
   }
 
   private secuenciaContieneTipo(block: any, blockType: string): boolean {
@@ -713,8 +671,6 @@ export class JugadaValidator {
         return 'hay defensa cerca';
       case 'futbol_distancia_arco':
         return 'distancia al arco < 20';
-      case 'futbol_companero_libre':
-        return 'hay compañero libre';
       default:
         return 'condición';
     }
