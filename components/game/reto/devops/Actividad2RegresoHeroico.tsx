@@ -31,7 +31,7 @@ const ACCIONES: Accion[] = [
     feedback: '¡Rollback ejecutado! Detectaste el fallo en producción y devolviste el sistema a un estado estable al instante. Esto es monitoreo proactivo y recuperación automática.',
     score: 100,
     resultado: 'correcto',
-    color: 'border-green-400 hover:bg-green-50 text-green-800',
+    color: 'border-gray-300 hover:bg-gray-50 text-gray-800',
   },
   {
     id: 'apoyo',
@@ -41,7 +41,7 @@ const ACCIONES: Accion[] = [
     feedback: 'Error detectado tarde. El sistema se salvó por poco gracias al equipo, pero un buen DevOps tiene alertas automáticas que no dependen de que alguien llame a otro.',
     score: 50,
     resultado: 'regular',
-    color: 'border-yellow-400 hover:bg-yellow-50 text-yellow-800',
+    color: 'border-gray-300 hover:bg-gray-50 text-gray-800',
   },
   {
     id: 'quieto',
@@ -51,7 +51,7 @@ const ACCIONES: Accion[] = [
     feedback: '¡Gol! No tenías monitoreo activo del sistema. El error llegó al usuario final y destruyó la experiencia. Como DevOps, el uptime es tu responsabilidad 24/7.',
     score: 0,
     resultado: 'incorrecto',
-    color: 'border-red-400 hover:bg-red-50 text-red-800',
+    color: 'border-gray-300 hover:bg-gray-50 text-gray-800',
   },
 ];
 

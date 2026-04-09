@@ -236,9 +236,9 @@ export const Actividad1BloqueoAngulo: React.FC<Props> = ({ onComplete }) => {
               key={z.id}
               onClick={() => handleElegir(z)}
               className={`flex flex-col items-center gap-1 rounded-xl border-2 border-dashed p-3 text-sm font-bold transition-all hover:scale-105 active:scale-95 cursor-pointer
-                ${z.resultado === 'correcto' ? 'border-green-400 hover:bg-green-50 text-green-800' :
-                  z.resultado === 'regular'  ? 'border-yellow-400 hover:bg-yellow-50 text-yellow-800' :
-                  'border-red-400 hover:bg-red-50 text-red-800'}`}
+                ${z.resultado === 'correcto' ? 'border-gray-300 hover:bg-gray-50 text-gray-800' :
+                  z.resultado === 'regular'  ? 'border-gray-300 hover:bg-gray-50 text-gray-800' :
+                  'border-gray-300 hover:bg-gray-50 text-gray-800'}`}
             >
               <span className="text-2xl">{z.emoji}</span>
               <span>{z.label}</span>

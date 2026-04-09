@@ -8,37 +8,30 @@ export const HUD: React.FC = () => {
   const [seconds, setSeconds] = useState(0);
 
   useEffect(() => {
-    // Calcular puntaje total sumando los storages
-    let sum = 0;
-    try {
-      const pre = localStorage.getItem('currentPlayer') || 'guest';
-      const p = JSON.parse(localStorage.getItem(`${pre}_po_answers`) || '{}');
-      if (p.actividad1?.score) sum += p.actividad1.score;
-      if (p.actividad2?.score) sum += p.actividad2.score;
+    const readScore = () => {
+      try {
+        const pre = localStorage.getItem('currentPlayer') || 'guest';
+        const saved = parseInt(localStorage.getItem(`${pre}_total_score`) || '0', 10);
+        setTotalScore(saved);
+      } catch (e) {
+        console.error(e);
+      }
+    };
 
-      const q = JSON.parse(localStorage.getItem(`${pre}_qa_answers`) || '{}');
-      if (q.actividad1?.score) sum += q.actividad1.score;
-      if (q.actividad2?.score) sum += q.actividad2.score;
+    readScore(); // run once immediately
 
-      const d = JSON.parse(localStorage.getItem(`${pre}_devops_scores`) || '{}');
-      if (d.total) sum += d.total;
-
-      const f = JSON.parse(localStorage.getItem(`${pre}_frontend_scores`) || '{}');
-      if (f.total) sum += f.total;
-
-      const m = JSON.parse(localStorage.getItem(`${pre}_manager_scores`) || '{}');
-      if (m.actividad1_pase) sum += m.actividad1_pase;
-      if (m.actividad2_cambio) sum += m.actividad2_cambio;
-    } catch (e) {
-      console.error(e);
-    }
-    setTotalScore(sum);
+    // Refresh every second to pick up changes from Cancha
+    const scoreInterval = setInterval(readScore, 1000);
 
     // Timer
     const interval = setInterval(() => {
       setSeconds(s => s + 1);
     }, 1000);
-    return () => clearInterval(interval);
+
+    return () => {
+      clearInterval(interval);
+      clearInterval(scoreInterval);
+    };
   }, []);
 
   const formatTime = (totalSecs: number) => {

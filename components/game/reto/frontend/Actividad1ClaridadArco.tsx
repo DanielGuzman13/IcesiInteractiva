@@ -30,7 +30,7 @@ const PASILLOS: Pasillo[] = [
     resultado: 'correcto',
     feedback: '¡Qué claridad! Elegiste el camino que todos podían ver y el balón entró limpio. (En el equipo, esto es usar una buena Jerarquía Visual; pusiste lo más importante donde el ojo del usuario lo ve primero)',
     ballTarget: { x: 92, y: VB_H * 0.5 },
-    colorClass: 'border-green-400 hover:bg-green-50 text-green-800',
+    colorClass: 'border-gray-300 hover:bg-gray-50 text-gray-800',
   },
   {
     id: 'estrecho',
@@ -41,7 +41,7 @@ const PASILLOS: Pasillo[] = [
     resultado: 'regular',
     feedback: '¡Uff, pasó raspando! El balón pegó en el palo y entró de milagro. (Tu interfaz está un poco Saturada; el usuario encontró el botón, pero le costó trabajo distinguirlo entre tantos elementos)',
     ballTarget: { x: 92, y: VB_H * 0.35 },
-    colorClass: 'border-yellow-400 hover:bg-yellow-50 text-yellow-800',
+    colorClass: 'border-gray-300 hover:bg-gray-50 text-gray-800',
   },
   {
     id: 'bloqueado',
@@ -52,7 +52,7 @@ const PASILLOS: Pasillo[] = [
     resultado: 'incorrecto',
     feedback: '¡Bloqueado! Le pegaste directo al defensa que tenías enfrente. (El Diseño es Confuso; pusiste tantas cosas en la pantalla que el usuario no supo a qué darle clic y se perdió)',
     ballTarget: { x: 82, y: VB_H * 0.75 },
-    colorClass: 'border-red-400 hover:bg-red-50 text-red-800',
+    colorClass: 'border-gray-300 hover:bg-gray-50 text-gray-800',
   },
 ];
 

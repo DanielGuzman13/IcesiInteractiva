@@ -237,9 +237,9 @@ export const Actividad2DespejeSeg: React.FC<Props> = ({ onComplete }) => {
               key={d.id}
               onClick={() => handleElegir(d)}
               className={`flex flex-col items-center gap-1 rounded-xl border-2 border-dashed p-3 text-sm font-bold transition-all hover:scale-105 active:scale-95
-                ${d.resultado === 'correcto' ? 'border-green-400 hover:bg-green-50 text-green-800'
-                  : d.resultado === 'regular' ? 'border-yellow-400 hover:bg-yellow-50 text-yellow-800'
-                  : 'border-red-400 hover:bg-red-50 text-red-800'}`}
+                ${d.resultado === 'correcto' ? 'border-gray-300 hover:bg-gray-50 text-gray-800'
+                  : d.resultado === 'regular' ? 'border-gray-300 hover:bg-gray-50 text-gray-800'
+                  : 'border-gray-300 hover:bg-gray-50 text-gray-800'}`}
             >
               <span className="text-2xl">{d.emoji}</span>
               <span>{d.label}</span>

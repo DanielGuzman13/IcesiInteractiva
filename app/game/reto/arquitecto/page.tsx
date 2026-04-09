@@ -32,6 +32,12 @@ export default function ArquitectoRetoPage() {
     setScoreA2(score);
     setPaso('resultado');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Guardar en Storage
+    const val = localStorage.getItem('currentPlayer') || 'guest';
+    const ans = JSON.parse(localStorage.getItem(`${val}_arquitecto_answers`) || '{}');
+    ans['score'] = scoreA1 + score;
+    localStorage.setItem(`${val}_arquitecto_answers`, JSON.stringify(ans));
     
     // Mostrar mensaje final
     const mensajes = [
@@ -120,10 +126,21 @@ export default function ArquitectoRetoPage() {
           {paso === 'intro' && (
             <div className="text-center">
               <div className="mb-8">
+                
+                <div className="bg-red-50 border-2 border-red-500 rounded-xl p-6 mb-6 shadow-md animate-pulse">
+                  <h3 className="text-red-700 text-xl font-black mb-2 font-mono flex items-center justify-center gap-2">
+                    <span>⏱️</span> ¡MEDIO TIEMPO - PARTIDO EN PAUSA! <span>⏸️</span>
+                  </h3>
+                  <p className="text-red-800 text-base font-medium">
+                    ¡Silbatazo del árbitro! El cronómetro se detiene. El equipo ha procesado la lógica del Backend con éxito, 
+                    pero para ganar el segundo tiempo, necesitamos un diseño estructural perfecto. El tiempo no avanzará 
+                    hasta que la arquitectura del sistema esté aprobada.
+                  </p>
+                </div>
+
                 <p className="text-gray-600 text-base leading-relaxed max-w-2xl mx-auto mb-6">
-                  El <strong>Arquitecto de Software</strong> es como el director técnico del equipo: no está en cada jugada, 
-                  pero define cómo juega todo el sistema. Diseña la estructura, establece los patrones y asegura que 
-                  cada componente tenga su lugar y función correcta.
+                  El estudiante Arquitecto asume el rol de <strong>Director Técnico</strong>: no está en cada jugada, 
+                  pero define cómo juega todo el sistema de manera global.
                 </p>
                 <div className="bg-purple-50 border border-purple-200 rounded-xl p-4 mb-6 text-sm text-purple-800 text-left">
                   <strong>Visión del Arquitecto:</strong> Un buen diseño arquitectónico es como una formación táctica perfecta - 
@@ -169,8 +186,14 @@ export default function ArquitectoRetoPage() {
                 <div className="text-6xl mb-4 animate-bounce">
                   {totalScore >= 180 ? '🧭' : totalScore >= 120 ? '✅' : '⚠️'}
                 </div>
-                <h2 className="text-3xl font-extrabold text-gray-800 mb-2">Diseño Arquitectónico Completado</h2>
-                <p className="text-gray-500 mb-6">Has completado el análisis estructural del sistema</p>
+                <h2 className="text-3xl font-extrabold text-gray-800 mb-2">Charla Final de Medio Tiempo</h2>
+                <div className="bg-purple-50 rounded-xl p-4 mb-6 border border-purple-200">
+                  <p className="text-purple-800 font-medium text-lg leading-snug">
+                    Con la arquitectura definida, el equipo vuelve a la cancha para el segundo tiempo.<br/>
+                    El <strong>Frontend (Delantero)</strong> recibirá el balón para buscar el gol,<br/> 
+                    y el <strong>DevOps</strong> ejecutará el despliegue final.
+                  </p>
+                </div>
 
                 {/* Score breakdown */}
                 <div className="grid grid-cols-3 gap-3 mb-6">
@@ -201,9 +224,10 @@ export default function ArquitectoRetoPage() {
                   </button>
                   <Link
                     href="/game"
-                    className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-full transition-all shadow-md text-center"
+                    className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-full transition-all shadow-md text-center flex flex-col items-center leading-tight"
                   >
-                    &larr; Volver a la cancha
+                    <span>&larr; Volver a la cancha</span>
+                    <span className="text-xs font-normal mt-1 opacity-80">(Segundo Tiempo: Pasa al Frontend)</span>
                   </Link>
                 </div>
               </div>

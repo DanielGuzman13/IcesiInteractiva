@@ -183,14 +183,16 @@ export const Actividad2Salida: React.FC<Props> = ({ onComplete }) => {
       {/* Descripción de opciones */}
       <div className="grid grid-cols-3 gap-3 mt-4">
         {COMPANEROS.map(comp => (
-          <div
+          <button
             key={comp.id}
-            className={`rounded-xl border-2 p-3 text-center text-xs transition-all ${elegido?.id === comp.id ? `${comp.color} bg-yellow-50 shadow` : 'border-gray-200 bg-gray-50'}`}
+            disabled={!!elegido}
+            onClick={() => handleElegir(comp)}
+            className={`rounded-xl border-2 p-3 text-center text-xs transition-all cursor-pointer hover:scale-105 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed ${elegido?.id === comp.id ? `${comp.color} bg-yellow-50 shadow` : 'border-gray-200 bg-gray-50 hover:bg-gray-100'}`}
           >
             <div className="text-2xl mb-1">{comp.emoji}</div>
             <div className="font-bold text-gray-700">{comp.label}</div>
             <div className="text-gray-500 mt-1">{comp.descripcion}</div>
-          </div>
+          </button>
         ))}
       </div>
 

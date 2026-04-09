@@ -31,7 +31,7 @@ const MOVS: Movimiento[] = [
     score: 100,
     resultado: 'correcto',
     feedback: '¡Qué finta! Lo dejaste sembrado en el piso con pura agilidad. (Tu aplicación tiene una Experiencia de Usuario (UX) fluida y rápida que encanta al cliente)',
-    colorClass: 'border-green-400 hover:bg-green-50 text-green-800',
+    colorClass: 'border-gray-300 hover:bg-gray-50 text-gray-800',
   },
   {
     id: 'choque',
@@ -41,7 +41,7 @@ const MOVS: Movimiento[] = [
     score: 50,
     resultado: 'regular',
     feedback: '¡Pasaste! Pero el choque te frenó y casi pierdes el control. (La Interacción es Pesada; el usuario sintió que el sistema tardaba en responder y la navegación fue tosca)',
-    colorClass: 'border-yellow-400 hover:bg-yellow-50 text-yellow-800',
+    colorClass: 'border-gray-300 hover:bg-gray-50 text-gray-800',
   },
   {
     id: 'dudar',
@@ -51,7 +51,7 @@ const MOVS: Movimiento[] = [
     score: 0,
     resultado: 'incorrecto',
     feedback: '¡Perdiste el balón! Te enredaste solo y te quitaron la oportunidad. (Hay demasiados Errores de Interacción; el usuario intenta avanzar pero el sistema no responde y la experiencia es frustrante)',
-    colorClass: 'border-red-400 hover:bg-red-50 text-red-800',
+    colorClass: 'border-gray-300 hover:bg-gray-50 text-gray-800',
   },
 ];
 

@@ -4,6 +4,7 @@ import { useState, useRef, useCallback } from 'react';
 import FutbolEditor from '@/components/FutbolEditor';
 import { JugadaValidator, ValidationMode } from '@/lib/validation/jugada-validator';
 import { Workspace } from 'blockly';
+import Link from 'next/link';
 
 interface ValidationResult {
   isValid: boolean;
@@ -64,7 +65,15 @@ export default function FutbolPage() {
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-4">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-4">
+        <div className="bg-white rounded-lg shadow-lg p-6 mb-4 relative">
+          <div className="absolute top-6 right-6">
+            <Link
+              href="/game"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors text-sm"
+            >
+              &larr; Volver a la Cancha
+            </Link>
+          </div>
           <h1 className="text-4xl font-bold text-gray-800 mb-2 flex items-center">
             Jugadas de Fútbol
           </h1>
@@ -128,6 +137,21 @@ export default function FutbolPage() {
                 <p className="text-gray-500 italic">
                   Valida tu jugada para ver los resultados aquí
                 </p>
+              )}
+              {validationResult.isValid && (
+                <div className="mt-4 p-4 bg-purple-100 rounded-lg border-2 border-purple-400 animate-pulse">
+                   <h3 className="text-purple-800 font-bold mb-2">¡Jugada Completada! ⚽</h3>
+                   <p className="text-sm text-purple-700 mb-4">
+                     La lógica es perfecta y la jugada llega al borde del área rival. El árbitro pita el final del primer tiempo. 
+                     El siguiente paso es el vestuario, donde el Arquitecto ajustará la estructura.
+                   </p>
+                   <Link 
+                     href="/game/reto/arquitecto" 
+                     className="block text-center bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded transition-colors"
+                   >
+                     Continuar al Vestuario →
+                   </Link>
+                </div>
               )}
             </div>
 
