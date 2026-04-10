@@ -105,8 +105,25 @@ export default function FutbolPage() {
           if (award.assigned) {
             setValidationResult({
               ...result,
-              messages: [...result.messages, `+${award.points} puntos asignados a tu jugador por esta lógica.`],
+              messages: [...result.messages, `¡Excelente! Has completado ${validationMode === 'logica_disparo' ? 'la Lógica 1' : 'la Lógica 2'}.`],
             });
+            
+            // Store animation data in localStorage and redirect to game
+            const currentPlayer = localStorage.getItem('currentPlayer') || 'guest';
+            localStorage.setItem(
+              `${currentPlayer}_futbol_animation`,
+              JSON.stringify({
+                show: true,
+                points: award.points,
+                logicMode: validationMode
+              })
+            );
+            
+            // Redirect to game page
+            setTimeout(() => {
+              router.replace('/game');
+            }, 500);
+            
             return;
           }
 

@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { jugadoresData } from '../../lib/jugadores';
 import { Jugador } from './Jugador';
@@ -34,6 +35,7 @@ type GameFlowState =
 // Opciones originales removidas porque ahora se usan los componentes completos
 
 export const Cancha: React.FC = () => {
+  const router = useRouter();
   const [gameState, setGameState] = useState<GameFlowState>('init');
   const [goals, setGoals] = useState({ a: 0, b: 0 });
   const [totalScore, setTotalScore] = useState(0);
@@ -42,6 +44,10 @@ export const Cancha: React.FC = () => {
   const [ballParams, setBallParams] = useState({ top: '50%', left: '50%', scale: 1, text: '⚽' });
   const [poPos, setPoPos] = useState({ top: '50%', left: '5%' }); // Portero
   const [showFlash, setShowFlash] = useState(false);
+  
+  // Futbol Animation
+  const [futbolAnimation, setFutbolAnimation] = useState<{ show: boolean; points: number; logicMode: string }>({ show: false, points: 0, logicMode: '' });
+  const futbolAnimationHandledRef = useRef(false);
   
   // Feedback Data
   const [feedback, setFeedback] = useState<{show: boolean, msg: string, score: number, ok: boolean}>({show: false, msg: '', score: 0, ok: true});
@@ -78,6 +84,32 @@ export const Cancha: React.FC = () => {
       setBallParams({ top: '50%', left: '50%', scale: 1, text: '⚽' });
     }
   }, []);
+
+  // Detectar animación de futbol
+  useEffect(() => {
+    if (futbolAnimationHandledRef.current) return;
+    
+    const val = localStorage.getItem('currentPlayer') || 'guest';
+    const futbolAnimData = localStorage.getItem(`${val}_futbol_animation`);
+    
+    if (futbolAnimData) {
+      try {
+        futbolAnimationHandledRef.current = true;
+        const animData = JSON.parse(futbolAnimData);
+        setFutbolAnimation({ show: true, points: animData.points, logicMode: animData.logicMode });
+        
+        // Clear the localStorage flag
+        localStorage.removeItem(`${val}_futbol_animation`);
+      } catch (error) {
+        console.error('Error parsing futbol animation data:', error);
+      }
+    }
+  }, []);
+
+  const handleContinueFromFutbol = () => {
+    setFutbolAnimation((prev) => ({ ...prev, show: false }));
+    router.push('/game/reto/arquitecto');
+  };
 
   // KICK-OFF MOVIE
   const handleKickoff = () => {
@@ -316,7 +348,7 @@ export const Cancha: React.FC = () => {
       
       <AnimatePresence>
         {showFlash && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-white z-[9999] pointer-events-none" />
+          <motion.div key="flash-overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-white z-[9999] pointer-events-none" />
         )}
       </AnimatePresence>
 
@@ -433,6 +465,7 @@ export const Cancha: React.FC = () => {
             {/* INICIO PARTIDO BTN */}
             {gameState === 'pre_kickoff' && (
               <motion.button 
+                key="kickoff-button"
                 initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
                 onClick={handleKickoff}
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[100] bg-emerald-500 hover:bg-emerald-600 border-4 border-white text-white font-black px-6 py-6 rounded-full shadow-2xl transition hover:scale-110 active:scale-95"
@@ -443,7 +476,7 @@ export const Cancha: React.FC = () => {
 
             {/* Actividad 1 - El Grito de la Barrera OVERLAY */}
             {gameState === 'po_act1_frozen' && (
-              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
+              <motion.div key="po-act1-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
                 className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
               >
                 <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-blue-500">
@@ -460,7 +493,7 @@ export const Cancha: React.FC = () => {
 
             {/* Actividad 2 - Salida OVERLAY */}
             {gameState === 'po_act2_frozen' && (
-              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
+              <motion.div key="po-act2-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
                 className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
               >
                 <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-green-500">
@@ -477,7 +510,7 @@ export const Cancha: React.FC = () => {
 
             {/* QA Actividad 1 - Smoke Test OVERLAY */}
             {gameState === 'qa_act1_frozen' && (
-              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
+              <motion.div key="qa-act1-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
                 className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
               >
                 <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-blue-600">
@@ -494,7 +527,7 @@ export const Cancha: React.FC = () => {
 
             {/* QA Actividad 2 - Regression Testing OVERLAY */}
             {gameState === 'qa_act2_frozen' && (
-              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
+              <motion.div key="qa-act2-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
                 className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
               >
                 <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-teal-600">
@@ -511,12 +544,53 @@ export const Cancha: React.FC = () => {
 
             {/* Feedback Popups */}
             {feedback.show && (
-              <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }}
+              <motion.div key="feedback-popup" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }}
                 className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-6 rounded-2xl shadow-2xl border-4 z-[200] text-center ${feedback.ok ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'}`}
               >
                 <div className="text-4xl mb-2">{feedback.ok ? '✅' : '❌'}</div>
                 <h2 className={`font-black text-2xl ${feedback.ok ? 'text-green-800' : 'text-red-800'}`}>{feedback.msg}</h2>
                 <div className="mt-4 font-mono font-bold text-lg bg-white px-4 py-2 rounded-lg border inline-block">+{feedback.score} pts</div>
+              </motion.div>
+            )}
+
+            {/* Futbol Logic Points Animation Overlay */}
+            {futbolAnimation.show && (
+              <motion.div
+                key="futbol-points-overlay"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-[250] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+              >
+                <motion.div
+                  initial={{ scale: 0.7, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+                  className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center border-t-8 border-green-500"
+                >
+                  <div className="text-5xl mb-3">⚽</div>
+                  <h3 className="text-xl font-extrabold text-gray-800 mb-2">
+                    {futbolAnimation.logicMode === 'logica_disparo' ? 'Lógica 1 Completada' : 'Lógica 2 Completada'}
+                  </h3>
+                  <div className="inline-block bg-blue-100 text-blue-700 text-xs font-bold px-2 py-0.5 rounded-full mb-2 uppercase tracking-wide">
+                    🔗 Relación con el Rol (Backend)
+                  </div>
+                  <p className="text-sm leading-relaxed mb-4 text-green-700">
+                    ¡Buena lectura de juego! Validaste correctamente la lógica y tomaste una decisión técnica sólida para continuar el flujo del partido.
+                  </p>
+                  <div className="inline-block rounded-xl border py-3 px-6 mb-6 bg-green-50 border-green-200">
+                    <span className="font-black text-2xl text-green-600">
+                      +{futbolAnimation.points} pts
+                    </span>
+                  </div>
+                  <br />
+                  <button
+                    onClick={handleContinueFromFutbol}
+                    className="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold py-3 px-8 rounded-full transition-all shadow-md"
+                  >
+                    Continuar a siguiente actividad →
+                  </button>
+                </motion.div>
               </motion.div>
             )}
 

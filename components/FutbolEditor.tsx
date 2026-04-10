@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { inject, Workspace, Events } from 'blockly';
+import { inject, Workspace, WorkspaceSvg, Events } from 'blockly';
+import modernTheme from '@blockly/theme-modern';
 import { futbolToolbox } from '@/lib/toolbox/futbol-toolbox';
 import { defineFutbolBlocks, registerFutbolGenerators } from '@/lib/blocks/futbol-blocks';
 
@@ -11,7 +12,7 @@ interface FutbolEditorProps {
 
 export default function FutbolEditor({ onWorkspaceChange }: FutbolEditorProps) {
   const futbolDiv = useRef<HTMLDivElement>(null);
-  const workspace = useRef<Workspace | null>(null);
+  const workspace = useRef<WorkspaceSvg | null>(null);
 
   const resetFlyoutScroll = () => {
     window.setTimeout(() => {
@@ -27,6 +28,7 @@ export default function FutbolEditor({ onWorkspaceChange }: FutbolEditorProps) {
 
       // Inicializar el workspace de Blockly con toolbox personalizada
       workspace.current = inject(futbolDiv.current, {
+        theme: modernTheme,
         toolbox: futbolToolbox,
         grid: {
           spacing: 20,
