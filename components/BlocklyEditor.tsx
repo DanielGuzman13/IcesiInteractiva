@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { inject, Workspace, Xml, utils } from 'blockly';
-import modernTheme from '@blockly/theme-modern';
+import darkTheme from '@blockly/theme-dark';
 
 interface BlocklyEditorProps {
   initialXml?: string;
@@ -17,7 +17,7 @@ export default function BlocklyEditor({ initialXml, onWorkspaceChange }: Blockly
     if (blocklyDiv.current && !workspace.current) {
       // Inicializar el workspace de Blockly
       workspace.current = inject(blocklyDiv.current, {
-        theme: modernTheme,
+        theme: darkTheme,
         toolbox: {
           kind: 'categoryToolbox',
           contents: [

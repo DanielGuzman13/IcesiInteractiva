@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@blockly/theme-dark": "^8.0.4",
     "@blockly/theme-modern": "^7.0.5",
     "blockly": "^12.5.1",
     "framer-motion": "^12.38.0",
