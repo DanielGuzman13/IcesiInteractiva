@@ -41,3 +41,20 @@ body {
 .blocklyTreeRow:hover .blocklyTreeLabel {
   color: #000000 !important;
 }
+
+/* Blockly: oculta la barra vertical del flyout/categorías, pero conserva el scroll */
+.blocklyFlyoutScrollbar,
+.blocklyFlyout .blocklyScrollbarVertical,
+.blocklyFlyout .blocklyScrollbarHorizontal {
+  display: none !important;
+}
+
+/* Si el toolbox de categorías llega a mostrar scroll, también se oculta visualmente */
+.blocklyToolbox {
+  scrollbar-width: none;
+}
+
+.blocklyToolbox::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
+}

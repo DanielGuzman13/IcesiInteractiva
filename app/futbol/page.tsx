@@ -1,10 +1,13 @@
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import FutbolEditor from '@/components/FutbolEditor';
 import { JugadaValidator, ValidationMode } from '@/lib/validation/jugada-validator';
 import { Workspace } from 'blockly';
 import Link from 'next/link';
+
+const TIMER_SECONDS = 10 * 60;
 
 interface ValidationResult {
   isValid: boolean;
@@ -12,24 +15,128 @@ interface ValidationResult {
   pseudocode: string;
 }
 
+const POINTS_PER_LOGIC: Record<ValidationMode, number> = {
+  logica_disparo: 100,
+  logica_ciclo: 100,
+};
+
+interface FutbolScoreState {
+  logica_disparo?: number;
+  logica_ciclo?: number;
+  total?: number;
+}
+
 export default function FutbolPage() {
+  const router = useRouter();
   const [validationMode, setValidationMode] = useState<ValidationMode>('logica_disparo');
   const [validationResult, setValidationResult] = useState<ValidationResult>({
     isValid: false,
     messages: [],
     pseudocode: '// Tu jugada aparecerá aquí'
   });
+  const [timeLeft, setTimeLeft] = useState<number>(TIMER_SECONDS);
   const workspaceRef = useRef<Workspace | null>(null);
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setTimeLeft((previous) => {
+        if (previous <= 1) {
+          window.clearInterval(intervalId);
+          router.replace('/game');
+          return 0;
+        }
+
+        return previous - 1;
+      });
+    }, 1000);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, [router]);
+
+  const formattedMinutes = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+  const formattedSeconds = String(timeLeft % 60).padStart(2, '0');
 
   const handleWorkspaceChange = useCallback((workspace: Workspace) => {
     workspaceRef.current = workspace;
   }, []);
+
+  const asignarPuntosSiAplica = (mode: ValidationMode) => {
+    if (typeof window === 'undefined') {
+      return { assigned: false, points: 0, alreadyAwarded: false };
+    }
+
+    const currentPlayer = localStorage.getItem('currentPlayer') || 'guest';
+    const storageKey = `${currentPlayer}_futbol_scores`;
+
+    let prev: FutbolScoreState = {};
+    try {
+      prev = JSON.parse(localStorage.getItem(storageKey) || '{}') as FutbolScoreState;
+    } catch {
+      prev = {};
+    }
+
+    const alreadyAwarded = (prev[mode] ?? 0) > 0;
+    if (alreadyAwarded) {
+      return { assigned: false, points: 0, alreadyAwarded: true };
+    }
+
+    const points = POINTS_PER_LOGIC[mode];
+    const next: FutbolScoreState = {
+      ...prev,
+      [mode]: points,
+      total: (prev.total ?? 0) + points,
+    };
+
+    localStorage.setItem(storageKey, JSON.stringify(next));
+
+    return { assigned: true, points, alreadyAwarded: false };
+  };
 
   const validarJugada = () => {
     if (workspaceRef.current) {
       try {
         const validator = new JugadaValidator(workspaceRef.current);
         const result = validator.validarJugada(validationMode);
+
+        if (result.isValid) {
+          const award = asignarPuntosSiAplica(validationMode);
+
+          if (award.assigned) {
+            setValidationResult({
+              ...result,
+              messages: [...result.messages, `¡Excelente! Has completado ${validationMode === 'logica_disparo' ? 'la Lógica 1' : 'la Lógica 2'}.`],
+            });
+            
+            // Store animation data in localStorage and redirect to game
+            const currentPlayer = localStorage.getItem('currentPlayer') || 'guest';
+            localStorage.setItem(
+              `${currentPlayer}_futbol_animation`,
+              JSON.stringify({
+                show: true,
+                points: award.points,
+                logicMode: validationMode
+              })
+            );
+            
+            // Redirect to game page
+            setTimeout(() => {
+              router.replace('/game');
+            }, 500);
+            
+            return;
+          }
+
+          if (award.alreadyAwarded) {
+            setValidationResult({
+              ...result,
+              messages: [...result.messages, 'Esta lógica ya otorgó puntos anteriormente para tu jugador.'],
+            });
+            return;
+          }
+        }
+
         setValidationResult(result);
       } catch (error) {
         console.error('Error validando la jugada:', error);
@@ -61,25 +168,35 @@ export default function FutbolPage() {
     return isValid ? 'border-green-500' : 'border-red-500';
   };
 
+  const getChallengeStatement = (mode: ValidationMode) => {
+    if (mode === 'logica_ciclo') {
+      return 'Lógica 2 – Construye una jugada de contraataque que avance 20 metros en tramos de 5 metros usando un bloque de repetición de 4 veces. En cada repetición, evalúa si hay defensa cerca para decidir entre pasar o seguir avanzando. Al finalizar el ciclo, cierra la jugada con una decisión por distancia al arco: si es menor a 20, dispara; si no, pasa el balón. La secuencia debe comenzar con INICIO y terminar con FIN.';
+    }
+
+    return 'Lógica 1 – Construye una jugada ofensiva que comience en INICIO y termine en FIN. Primero, evalúa si hay defensa cerca para decidir la acción inicial: si hay defensa, pasa el balón; si no hay defensa, avanza. Luego, toma una decisión final según la distancia al arco: si la distancia es menor a 20, debes disparar; si no, debes mantener la jugada con un pase. Organiza la secuencia con bloques SI/SINO de forma clara y en el orden correcto.';
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-4">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-4 relative">
-          <div className="absolute top-6 right-6">
-            <Link
-              href="/game"
-              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors text-sm"
-            >
-              &larr; Volver a la Cancha
-            </Link>
+        <div className="bg-white rounded-lg shadow-lg p-6 mb-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h1 className="text-4xl font-bold text-gray-800 mb-2 flex items-center">
+                Jugadas de Fútbol
+              </h1>
+              <p className="text-gray-600">
+                Construye jugadas usando lógica de programación. Arrastra bloques para crear tu estrategia.
+              </p>
+            </div>
+            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-center sm:min-w-40">
+              <p className="text-xs font-semibold uppercase tracking-wide text-red-700">Tiempo restante</p>
+              <p className="text-2xl font-bold text-red-700">
+                {formattedMinutes}:{formattedSeconds}
+              </p>
+            </div>
           </div>
-          <h1 className="text-4xl font-bold text-gray-800 mb-2 flex items-center">
-            Jugadas de Fútbol
-          </h1>
-          <p className="text-gray-600">
-            Construye jugadas usando lógica de programación. Arrastra bloques para crear tu estrategia.
-          </p>
         </div>
 
         {/* Main Content */}
@@ -96,7 +213,6 @@ export default function FutbolPage() {
                 >
                   <option value="logica_disparo">Lógica 1: Disparo por distancia</option>
                   <option value="logica_ciclo">Lógica 2: Contraataque con ciclo</option>
-                  <option value="logica_triangulacion">Lógica 3: Triangulación de pases</option>
                 </select>
                 <button
                   onClick={validarJugada}
@@ -112,6 +228,14 @@ export default function FutbolPage() {
                 </button>
               </div>
             </div>
+
+            <div className="mb-4 rounded-lg border border-blue-200 bg-blue-50 p-4">
+              <h3 className="mb-2 text-base font-semibold text-blue-900">Enunciado de la lógica seleccionada</h3>
+              <p className="text-sm leading-relaxed text-blue-900">
+                {getChallengeStatement(validationMode)}
+              </p>
+            </div>
+
             <FutbolEditor onWorkspaceChange={handleWorkspaceChange} />
           </div>
 
@@ -182,7 +306,7 @@ export default function FutbolPage() {
                   <span className="inline-block rounded-md bg-green-100 px-2 py-1 text-base font-bold text-green-800">
                     Condiciones:
                   </span>{' '}
-                  hay defensa cerca, distancia al arco &lt; 20, hay compañero libre
+                  hay defensa cerca, distancia al arco &lt; 20
                 </li>
                 <li>
                   <span className="inline-block rounded-md bg-blue-100 px-2 py-1 text-base font-bold text-blue-800">
@@ -202,12 +326,6 @@ export default function FutbolPage() {
                     <li>• Debes usar "REPETIR 4 VECES" para representar 20 metros en tramos de 5</li>
                     <li>• Dentro del ciclo, evalúa "hay defensa cerca" con SI/SINO</li>
                     <li>• Cierra la jugada con: SI distancia al arco &lt; 20 → disparar, SINO → pasar balón</li>
-                  </>
-                ) : validationMode === 'logica_triangulacion' ? (
-                  <>
-                    <li>• Debes usar al menos 2 bloques "pasar balón" para triangular</li>
-                    <li>• Incluye un SI con la condición "hay compañero libre"</li>
-                    <li>• Cierra con: SI distancia al arco &lt; 20 → disparar, SINO → pasar balón</li>
                   </>
                 ) : (
                   <>

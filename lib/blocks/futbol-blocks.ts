@@ -82,16 +82,6 @@ export function defineFutbolBlocks() {
     }
   };
 
-  Blocks['futbol_companero_libre'] = {
-    init: function() {
-      this.appendDummyInput()
-        .appendField('hay compañero libre');
-      this.setOutput(true, 'Boolean');
-      this.setColour(120); // Verde
-      this.setTooltip('Verifica si hay un compañero libre para triangular.');
-    }
-  };
-
   // Bloques de Acción (Azul)
   Blocks['futbol_avanzar'] = {
     init: function() {

@@ -1,7 +1,9 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { inject, Workspace, Events } from 'blockly';
+import { inject, Workspace, WorkspaceSvg, Events } from 'blockly';
+import modernTheme from '@blockly/theme-modern';
+import darkTheme from '@blockly/theme-dark';
 import { futbolToolbox } from '@/lib/toolbox/futbol-toolbox';
 import { defineFutbolBlocks, registerFutbolGenerators } from '@/lib/blocks/futbol-blocks';
 
@@ -11,13 +13,7 @@ interface FutbolEditorProps {
 
 export default function FutbolEditor({ onWorkspaceChange }: FutbolEditorProps) {
   const futbolDiv = useRef<HTMLDivElement>(null);
-  const workspace = useRef<Workspace | null>(null);
-
-  const resetFlyoutScroll = () => {
-    window.setTimeout(() => {
-      workspace.current?.getToolbox()?.getFlyout()?.scrollToStart();
-    }, 0);
-  };
+  const workspace = useRef<WorkspaceSvg | null>(null);
 
   useEffect(() => {
     if (futbolDiv.current && !workspace.current) {
@@ -27,6 +23,7 @@ export default function FutbolEditor({ onWorkspaceChange }: FutbolEditorProps) {
 
       // Inicializar el workspace de Blockly con toolbox personalizada
       workspace.current = inject(futbolDiv.current, {
+        theme: darkTheme,
         toolbox: futbolToolbox,
         grid: {
           spacing: 20,
@@ -50,17 +47,8 @@ export default function FutbolEditor({ onWorkspaceChange }: FutbolEditorProps) {
       if (onWorkspaceChange) {
         workspace.current.addChangeListener((event) => {
           onWorkspaceChange(workspace.current!);
-
-          if (
-            event.type === Events.TOOLBOX_ITEM_SELECT ||
-            event.type === Events.BLOCK_CREATE
-          ) {
-            resetFlyoutScroll();
-          }
         });
       }
-
-      resetFlyoutScroll();
     }
 
     // Cleanup

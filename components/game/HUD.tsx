@@ -20,9 +20,6 @@ export const HUD: React.FC = () => {
 
     readScore(); // run once immediately
 
-    // Refresh every second to pick up changes from Cancha
-    const scoreInterval = setInterval(readScore, 1000);
-
     // Timer
     const interval = setInterval(() => {
       setSeconds(s => s + 1);
@@ -30,7 +27,6 @@ export const HUD: React.FC = () => {
 
     return () => {
       clearInterval(interval);
-      clearInterval(scoreInterval);
     };
   }, []);
 
