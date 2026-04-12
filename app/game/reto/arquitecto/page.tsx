@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Actividad1DiagramaClases from '@/components/game/reto/arquitecto/Actividad1DiagramaClases';
 import Actividad2AsignarAtributos from '@/components/game/reto/arquitecto/Actividad2AsignarAtributos';
+import CanchaBackground from '@/components/game/reto/arquitecto/CanchaBackground';
 
 type Paso = 'intro' | 'actividad1' | 'actividad2' | 'resultado';
 
@@ -52,8 +53,7 @@ export default function ArquitectoRetoPage() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-purple-900 via-indigo-800 to-purple-700 flex flex-col items-center py-8 px-4 relative">
-      
+    <CanchaBackground>
       {/* Mensaje Emergente */}
       {mensajeEmergente && (
         <div className="fixed top-4 right-4 bg-purple-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 max-w-sm animate-pulse">
@@ -63,8 +63,9 @@ export default function ArquitectoRetoPage() {
           </div>
         </div>
       )}
+      
       {/* Top bar */}
-      <div className="w-full max-w-4xl flex justify-between items-center mb-6">
+      <div className="w-full flex justify-between items-center mb-6">
         <Link
           href="/game"
           className="text-white/80 hover:text-white text-sm font-semibold flex items-center gap-1 transition-colors"
@@ -94,9 +95,9 @@ export default function ArquitectoRetoPage() {
       </div>
 
       {/* Card principal */}
-      <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden">
+      <div className="w-full bg-white/50 rounded-3xl shadow-2xl overflow-hidden">
         {/* Header del rol */}
-        <div className="bg-gradient-to-r from-purple-700 to-indigo-600 px-8 py-6 text-white">
+        <div className="bg-gradient-to-r from-purple-700/50 to-indigo-600/50 px-8 py-6 text-white">
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 rounded-full bg-white/20 border-3 border-white flex items-center justify-center text-3xl shadow-inner">
               <div className="text-4xl">{'\ud83c\udfd7\ufe0f'}</div>
@@ -115,7 +116,7 @@ export default function ArquitectoRetoPage() {
           </div>
         </div>
 
-        <div className="p-6 md:p-8">
+        <div className="p-6 md:p-8 bg-white/50">
           {/* INTRO */}
           {paso === 'intro' && (
             <div className="text-center">
@@ -125,18 +126,18 @@ export default function ArquitectoRetoPage() {
                   pero define cómo juega todo el sistema. Diseña la estructura, establece los patrones y asegura que 
                   cada componente tenga su lugar y función correcta.
                 </p>
-                <div className="bg-purple-50 border border-purple-200 rounded-xl p-4 mb-6 text-sm text-purple-800 text-left">
-                  <strong>Visión del Arquitecto:</strong> Un buen diseño arquitectónico es como una formación táctica perfecta - 
-                  cada jugador (clase) sabe dónde estar, qué hacer y cómo comunicarse con los demás.
+                <div className="bg-white/50 border border-gray-200 rounded-xl p-6 text-left">
+                  <strong className="text-black">Visión del Arquitecto:</strong> <span className="text-black">Un buen diseño arquitectónico es como una formación táctica perfecta - 
+                  cada jugador (clase) sabe dónde estar, qué hacer y cómo comunicarse con los demás.</span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
                   {[
                     { icon: '🧭', title: 'Actividad 1 - Diseño Estructural', desc: 'Identifica las clases principales del sistema y colócalas en el diagrama arquitectónico' },
                     { icon: '⚙️', title: 'Actividad 2 - Definición de Atributos', desc: 'Asigna los atributos correctos a cada clase según su responsabilidad en el sistema' },
                   ].map(a => (
-                    <div key={a.title} className="bg-gray-50 border border-gray-200 rounded-xl p-4 hover:shadow-md transition-shadow">
+                    <div key={a.title} className="bg-gray-50/50 border border-gray-200 rounded-xl p-4 hover:shadow-md transition-shadow">
                       <div className="text-2xl mb-2">{a.icon}</div>
-                      <div className="font-bold text-gray-800 text-sm">{a.title}</div>
+                      <div className="font-bold text-gray-800 text-base">{a.title}</div>
                       <div className="text-gray-500 text-xs mt-1">{a.desc}</div>
                     </div>
                   ))}
@@ -179,7 +180,7 @@ export default function ArquitectoRetoPage() {
                     { label: 'Asignación de Atributos', score: scoreA2, icon: '⚙️' },
                     { label: 'Total', score: totalScore, icon: '🏆', bold: true },
                   ].map(item => (
-                    <div key={item.label} className={`rounded-xl border p-4 ${item.bold ? 'border-purple-300 bg-purple-50' : 'border-gray-200 bg-gray-50'}`}>
+                    <div key={item.label} className={`rounded-xl border p-4 ${item.bold ? 'border-purple-300 bg-purple-50/50' : 'border-gray-200 bg-gray-50/50'}`}>
                       <div className="text-2xl mb-1">{item.icon}</div>
                       <div className={`text-2xl font-black ${item.bold ? 'text-purple-600' : 'text-gray-700'}`}>{item.score} pts</div>
                       <div className="text-xs text-gray-500">{item.label}</div>
@@ -211,6 +212,6 @@ export default function ArquitectoRetoPage() {
           })()}
         </div>
       </div>
-    </main>
+    </CanchaBackground>
   );
 }
