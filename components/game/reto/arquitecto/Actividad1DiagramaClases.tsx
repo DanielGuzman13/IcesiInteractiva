@@ -182,7 +182,7 @@ const Actividad1DiagramaClases: React.FC<{ onComplete: (score: number) => void }
         </div>
 
         {/* Layout principal más compacto */}
-        <div className="flex gap-6 flex-1">
+        <div className="flex gap-2 flex-1 overflow-x-auto">
           {/* Panel de opciones - lado izquierdo */}
           <div className="w-80">
             <div className="bg-white/50 border-2 border-gray-200 rounded-xl p-4 h-full">
@@ -240,10 +240,10 @@ const Actividad1DiagramaClases: React.FC<{ onComplete: (score: number) => void }
           </div>
 
           {/* Diagrama de clases - lado derecho */}
-          <div className="flex-1">
-            <div className="relative bg-gray-50/50 border-2 border-gray-200 rounded-xl p-6 h-full" style={{ minHeight: '620px', width: '950px', margin: '0 auto' }}>
-        {/* Líneas de relaciones con nombres (ajustadas para marco más grande) */}
-        <svg className="absolute inset-0 pointer-events-none" style={{ width: '950px', height: '620px', left: '32px', top: '32px' }}>
+          <div className="flex-1 min-w-0">
+            <div className="relative bg-gray-50/50 border-2 border-gray-200 rounded-xl p-4 sm:p-6 h-full" style={{ minHeight: '500px', width: '100%', minWidth: '600px' }}>
+        {/* Líneas de relaciones con nombres (ajustadas para responsive) */}
+        <svg className="absolute inset-0 pointer-events-none" style={{ width: '100%', height: '100%', left: '16px', top: '16px' }}>
           {/* Equipo -> Jugador */}
           <line x1="475" y1="90" x2="120" y2="160" stroke="#9333ea" strokeWidth="2" />
           <text x="297" y="120" fill="#6b21a8" fontSize="11" fontWeight="bold" textAnchor="middle">contiene</text>
@@ -283,10 +283,10 @@ const Actividad1DiagramaClases: React.FC<{ onComplete: (score: number) => void }
                 : 'bg-white border-gray-400 hover:border-purple-400'
             }`}
             style={{
-              left: `${clase.posicion.x - 70}px`,
-              top: `${clase.posicion.y - 40}px`,
-              width: '140px',
-              minHeight: '80px'
+              left: `${(clase.posicion.x / 950) * 100}%`,
+              top: `${(clase.posicion.y / 620) * 100}%`,
+              width: '120px',
+              minHeight: '70px'
             }}
           >
             <h5 className="font-bold text-gray-800 text-center text-sm mb-2">{clase.nombre || '?'}</h5>

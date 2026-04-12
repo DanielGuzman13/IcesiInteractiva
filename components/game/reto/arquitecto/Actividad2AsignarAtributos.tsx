@@ -262,6 +262,7 @@ const Actividad2AsignarAtributos: React.FC<{ onComplete: (score: number) => void
           </div>
         )}
 
+
         {/* Título y enunciado en la parte superior */}
         <div className="mb-6">
           <h3 className="text-xl font-bold text-gray-800 mb-2">Actividad 2: Asignación de Atributos</h3>
@@ -272,9 +273,9 @@ const Actividad2AsignarAtributos: React.FC<{ onComplete: (score: number) => void
         </div>
 
         {/* Layout principal: opciones y guía a la izquierda, clases a la derecha */}
-        <div className="flex gap-12 flex-1">
+        <div className="flex flex-col lg:flex-row gap-4 flex-1 overflow-x-auto">
           {/* Panel lateral izquierdo - opciones y guía */}
-          <div className="w-80">
+          <div className="w-full lg:w-80">
             <div className="bg-white/50 border-2 border-gray-200 rounded-xl p-6 h-full flex flex-col">
               {/* Panel de atributos disponibles */}
               <div className="mb-6">
@@ -350,9 +351,9 @@ const Actividad2AsignarAtributos: React.FC<{ onComplete: (score: number) => void
           </div>
 
           {/* Clases con sus atributos - lado derecho */}
-          <div className="flex-1">
-            <div className="grid grid-cols-2 grid-rows-3 gap-1 h-auto">
-              {/* Primera fila */}
+          <div className="flex-1 min-w-0">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 lg:gap-3 h-auto items-start justify-start">
+              {/* Primera fila - Equipo */}
               <div className="col-span-1">
                 {clases[0] && (
                   <div
@@ -411,6 +412,7 @@ const Actividad2AsignarAtributos: React.FC<{ onComplete: (score: number) => void
                   </div>
                 )}
               </div>
+              {/* Segunda fila - Jugador */}
               <div className="col-span-1">
                 {clases[1] && (
                   <div
@@ -469,7 +471,7 @@ const Actividad2AsignarAtributos: React.FC<{ onComplete: (score: number) => void
                   </div>
                 )}
               </div>
-              {/* Segunda fila */}
+              {/* Tercera fila - Partido */}
               <div className="col-span-1">
                 {clases[2] && (
                   <div
@@ -528,6 +530,7 @@ const Actividad2AsignarAtributos: React.FC<{ onComplete: (score: number) => void
                   </div>
                 )}
               </div>
+              {/* Cuarta fila - Estadística */}
               <div className="col-span-1">
                 {clases[3] && (
                   <div
@@ -586,8 +589,8 @@ const Actividad2AsignarAtributos: React.FC<{ onComplete: (score: number) => void
                   </div>
                 )}
               </div>
-              {/* Tercera fila */}
-              <div className="col-span-1 col-start-1">
+              {/* Quinta fila - Táctica */}
+              <div className="col-span-1">
                 {clases[4] && (
                   <div
                     key={clases[4].id}
