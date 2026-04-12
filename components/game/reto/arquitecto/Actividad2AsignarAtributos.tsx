@@ -48,20 +48,20 @@ const Actividad2AsignarAtributos: React.FC<{ onComplete: (score: number) => void
   ]);
 
   const [atributosDisponibles, setAtributosDisponibles] = useState<Atributo[]>([
-    { id: 'a1', nombre: 'nombreDelEquipo', tipo: 'string', claseId: null, esCorrecto: false },
-    { id: 'a2', nombre: 'integrantes', tipo: 'number', claseId: null, esCorrecto: false },
-    { id: 'a3', nombre: 'puntosTotales', tipo: 'number', claseId: null, esCorrecto: false },
-    { id: 'a4', nombre: 'nombreJugador', tipo: 'string', claseId: null, esCorrecto: false },
-    { id: 'a5', nombre: 'posicionCampo', tipo: 'string', claseId: null, esCorrecto: false },
-    { id: 'a6', nombre: 'fechaPartido', tipo: 'string', claseId: null, esCorrecto: false },
-    { id: 'a7', nombre: 'marcadorFinal', tipo: 'string', claseId: null, esCorrecto: false },
-    { id: 'a8', nombre: 'golesMarcados', tipo: 'number', claseId: null, esCorrecto: false },
-    { id: 'a9', nombre: 'asistenciasRealizadas', tipo: 'number', claseId: null, esCorrecto: false },
-    { id: 'a10', nombre: 'formacionTactica', tipo: 'string', claseId: null, esCorrecto: false },
-    { id: 'a11', nombre: 'estrategiaJuego', tipo: 'string', claseId: null, esCorrecto: false },
-    { id: 'a12', nombre: 'minutosJugados', tipo: 'number', claseId: null, esCorrecto: false },
-    { id: 'a13', nombre: 'amonestaciones', tipo: 'number', claseId: null, esCorrecto: false },
-    { id: 'a14', nombre: 'expulsiones', tipo: 'number', claseId: null, esCorrecto: false }
+    { id: 'a1', nombre: 'Nombre Del Equipo', tipo: 'string', claseId: null, esCorrecto: false },
+    { id: 'a2', nombre: 'Integrantes', tipo: 'number', claseId: null, esCorrecto: false },
+    { id: 'a3', nombre: 'Puntos Totales', tipo: 'number', claseId: null, esCorrecto: false },
+    { id: 'a4', nombre: 'Nombre Jugador', tipo: 'string', claseId: null, esCorrecto: false },
+    { id: 'a5', nombre: 'Posicion Campo', tipo: 'string', claseId: null, esCorrecto: false },
+    { id: 'a6', nombre: 'Fecha Partido', tipo: 'string', claseId: null, esCorrecto: false },
+    { id: 'a7', nombre: 'Marcador Final', tipo: 'string', claseId: null, esCorrecto: false },
+    { id: 'a8', nombre: 'Goles Marcados', tipo: 'number', claseId: null, esCorrecto: false },
+    { id: 'a9', nombre: 'Asistencias Realizadas', tipo: 'number', claseId: null, esCorrecto: false },
+    { id: 'a10', nombre: 'Formacion Tactica', tipo: 'string', claseId: null, esCorrecto: false },
+    { id: 'a11', nombre: 'Estrategia Juego', tipo: 'string', claseId: null, esCorrecto: false },
+    { id: 'a12', nombre: 'Minutos Jugados', tipo: 'number', claseId: null, esCorrecto: false },
+    { id: 'a13', nombre: 'Amonestaciones', tipo: 'number', claseId: null, esCorrecto: false },
+    { id: 'a14', nombre: 'Expulsiones', tipo: 'number', claseId: null, esCorrecto: false }
   ]);
 
   const [draggedAttribute, setDraggedAttribute] = useState<string | null>(null);
@@ -70,11 +70,11 @@ const Actividad2AsignarAtributos: React.FC<{ onComplete: (score: number) => void
 
   // Respuestas correctas para validar
   const respuestasCorrectas = {
-    equipo: ['nombreDelEquipo', 'integrantes', 'puntosTotales'],
-    jugador: ['nombreJugador', 'posicionCampo', 'golesMarcados', 'asistenciasRealizadas', 'minutosJugados', 'amonestaciones', 'expulsiones'],
-    partido: ['fechaPartido', 'marcadorFinal', 'estadio', 'arbitro'],
-    estadistica: ['golesMarcados', 'asistenciasRealizadas', 'minutosJugados'],
-    tactica: ['formacionTactica', 'estrategiaJuego']
+    equipo: ['Nombre Del Equipo', 'Integrantes', 'Puntos Totales'],
+    jugador: ['Nombre Jugador', 'Posicion Campo', 'Goles Marcados', 'Asistencias Realizadas', 'Minutos Jugados', 'Amonestaciones', 'Expulsiones'],
+    partido: ['Fecha Partido', 'Marcador Final', 'Estadio', 'Arbitro'],
+    estadistica: ['Goles Marcados', 'Asistencias Realizadas', 'Minutos Jugados'],
+    tactica: ['Formacion Tactica', 'Estrategia Juego']
   };
 
   // Mensajes de analogías arquitecto-fútbol
@@ -92,13 +92,13 @@ const Actividad2AsignarAtributos: React.FC<{ onComplete: (score: number) => void
   // Inicializar con más atributos ya asignados (solo 2 por organizar)
   useEffect(() => {
     const asignacionesPredefinidas = [
-      { atributoId: 'a1', claseId: 'equipo' }, // nombreDelEquipo -> Equipo
-      { atributoId: 'a2', claseId: 'equipo' }, // integrantes -> Equipo
-      { atributoId: 'a4', claseId: 'jugador' }, // nombreJugador -> Jugador
-      { atributoId: 'a5', claseId: 'jugador' }, // posicionCampo -> Jugador
-      { atributoId: 'a6', claseId: 'partido' }, // fechaPartido -> Partido
-      { atributoId: 'a10', claseId: 'tactica' }, // formacionTactica -> Tactica
-      { atributoId: 'a8', claseId: 'estadistica' } // golesMarcados -> Estadistica
+      { atributoId: 'a3', claseId: 'equipo' }, // puntos Totales -> Equipo
+      { atributoId: 'a7', claseId: 'partido' }, // marcador Final -> Partido
+      { atributoId: 'a9', claseId: 'estadistica' }, // asistencias Realizadas -> Estadistica
+      { atributoId: 'a12', claseId: 'jugador' }, // minutos Jugados -> Jugador
+      { atributoId: 'a11', claseId: 'tactica' }, // estrategia Juego -> Tactica
+      { atributoId: 'a13', claseId: 'jugador' }, // amonestaciones -> Jugador
+      { atributoId: 'a14', claseId: 'jugador' } // expulsiones -> Jugador
     ];
 
     const atributosActualizados = atributosDisponibles.map(atributo => {
@@ -214,7 +214,14 @@ const Actividad2AsignarAtributos: React.FC<{ onComplete: (score: number) => void
     const score = calcularScore();
     
     // Mostrar mensaje final
-    setMensajeEmergente("¡Como un arquitecto que finaliza su diseño, ha organizado la estructura del sistema!");
+    const correctos = clases.reduce((acc, clase) => acc + clase.atributosAsignados.filter(a => a.esCorrecto).length, 0);
+    const total = clases.reduce((acc, clase) => acc + clase.atributosAsignados.length, 0);
+    
+    if (correctos === 14 && total === 14) {
+      setMensajeEmergente("¡Excelente! Dominaste la asignación de atributos\nAtributos correctos: 14/14");
+    } else {
+      setMensajeEmergente("¡Como un arquitecto que finaliza su diseño, ha organizado la estructura del sistema!");
+    }
     // No avanzar automáticamente - esperar a que el usuario dé siguiente
   };
 
@@ -224,7 +231,7 @@ const Actividad2AsignarAtributos: React.FC<{ onComplete: (score: number) => void
 
   const resetActivity = () => {
     // Liberar todos los atributos excepto los preasignados
-    const asignacionesPredefinidas = ['a1', 'a2', 'a4', 'a5', 'a6', 'a10', 'a8'];
+    const asignacionesPredefinidas = ['a3', 'a7', 'a9', 'a12', 'a11', 'a13', 'a14'];
     
     setAtributosDisponibles(prev => prev.map(a => 
       asignacionesPredefinidas.includes(a.id) ? a : { ...a, claseId: null, esCorrecto: false }
@@ -259,7 +266,7 @@ const Actividad2AsignarAtributos: React.FC<{ onComplete: (score: number) => void
         <div className="mb-6">
           <h3 className="text-xl font-bold text-gray-800 mb-2">Actividad 2: Asignación de Atributos</h3>
           <p className="text-gray-600 text-sm">
-            La mayoría de los atributos ya están organizados. Solo necesitas asignar los 2 atributos restantes 
+            La mayoría de los atributos ya están organizados. Solo necesitas asignar los 7 atributos restantes 
             en las clases correctas según su responsabilidad en el sistema.
           </p>
         </div>
@@ -344,65 +351,300 @@ const Actividad2AsignarAtributos: React.FC<{ onComplete: (score: number) => void
 
           {/* Clases con sus atributos - lado derecho */}
           <div className="flex-1">
-            <div className="grid grid-cols-2 grid-rows-3 gap-2 h-auto">
-              {clases.map((clase, index) => (
-                <div
-                  key={clase.id}
-                  onDragOver={handleDragOver}
-                  onDrop={(e) => handleDrop(e, clase.id)}
-                  className={`border-2 rounded-xl p-1.5 transition-all ${
-                    index === 4 ? 'lg:col-start-1' : ''
-                  } ${
-                    mostrarResultado
-                      ? 'bg-gray-50/50 border-gray-300'
-                      : 'bg-white/50 border-gray-400 hover:border-purple-400'
-                  }`}
-                >
-                  <h5 className="font-bold text-gray-800 mb-1 text-center text-xs">{clase.nombre}</h5>
-                  <div className="min-h-[70px] space-y-1">
-                    <div className="text-xs text-gray-500 mb-2 text-center">
-                      Faltan: {Math.max(0, 3 - clase.atributosAsignados.length)} atributos
-                    </div>
-                    {clase.atributosAsignados.length === 0 ? (
-                      <div className="text-gray-400 text-sm text-center py-4 border-2 border-dashed border-gray-300 rounded-lg shadow-sm">
-                        Arrastra atributos aquí
+            <div className="grid grid-cols-2 grid-rows-3 gap-1 h-auto">
+              {/* Primera fila */}
+              <div className="col-span-1">
+                {clases[0] && (
+                  <div
+                    key={clases[0].id}
+                    onDragOver={handleDragOver}
+                    onDrop={(e) => handleDrop(e, clases[0].id)}
+                    className={`border-2 rounded-lg p-1 transition-all ${
+                      mostrarResultado
+                        ? 'bg-gray-50/50 border-gray-300'
+                        : 'bg-white/50 border-gray-400 hover:border-purple-400'
+                    }`}
+                  >
+                    <h5 className="font-bold text-gray-800 mb-0.5 text-center text-xs">{clases[0].nombre}</h5>
+                    <div className="min-h-[60px] space-y-0.5">
+                      <div className="text-xs text-gray-500 mb-1 text-center">
+                        Faltan: {Math.max(0, respuestasCorrectas.equipo.length - clases[0].atributosAsignados.length)} atributos
                       </div>
-                    ) : (
-                      clase.atributosAsignados.map(atributo => (
-                        <div
-                          key={atributo.id}
-                          className={`flex items-center justify-between p-2 rounded-lg text-sm ${
-                            mostrarResultado
-                              ? atributo.esCorrecto
-                                ? 'bg-green-100/50 border border-green-300'
-                                : 'bg-red-100/50 border border-red-300'
-                              : atributo.claseId && ['a1', 'a2', 'a4', 'a5', 'a6', 'a10', 'a8'].includes(atributo.id)
-                                ? 'bg-blue-100/50 border border-blue-300'
-                                : 'bg-purple-50/50 border border-purple-200'
-                          }`}
-                        >
-                          <div>
-                            <span className={`font-medium ${mostrarResultado && !atributo.esCorrecto ? 'text-red-600' : 'text-gray-700'}`}>
-                              {atributo.nombre}
-                            </span>
-                          </div>
-                          {!mostrarResultado && !['a1', 'a2', 'a4', 'a5', 'a6', 'a10', 'a8'].includes(atributo.id) && (
-                            <button
-                              onClick={() => handleRemoveAttribute(clase.id, atributo.id)}
-                              className="text-red-500 hover:text-red-700 text-sm font-bold"
-                            >
-                              {'\ud83d\uddd1\ufe0f'}
-                            </button>
-                          )}
-                          {['a1', 'a2', 'a4', 'a5', 'a6', 'a10', 'a8'].includes(atributo.id) && (
-                            <span className="text-xs text-blue-600 font-medium">Ejemplo</span>
-                          )}
+                      {clases[0].atributosAsignados.length === 0 ? (
+                        <div className="text-gray-400 text-xs text-center py-2 border-2 border-dashed border-gray-300 rounded-md shadow-sm">
+                          Arrastra atributos aquí
                         </div>
-                      ))
-                    )}
+                      ) : (
+                        clases[0].atributosAsignados.map(atributo => (
+                          <div
+                            key={atributo.id}
+                            className={`flex items-center justify-between p-1.5 rounded-md text-xs ${
+                              mostrarResultado
+                                ? atributo.esCorrecto
+                                  ? 'bg-green-100/50 border border-green-300'
+                                  : 'bg-red-100/50 border border-red-300'
+                                : atributo.claseId && ['a3', 'a7', 'a9', 'a12', 'a11', 'a13', 'a14'].includes(atributo.id)
+                                  ? 'bg-blue-100/50 border border-blue-300'
+                                  : 'bg-purple-50/50 border border-purple-200'
+                            }`}
+                          >
+                            <div>
+                              <span className={`font-medium ${mostrarResultado && !atributo.esCorrecto ? 'text-red-600' : 'text-gray-700'}`}>
+                                {atributo.nombre}
+                              </span>
+                            </div>
+                            {!mostrarResultado && !['a3', 'a7', 'a9', 'a12', 'a11', 'a13', 'a14'].includes(atributo.id) && (
+                              <button
+                                onClick={() => handleRemoveAttribute(clases[0].id, atributo.id)}
+                                className="text-red-500 hover:text-red-700 text-sm font-bold"
+                              >
+                                🗑️
+                              </button>
+                            )}
+                            {['a3', 'a7', 'a9', 'a12', 'a11', 'a13', 'a14'].includes(atributo.id) && (
+                              <span className="text-xs text-blue-600 font-medium">Ejemplo</span>
+                            )}
+                          </div>
+                        ))
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                )}
+              </div>
+              <div className="col-span-1">
+                {clases[1] && (
+                  <div
+                    key={clases[1].id}
+                    onDragOver={handleDragOver}
+                    onDrop={(e) => handleDrop(e, clases[1].id)}
+                    className={`border-2 rounded-lg p-1 transition-all ${
+                      mostrarResultado
+                        ? 'bg-gray-50/50 border-gray-300'
+                        : 'bg-white/50 border-gray-400 hover:border-purple-400'
+                    }`}
+                  >
+                    <h5 className="font-bold text-gray-800 mb-0.5 text-center text-xs">{clases[1].nombre}</h5>
+                    <div className="min-h-[60px] space-y-0.5">
+                      <div className="text-xs text-gray-500 mb-1 text-center">
+                        Faltan: {Math.max(0, respuestasCorrectas.jugador.length - clases[1].atributosAsignados.length)} atributos
+                      </div>
+                      {clases[1].atributosAsignados.length === 0 ? (
+                        <div className="text-gray-400 text-xs text-center py-2 border-2 border-dashed border-gray-300 rounded-md shadow-sm">
+                          Arrastra atributos aquí
+                        </div>
+                      ) : (
+                        clases[1].atributosAsignados.map(atributo => (
+                          <div
+                            key={atributo.id}
+                            className={`flex items-center justify-between p-1.5 rounded-md text-xs ${
+                              mostrarResultado
+                                ? atributo.esCorrecto
+                                  ? 'bg-green-100/50 border border-green-300'
+                                  : 'bg-red-100/50 border border-red-300'
+                                : atributo.claseId && ['a3', 'a7', 'a9', 'a12', 'a11', 'a13', 'a14'].includes(atributo.id)
+                                  ? 'bg-blue-100/50 border border-blue-300'
+                                  : 'bg-purple-50/50 border border-purple-200'
+                            }`}
+                          >
+                            <div>
+                              <span className={`font-medium ${mostrarResultado && !atributo.esCorrecto ? 'text-red-600' : 'text-gray-700'}`}>
+                                {atributo.nombre}
+                              </span>
+                            </div>
+                            {!mostrarResultado && !['a3', 'a7', 'a9', 'a12', 'a11', 'a13', 'a14'].includes(atributo.id) && (
+                              <button
+                                onClick={() => handleRemoveAttribute(clases[1].id, atributo.id)}
+                                className="text-red-500 hover:text-red-700 text-sm font-bold"
+                              >
+                                🗑️
+                              </button>
+                            )}
+                            {['a3', 'a7', 'a9', 'a12', 'a11', 'a13', 'a14'].includes(atributo.id) && (
+                              <span className="text-xs text-blue-600 font-medium">Ejemplo</span>
+                            )}
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+              {/* Segunda fila */}
+              <div className="col-span-1">
+                {clases[2] && (
+                  <div
+                    key={clases[2].id}
+                    onDragOver={handleDragOver}
+                    onDrop={(e) => handleDrop(e, clases[2].id)}
+                    className={`border-2 rounded-lg p-1 transition-all ${
+                      mostrarResultado
+                        ? 'bg-gray-50/50 border-gray-300'
+                        : 'bg-white/50 border-gray-400 hover:border-purple-400'
+                    }`}
+                  >
+                    <h5 className="font-bold text-gray-800 mb-0.5 text-center text-xs">{clases[2].nombre}</h5>
+                    <div className="min-h-[60px] space-y-0.5">
+                      <div className="text-xs text-gray-500 mb-1 text-center">
+                        Faltan: {Math.max(0, respuestasCorrectas.partido.length - clases[2].atributosAsignados.length)} atributos
+                      </div>
+                      {clases[2].atributosAsignados.length === 0 ? (
+                        <div className="text-gray-400 text-xs text-center py-2 border-2 border-dashed border-gray-300 rounded-md shadow-sm">
+                          Arrastra atributos aquí
+                        </div>
+                      ) : (
+                        clases[2].atributosAsignados.map(atributo => (
+                          <div
+                            key={atributo.id}
+                            className={`flex items-center justify-between p-1.5 rounded-md text-xs ${
+                              mostrarResultado
+                                ? atributo.esCorrecto
+                                  ? 'bg-green-100/50 border border-green-300'
+                                  : 'bg-red-100/50 border border-red-300'
+                                : atributo.claseId && ['a3', 'a7', 'a9', 'a12', 'a11', 'a13', 'a14'].includes(atributo.id)
+                                  ? 'bg-blue-100/50 border border-blue-300'
+                                  : 'bg-purple-50/50 border border-purple-200'
+                            }`}
+                          >
+                            <div>
+                              <span className={`font-medium ${mostrarResultado && !atributo.esCorrecto ? 'text-red-600' : 'text-gray-700'}`}>
+                                {atributo.nombre}
+                              </span>
+                            </div>
+                            {!mostrarResultado && !['a3', 'a7', 'a9', 'a12', 'a11', 'a13', 'a14'].includes(atributo.id) && (
+                              <button
+                                onClick={() => handleRemoveAttribute(clases[2].id, atributo.id)}
+                                className="text-red-500 hover:text-red-700 text-sm font-bold"
+                              >
+                                🗑️
+                              </button>
+                            )}
+                            {['a3', 'a7', 'a9', 'a12', 'a11', 'a13', 'a14'].includes(atributo.id) && (
+                              <span className="text-xs text-blue-600 font-medium">Ejemplo</span>
+                            )}
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div className="col-span-1">
+                {clases[3] && (
+                  <div
+                    key={clases[3].id}
+                    onDragOver={handleDragOver}
+                    onDrop={(e) => handleDrop(e, clases[3].id)}
+                    className={`border-2 rounded-lg p-1 transition-all ${
+                      mostrarResultado
+                        ? 'bg-gray-50/50 border-gray-300'
+                        : 'bg-white/50 border-gray-400 hover:border-purple-400'
+                    }`}
+                  >
+                    <h5 className="font-bold text-gray-800 mb-0.5 text-center text-xs">{clases[3].nombre}</h5>
+                    <div className="min-h-[60px] space-y-0.5">
+                      <div className="text-xs text-gray-500 mb-1 text-center">
+                        Faltan: {Math.max(0, respuestasCorrectas.estadistica.length - clases[3].atributosAsignados.length)} atributos
+                      </div>
+                      {clases[3].atributosAsignados.length === 0 ? (
+                        <div className="text-gray-400 text-xs text-center py-2 border-2 border-dashed border-gray-300 rounded-md shadow-sm">
+                          Arrastra atributos aquí
+                        </div>
+                      ) : (
+                        clases[3].atributosAsignados.map(atributo => (
+                          <div
+                            key={atributo.id}
+                            className={`flex items-center justify-between p-1.5 rounded-md text-xs ${
+                              mostrarResultado
+                                ? atributo.esCorrecto
+                                  ? 'bg-green-100/50 border border-green-300'
+                                  : 'bg-red-100/50 border border-red-300'
+                                : atributo.claseId && ['a3', 'a7', 'a9', 'a12', 'a11', 'a13', 'a14'].includes(atributo.id)
+                                  ? 'bg-blue-100/50 border border-blue-300'
+                                  : 'bg-purple-50/50 border border-purple-200'
+                            }`}
+                          >
+                            <div>
+                              <span className={`font-medium ${mostrarResultado && !atributo.esCorrecto ? 'text-red-600' : 'text-gray-700'}`}>
+                                {atributo.nombre}
+                              </span>
+                            </div>
+                            {!mostrarResultado && !['a3', 'a7', 'a9', 'a12', 'a11', 'a13', 'a14'].includes(atributo.id) && (
+                              <button
+                                onClick={() => handleRemoveAttribute(clases[3].id, atributo.id)}
+                                className="text-red-500 hover:text-red-700 text-sm font-bold"
+                              >
+                                🗑️
+                              </button>
+                            )}
+                            {['a3', 'a7', 'a9', 'a12', 'a11', 'a13', 'a14'].includes(atributo.id) && (
+                              <span className="text-xs text-blue-600 font-medium">Ejemplo</span>
+                            )}
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+              {/* Tercera fila */}
+              <div className="col-span-1 col-start-1">
+                {clases[4] && (
+                  <div
+                    key={clases[4].id}
+                    onDragOver={handleDragOver}
+                    onDrop={(e) => handleDrop(e, clases[4].id)}
+                    className={`border-2 rounded-lg p-1 transition-all ${
+                      mostrarResultado
+                        ? 'bg-gray-50/50 border-gray-300'
+                        : 'bg-white/50 border-gray-400 hover:border-purple-400'
+                    }`}
+                  >
+                    <h5 className="font-bold text-gray-800 mb-0.5 text-center text-xs">{clases[4].nombre}</h5>
+                    <div className="min-h-[60px] space-y-0.5">
+                      <div className="text-xs text-gray-500 mb-1 text-center">
+                        Faltan: {Math.max(0, respuestasCorrectas.tactica.length - clases[4].atributosAsignados.length)} atributos
+                      </div>
+                      {clases[4].atributosAsignados.length === 0 ? (
+                        <div className="text-gray-400 text-xs text-center py-2 border-2 border-dashed border-gray-300 rounded-md shadow-sm">
+                          Arrastra atributos aquí
+                        </div>
+                      ) : (
+                        clases[4].atributosAsignados.map(atributo => (
+                          <div
+                            key={atributo.id}
+                            className={`flex items-center justify-between p-1.5 rounded-md text-xs ${
+                              mostrarResultado
+                                ? atributo.esCorrecto
+                                  ? 'bg-green-100/50 border border-green-300'
+                                  : 'bg-red-100/50 border border-red-300'
+                                : atributo.claseId && ['a3', 'a7', 'a9', 'a12', 'a11', 'a13', 'a14'].includes(atributo.id)
+                                  ? 'bg-blue-100/50 border border-blue-300'
+                                  : 'bg-purple-50/50 border border-purple-200'
+                            }`}
+                          >
+                            <div>
+                              <span className={`font-medium ${mostrarResultado && !atributo.esCorrecto ? 'text-red-600' : 'text-gray-700'}`}>
+                                {atributo.nombre}
+                              </span>
+                            </div>
+                            {!mostrarResultado && !['a3', 'a7', 'a9', 'a12', 'a11', 'a13', 'a14'].includes(atributo.id) && (
+                              <button
+                                onClick={() => handleRemoveAttribute(clases[4].id, atributo.id)}
+                                className="text-red-500 hover:text-red-700 text-sm font-bold"
+                              >
+                                🗑️
+                              </button>
+                            )}
+                            {['a3', 'a7', 'a9', 'a12', 'a11', 'a13', 'a14'].includes(atributo.id) && (
+                              <span className="text-xs text-blue-600 font-medium">Ejemplo</span>
+                            )}
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
