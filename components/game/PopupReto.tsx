@@ -54,7 +54,7 @@ export const PopupReto: React.FC<PopupRetoProps> = ({
       {feedback && (
         <div className="mt-8 flex flex-col items-center animate-fade-in">
           <p className={`text-xl font-bold mb-4 ${feedback === 'correct' ? 'text-green-600' : 'text-red-600'}`}>
-            {feedback === 'correct' ? '¡Correcto! 🎉' : '¡Incorrecto! 😢'}
+            {feedback === 'correct' ? '¡Correcto!' : '¡Incorrecto!'}
           </p>
           <Boton onClick={onNext} variant="primary" className="w-1/2">
             Continuar

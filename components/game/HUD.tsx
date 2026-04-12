@@ -60,7 +60,7 @@ export const HUD: React.FC = () => {
       {/* Puntaje Total */}
       <div className="flex-1 flex justify-start items-center p-2">
         <div className="bg-gray-800 border border-gray-600 rounded-lg px-4 py-2 flex items-center gap-3">
-          <span className="text-2xl">📊</span>
+          <span className="text-2xl">�</span>
           <div className="flex flex-col">
             <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Puntaje Total</span>
             <span className="text-xl font-black text-yellow-400">

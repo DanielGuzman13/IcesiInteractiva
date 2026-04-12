@@ -32,35 +32,35 @@ const Actividad1DiagramaClases: React.FC<{ onComplete: (score: number) => void }
       nombre: '',
       posicion: { x: 475, y: 50 },  // arriba centro
       esCorrecta: false,
-      pista: '🏆 Representa al grupo completo que compite...'
+      pista: 'Representa al grupo completo que compite...'
     },
     {
       id: 'jugador',
       nombre: '',
       posicion: { x: 120, y: 160 },  // izquierda
       esCorrecta: false,
-      pista: '⚽ Cada persona que juega en el campo...'
+      pista: 'Cada persona que juega en el campo...'
     },
     {
       id: 'partido',
       nombre: '',
       posicion: { x: 830, y: 160 },  // derecha
       esCorrecta: false,
-      pista: '📅 El evento completo donde se enfrentan dos equipos...'
+      pista: 'El evento completo donde se enfrentan dos equipos...'
     },
     {
       id: 'estadistica',
       nombre: '',
       posicion: { x: 220, y: 380 },  // abajo izquierda
       esCorrecta: false,
-      pista: '📊 Los números y datos que miden el rendimiento...'
+      pista: 'Los números y datos que miden el rendimiento...'
     },
     {
       id: 'tactica',
       nombre: '',
       posicion: { x: 730, y: 380 },  // abajo derecha
       esCorrecta: false,
-      pista: '🧠 El plan estratégico para ganar el juego...'
+      pista: 'El plan estratégico para ganar el juego...'
     }
   ]);
 
