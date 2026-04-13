@@ -32,6 +32,12 @@ export default function ArquitectoRetoPage() {
     setScoreA2(score);
     setPaso('resultado');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Guardar en Storage
+    const val = localStorage.getItem('currentPlayer') || 'guest';
+    const ans = JSON.parse(localStorage.getItem(`${val}_arquitecto_answers`) || '{}');
+    ans['score'] = scoreA1 + score;
+    localStorage.setItem(`${val}_arquitecto_answers`, JSON.stringify(ans));
     
     // Mostrar mensaje final
     const mensajes = [
@@ -172,7 +178,7 @@ export default function ArquitectoRetoPage() {
                   </button>
                   <Link
                     href="/game"
-                    className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-full transition-all shadow-md text-center"
+                    className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-full transition-all shadow-md text-center flex flex-col items-center leading-tight"
                   >
                     <span>&larr; Volver a la cancha</span>
                     <span className="text-xs font-normal mt-1 opacity-80">(Siguiente rol: Frontend)</span>

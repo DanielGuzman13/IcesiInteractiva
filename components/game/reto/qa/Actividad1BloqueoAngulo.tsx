@@ -180,28 +180,32 @@ export const Actividad1BloqueoAngulo: React.FC<Props> = ({ onComplete }) => {
 
           {/* Defensa (azul) con aura — se mueve a la zona elegida */}
           <motion.g
-            animate={{ cx: defensaPos.x, cy: defensaPos.y }}
+            animate={{ x: defensaPos.x - DEFENSA_START.x, y: defensaPos.y - DEFENSA_START.y }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
           >
             {/* Aura azul pulsante — indica jugador activo */}
-            <circle cx={defensaPos.x} cy={defensaPos.y} r="6.5" fill="#3b82f6" opacity="0.25">
+            <circle cx={DEFENSA_START.x} cy={DEFENSA_START.y} r="6.5" fill="#3b82f6" opacity="0.25">
               {fase === 'elige' && <animate attributeName="r" values="6;8;6" dur="1.2s" repeatCount="indefinite" />}
               {fase === 'elige' && <animate attributeName="opacity" values="0.25;0.08;0.25" dur="1.2s" repeatCount="indefinite" />}
             </circle>
-            <circle cx={defensaPos.x} cy={defensaPos.y} r="3.5" fill="#1d4ed8" stroke="#93c5fd" strokeWidth="1" />
-            <text x={defensaPos.x} y={defensaPos.y + 1.2} textAnchor="middle" fontSize="2.8" fill="white" fontWeight="bold">QA</text>
+            <circle cx={DEFENSA_START.x} cy={DEFENSA_START.y} r="3.5" fill="#1d4ed8" stroke="#93c5fd" strokeWidth="1" />
+            <text x={DEFENSA_START.x} y={DEFENSA_START.y + 1.2} textAnchor="middle" fontSize="2.8" fill="white" fontWeight="bold">QA</text>
           </motion.g>
 
           {/* Balón animado */}
-          <motion.text
-            x={ballPos.x} y={ballPos.y}
-            textAnchor="middle"
-            fontSize="4"
-            animate={{ x: ballPos.x, y: ballPos.y }}
+          <motion.g
+            animate={{ x: ballPos.x - BALL_START.x, y: ballPos.y - BALL_START.y }}
             transition={{ duration: 1, ease: 'easeIn', delay: 0.7 }}
           >
-            ⚽
-          </motion.text>
+            <text
+              x={BALL_START.x}
+              y={BALL_START.y}
+              textAnchor="middle"
+              fontSize="4"
+            >
+              ⚽
+            </text>
+          </motion.g>
 
           {/* GOL en contra */}
           <AnimatePresence>
@@ -232,9 +236,9 @@ export const Actividad1BloqueoAngulo: React.FC<Props> = ({ onComplete }) => {
               key={z.id}
               onClick={() => handleElegir(z)}
               className={`flex flex-col items-center gap-1 rounded-xl border-2 border-dashed p-3 text-sm font-bold transition-all hover:scale-105 active:scale-95 cursor-pointer
-                ${z.resultado === 'correcto' ? 'border-green-400 hover:bg-green-50 text-green-800' :
-                  z.resultado === 'regular'  ? 'border-yellow-400 hover:bg-yellow-50 text-yellow-800' :
-                  'border-red-400 hover:bg-red-50 text-red-800'}`}
+                ${z.resultado === 'correcto' ? 'border-gray-300 hover:bg-gray-50 text-gray-800' :
+                  z.resultado === 'regular'  ? 'border-gray-300 hover:bg-gray-50 text-gray-800' :
+                  'border-gray-300 hover:bg-gray-50 text-gray-800'}`}
             >
               <span className="text-2xl">{z.emoji}</span>
               <span>{z.label}</span>

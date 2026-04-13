@@ -32,7 +32,7 @@ const OPCIONES: BarreraOpt[] = [
     score: 100,
     resultado: 'correcto',
     feedback: '¡Bloqueo perfecto! El peligro pasó sin que tuvieras que esforzarte. (Como Product Owner, decidiste cubrir el riesgo más alto primero para que el proyecto no falle en el lanzamiento)',
-    colorClass: 'border-green-400 hover:bg-green-50 text-green-800',
+    colorClass: 'border-gray-300 hover:bg-gray-50 text-gray-800',
   },
   {
     id: 'ligera',
@@ -43,7 +43,7 @@ const OPCIONES: BarreraOpt[] = [
     score: 50,
     resultado: 'regular',
     feedback: '¡La sacaste con las uñas! El balón casi entra. (Arriesgaste la estabilidad del proyecto por querer avanzar rápido en otras cosas sin asegurar la base)',
-    colorClass: 'border-yellow-400 hover:bg-yellow-50 text-yellow-800',
+    colorClass: 'border-gray-300 hover:bg-gray-50 text-gray-800',
   },
   {
     id: 'sin',
@@ -54,7 +54,7 @@ const OPCIONES: BarreraOpt[] = [
     score: 0,
     resultado: 'incorrecto',
     feedback: '¡Gol en contra! El balón entró caminando. (No escuchaste las alertas de riesgo y un problema predecible destruyó el éxito de tu software)',
-    colorClass: 'border-red-400 hover:bg-red-50 text-red-800',
+    colorClass: 'border-gray-300 hover:bg-gray-50 text-gray-800',
   },
 ];
 

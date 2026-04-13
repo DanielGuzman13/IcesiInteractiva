@@ -151,8 +151,8 @@ const Actividad1DiagramaClases: React.FC<{ onComplete: (score: number) => void }
     const correctas = clases.filter(c => c.esCorrecta).length;
     const incorrectas = clases.filter(c => c.nombre && !c.esCorrecta).length;
     
-    // 50 pts por cada correcta, -10 pts por cada incorrecta
-    return Math.max(0, (correctas * 50) - (incorrectas * 10));
+    // 50 pts por cada correcta, -10 pts por cada incorrecta (Max 200)
+    return Math.min(200, Math.max(0, (correctas * 50) - (incorrectas * 10)));
   };
 
   const handleSubmit = () => {
