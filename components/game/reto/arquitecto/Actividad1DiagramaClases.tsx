@@ -25,40 +25,40 @@ interface PalabraOpcion {
 }
 
 const Actividad1DiagramaClases: React.FC<{ onComplete: (score: number) => void }> = ({ onComplete }) => {
-  // Diagrama base con clases sin nombre (distribución ajustada)
+  // Diagrama base con clases sin nombre (posiciones en porcentajes para ser responsive)
   const [clases, setClases] = useState<Clase[]>([
     {
       id: 'equipo',
       nombre: '',
-      posicion: { x: 475, y: 50 },  // arriba centro
+      posicion: { x: 50, y: 8 },  // arriba centro (porcentajes)
       esCorrecta: false,
       pista: 'Representa al grupo completo que compite...'
     },
     {
       id: 'jugador',
       nombre: '',
-      posicion: { x: 120, y: 160 },  // izquierda
+      posicion: { x: 15, y: 30 },  // izquierda
       esCorrecta: false,
       pista: 'Cada persona que juega en el campo...'
     },
     {
       id: 'partido',
       nombre: '',
-      posicion: { x: 830, y: 160 },  // derecha
+      posicion: { x: 85, y: 30 },  // derecha
       esCorrecta: false,
       pista: 'El evento completo donde se enfrentan dos equipos...'
     },
     {
       id: 'estadistica',
       nombre: '',
-      posicion: { x: 220, y: 380 },  // abajo izquierda
+      posicion: { x: 25, y: 70 },  // abajo izquierda
       esCorrecta: false,
       pista: 'Los números y datos que miden el rendimiento...'
     },
     {
       id: 'tactica',
       nombre: '',
-      posicion: { x: 730, y: 380 },  // abajo derecha
+      posicion: { x: 75, y: 70 },  // abajo derecha
       esCorrecta: false,
       pista: 'El plan estratégico para ganar el juego...'
     }
@@ -170,54 +170,59 @@ const Actividad1DiagramaClases: React.FC<{ onComplete: (score: number) => void }
 
   const todasCompletas = clases.every(c => c.nombre !== '');
 
+  // Calcular posiciones para SVG (en porcentajes)
+  const getClasePos = (id: string) => {
+    const clase = clases.find(c => c.id === id);
+    return clase ? clase.posicion : { x: 0, y: 0 };
+  };
+
   return (
     <CanchaBackground>
-      <div className="w-full h-full flex flex-col">
-        {/* Título y enunciado en la parte superior */}
-        <div className="mb-6">
-          <h3 className="text-xl font-bold text-gray-800 mb-2">Actividad 1: Diseño Estructural del Sistema</h3>
-          <p className="text-gray-600 text-sm">
-            Arrastra los nombres correctos a cada clase del diagrama. Analiza las relaciones y responsabilidades para identificar cada componente.
+      <div className="w-full h-full flex flex-col min-h-0">
+        {/* Título y enunciado - más compacto */}
+        <div className="mb-3 flex-shrink-0">
+          <h3 className="text-lg font-bold text-gray-800 mb-1">Actividad 1: Diseño Estructural del Sistema</h3>
+          <p className="text-gray-600 text-xs">
+            Arrastra los nombres correctos a cada clase del diagrama. Analiza las relaciones para identificar cada componente.
           </p>
         </div>
 
-        {/* Layout principal más compacto */}
-        <div className="flex gap-2 flex-1 overflow-x-auto">
-          {/* Panel de opciones - lado izquierdo */}
-          <div className="w-80">
-            <div className="bg-white/50 border-2 border-gray-200 rounded-xl p-4 h-full">
-              <h4 className="text-sm font-semibold text-gray-700 mb-3">Nombres Disponibles:</h4>
-              <div className="flex flex-wrap gap-2 mb-6">
+        {/* Layout principal - flex-col en móvil, flex-row en desktop */}
+        <div className="flex flex-col lg:flex-row gap-3 flex-1 min-h-0">
+          {/* Panel de opciones - arriba en móvil, izquierda en desktop */}
+          <div className="lg:w-72 flex-shrink-0">
+            <div className="bg-white/60 border-2 border-gray-200 rounded-xl p-3 h-full flex flex-col">
+              <h4 className="text-xs font-semibold text-gray-700 mb-2">Nombres Disponibles:</h4>
+              <div className="flex flex-wrap gap-1.5 mb-3">
                 {palabras.filter(p => !p.usada).map(palabra => (
                   <div
                     key={palabra.id}
                     draggable
                     onDragStart={(e) => handleDragStart(e, palabra.id)}
-                    className="bg-purple-100 hover:bg-purple-200 border-2 border-purple-300 rounded-lg px-3 py-2 cursor-move transition-colors select-none shadow-sm hover:shadow-md"
+                    className="bg-purple-100 hover:bg-purple-200 border border-purple-300 rounded-md px-2 py-1 cursor-move transition-colors select-none shadow-sm text-xs"
                   >
-                    <span className="font-semibold text-gray-800 text-sm">{palabra.texto}</span>
+                    <span className="font-semibold text-gray-800">{palabra.texto}</span>
                   </div>
                 ))}
               </div>
 
-              {/* Instrucciones */}
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-6 text-sm text-blue-800">
-                <strong>Analiza las relaciones:</strong> Las líneas muestran cómo se conectan las clases. 
-                Piensa en el sistema de un partido de fútbol - ¿qué representa cada bloque?
+              {/* Instrucciones compactas */}
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-2 mb-3 text-xs text-blue-800 flex-shrink-0">
+                <strong>Analiza las relaciones:</strong> Las líneas muestran cómo se conectan las clases.
               </div>
 
               {/* Botones */}
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-2 mt-auto">
                 <button
                   onClick={resetActivity}
-                  className="border-2 border-gray-300 hover:border-gray-400 text-gray-700 font-bold py-2 px-6 rounded-full transition-all"
+                  className="border border-gray-300 hover:border-gray-400 text-gray-700 font-semibold py-1.5 px-4 rounded-full transition-all text-sm"
                 >
                   Reiniciar
                 </button>
                 <button
                   onClick={handleSubmit}
                   disabled={!todasCompletas || mostrarResultado}
-                  className={`font-bold py-2 px-8 rounded-full transition-all ${
+                  className={`font-semibold py-1.5 px-4 rounded-full transition-all text-sm ${
                     todasCompletas && !mostrarResultado
                       ? 'bg-purple-600 hover:bg-purple-700 text-white'
                       : 'bg-gray-300 text-gray-500 cursor-not-allowed'
@@ -228,8 +233,8 @@ const Actividad1DiagramaClases: React.FC<{ onComplete: (score: number) => void }
               </div>
 
               {mostrarResultado && (
-                <div className="mt-6 text-center">
-                  <div className={`text-lg font-semibold ${calcularScore() >= 200 ? 'text-green-600' : calcularScore() >= 100 ? 'text-blue-600' : 'text-orange-600'}`}>
+                <div className="mt-3 text-center">
+                  <div className={`text-sm font-semibold ${calcularScore() >= 200 ? 'text-green-600' : calcularScore() >= 100 ? 'text-blue-600' : 'text-orange-600'}`}>
                     {calcularScore() >= 200 ? '¡Perfecto! Dominaste el diseño estructural' :
                      calcularScore() >= 100 ? 'Buen trabajo! La mayoría son correctas' :
                      'Sigue practicando el análisis arquitectónico'}
@@ -239,79 +244,84 @@ const Actividad1DiagramaClases: React.FC<{ onComplete: (score: number) => void }
             </div>
           </div>
 
-          {/* Diagrama de clases - lado derecho */}
-          <div className="flex-1 min-w-0">
-            <div className="relative bg-gray-50/50 border-2 border-gray-200 rounded-xl p-4 sm:p-6 h-full" style={{ minHeight: '500px', width: '100%', minWidth: '600px' }}>
-        {/* Líneas de relaciones con nombres (ajustadas para responsive) */}
-        <svg className="absolute inset-0 pointer-events-none" style={{ width: '100%', height: '100%', left: '16px', top: '16px' }}>
-          {/* Equipo -> Jugador */}
-          <line x1="475" y1="90" x2="120" y2="160" stroke="#9333ea" strokeWidth="2" />
-          <text x="297" y="120" fill="#6b21a8" fontSize="11" fontWeight="bold" textAnchor="middle">contiene</text>
-          
-          {/* Equipo -> Partido */}
-          <line x1="475" y1="90" x2="830" y2="160" stroke="#9333ea" strokeWidth="2" />
-          <text x="652" y="120" fill="#6b21a8" fontSize="11" fontWeight="bold" textAnchor="middle">participa</text>
-          
-          {/* Jugador -> Estadistica */}
-          <line x1="120" y1="200" x2="220" y2="380" stroke="#9333ea" strokeWidth="2" />
-          <text x="170" y="285" fill="#6b21a8" fontSize="11" fontWeight="bold" textAnchor="middle">genera</text>
-          
-          {/* Partido -> Tactica */}
-          <line x1="830" y1="200" x2="730" y2="380" stroke="#9333ea" strokeWidth="2" strokeDasharray="5,5" />
-          <text x="780" y="285" fill="#6b21a8" fontSize="11" fontWeight="bold" textAnchor="middle">usa</text>
-          
-          {/* Partido -> Estadistica */}
-          <line x1="830" y1="200" x2="220" y2="380" stroke="#9333ea" strokeWidth="2" />
-          <text x="525" y="285" fill="#6b21a8" fontSize="11" fontWeight="bold" textAnchor="middle">produce</text>
-          
-          {/* Estadistica -> Tactica */}
-          <line x1="220" y1="420" x2="730" y2="420" stroke="#9333ea" strokeWidth="2" strokeDasharray="5,5" />
-          <text x="475" y="415" fill="#6b21a8" fontSize="11" fontWeight="bold" textAnchor="middle">informa</text>
-        </svg>
+          {/* Diagrama de clases - abajo en móvil, derecha en desktop */}
+          <div className="flex-1 min-h-0 lg:min-h-[500px]">
+            <div className="relative bg-gray-50/50 border-2 border-gray-200 rounded-xl p-4 h-full" style={{ minHeight: '450px' }}>
+              {/* Líneas de relaciones SVG - usando viewBox para escalado proporcional */}
+              <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
+                {/* Equipo -> Jugador */}
+                <line x1="50" y1="8" x2="15" y2="30" stroke="#9333ea" strokeWidth="0.3" vectorEffect="non-scaling-stroke" />
+                <text x="32" y="17" fill="#6b21a8" fontSize="2.5" fontWeight="bold" textAnchor="middle">contiene</text>
 
-        {/* Clases del diagrama (posiciones fijas optimizadas) */}
-        {clases.map(clase => (
-          <div
-            key={clase.id}
-            onDragOver={handleDragOver}
-            onDrop={(e) => handleDrop(e, clase.id)}
-            className={`absolute border-2 rounded-lg p-3 transition-all ${
-              mostrarResultado
-                ? clase.esCorrecta
-                  ? 'bg-green-100 border-green-400'
-                  : 'bg-red-100 border-red-400'
-                : 'bg-white border-gray-400 hover:border-purple-400'
-            }`}
-            style={{
-              left: `${(clase.posicion.x / 950) * 100}%`,
-              top: `${(clase.posicion.y / 620) * 100}%`,
-              width: '120px',
-              minHeight: '70px'
-            }}
-          >
-            <h5 className="font-bold text-gray-800 text-center text-sm mb-2">{clase.nombre || '?'}</h5>
-            {clase.nombre ? (
-              <div className="text-center">
-                <span className={`text-xs ${mostrarResultado && !clase.esCorrecta ? 'text-red-600' : 'text-gray-600'}`}>
-                  {clase.nombre}
-                </span>
-                {!mostrarResultado && (
-                  <button
-                    onClick={() => handleRemoveWord(clase.id)}
-                    className="mt-1 text-red-600 hover:text-red-800 text-sm font-bold"
-                  >
-                    {'\ud83d\uddd1\ufe0f'}
-                  </button>
-                )}
-              </div>
-            ) : (
-              <div className="text-center">
-                <div className="text-xs text-gray-500 italic mb-2">{clase.pista}</div>
-                <div className="text-gray-400 text-sm font-medium">Arrastra aquí</div>
-              </div>
-            )}
-          </div>
-        ))}
+                {/* Equipo -> Partido */}
+                <line x1="50" y1="8" x2="85" y2="30" stroke="#9333ea" strokeWidth="0.3" vectorEffect="non-scaling-stroke" />
+                <text x="68" y="17" fill="#6b21a8" fontSize="2.5" fontWeight="bold" textAnchor="middle">participa</text>
+
+                {/* Jugador -> Estadistica */}
+                <line x1="15" y1="30" x2="25" y2="70" stroke="#9333ea" strokeWidth="0.3" vectorEffect="non-scaling-stroke" />
+                <text x="18" y="52" fill="#6b21a8" fontSize="2.5" fontWeight="bold" textAnchor="middle">genera</text>
+
+                {/* Partido -> Tactica */}
+                <line x1="85" y1="30" x2="75" y2="70" stroke="#9333ea" strokeWidth="0.3" strokeDasharray="2,1" vectorEffect="non-scaling-stroke" />
+                <text x="82" y="52" fill="#6b21a8" fontSize="2.5" fontWeight="bold" textAnchor="middle">usa</text>
+
+                {/* Partido -> Estadistica */}
+                <line x1="85" y1="30" x2="25" y2="70" stroke="#9333ea" strokeWidth="0.3" vectorEffect="non-scaling-stroke" />
+                <text x="57" y="52" fill="#6b21a8" fontSize="2.5" fontWeight="bold" textAnchor="middle">produce</text>
+
+                {/* Estadistica -> Tactica */}
+                <line x1="25" y1="70" x2="75" y2="70" stroke="#9333ea" strokeWidth="0.3" strokeDasharray="2,1" vectorEffect="non-scaling-stroke" />
+                <text x="50" y="68" fill="#6b21a8" fontSize="2.5" fontWeight="bold" textAnchor="middle">informa</text>
+              </svg>
+
+              {/* Clases del diagrama - posicionadas con porcentajes */}
+              {clases.map(clase => (
+                <div
+                  key={clase.id}
+                  onDragOver={handleDragOver}
+                  onDrop={(e) => handleDrop(e, clase.id)}
+                  className={`absolute border-2 rounded-lg p-2 transition-all shadow-sm ${
+                    mostrarResultado
+                      ? clase.esCorrecta
+                        ? 'bg-green-100 border-green-400'
+                        : 'bg-red-100 border-red-400'
+                      : 'bg-white/90 border-gray-400 hover:border-purple-400'
+                  }`}
+                  style={{
+                    left: `${clase.posicion.x}%`,
+                    top: `${clase.posicion.y}%`,
+                    transform: 'translate(-50%, -50%)',
+                    width: '130px',
+                    minHeight: '75px',
+                    zIndex: 10
+                  }}
+                >
+                  <div className="text-center">
+                    <h5 className="font-bold text-gray-800 text-sm mb-1">{clase.nombre || '?'}</h5>
+                    {clase.nombre ? (
+                      <div>
+                        <span className={`text-sm ${mostrarResultado && !clase.esCorrecta ? 'text-red-600' : 'text-gray-600'}`}>
+                          {clase.esCorrecta ? '✓ Correcto' : mostrarResultado ? '✗ Incorrecto' : clase.nombre}
+                        </span>
+                        {!mostrarResultado && (
+                          <button
+                            onClick={() => handleRemoveWord(clase.id)}
+                            className="ml-1 text-red-500 hover:text-red-700 text-xs"
+                            title="Quitar"
+                          >
+                            ×
+                          </button>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="text-center">
+                        <div className="text-xs text-gray-500 italic leading-tight px-1">{clase.pista}</div>
+                        <div className="text-gray-400 text-sm mt-1">Arrastra aquí</div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>

@@ -71,8 +71,8 @@ export default function ArquitectoRetoPage() {
         </div>
       </div>
 
-      {/* Card principal */}
-      <div className="w-full max-w-5xl xl:max-w-6xl bg-white rounded-3xl shadow-2xl overflow-hidden">
+      {/* Card principal - más ancho para el diagrama */}
+      <div className="w-full max-w-7xl 2xl:max-w-[1400px] bg-white rounded-3xl shadow-2xl overflow-hidden">
         {/* Header del rol */}
         <div className="bg-gradient-to-r from-purple-600 to-indigo-500 px-8 py-6 text-white">
           <div className="flex items-center gap-4">
@@ -93,34 +93,10 @@ export default function ArquitectoRetoPage() {
           </div>
         </div>
 
-        <div className="p-6 md:p-8 lg:p-10 xl:p-12">
+        <div className="p-4 md:p-6 lg:p-8">
           {/* INTRO */}
           {paso === 'intro' && (
             <div className="text-center">
-<<<<<<< HEAD
-              <div className="mb-8">
-                <p className="text-gray-600 text-base leading-relaxed max-w-2xl mx-auto mb-6">
-                  El <strong>Arquitecto de Software</strong> es como el director técnico del equipo: no está en cada jugada, 
-                  pero define cómo juega todo el sistema. Diseña la estructura, establece los patrones y asegura que 
-                  cada componente tenga su lugar y función correcta.
-                </p>
-                <div className="bg-white/50 border border-gray-200 rounded-xl p-6 text-left">
-                  <strong className="text-black">Visión del Arquitecto:</strong> <span className="text-black">Un buen diseño arquitectónico es como una formación táctica perfecta - 
-                  cada jugador (clase) sabe dónde estar, qué hacer y cómo comunicarse con los demás.</span>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
-                  {[
-                    { icon: '🧭', title: 'Actividad 1 - Diseño Estructural', desc: 'Identifica las clases principales del sistema y colócalas en el diagrama arquitectónico' },
-                    { icon: '⚙️', title: 'Actividad 2 - Definición de Atributos', desc: 'Asigna los atributos correctos a cada clase según su responsabilidad en el sistema' },
-                  ].map(a => (
-                    <div key={a.title} className="bg-gray-50/50 border border-gray-200 rounded-xl p-4 hover:shadow-md transition-shadow">
-                      <div className="text-2xl mb-2">{a.icon}</div>
-                      <div className="font-bold text-gray-800 text-base">{a.title}</div>
-                      <div className="text-gray-500 text-xs mt-1">{a.desc}</div>
-                    </div>
-                  ))}
-                </div>
-=======
               <p className="text-gray-600 text-base leading-relaxed max-w-xl mx-auto mb-6">
                 El <strong>Arquitecto de Software</strong> es el estratega del equipo: diseña la estructura del sistema,
                 define las clases y sus relaciones, y establece los patrones que guiarán todo el desarrollo.
@@ -136,7 +112,6 @@ export default function ArquitectoRetoPage() {
                     <div className="text-gray-500 text-xs mt-1">{a.desc}</div>
                   </div>
                 ))}
->>>>>>> 8c0c92e (pendiente ajustar pantallas de arquitecto)
               </div>
               <div className="bg-purple-50 border border-purple-200 rounded-xl p-4 mb-6 text-sm text-purple-800 text-left">
                 <strong>🏗️ Puntuación máxima: 200 pts.</strong> Cada actividad vale hasta <strong>100 pts</strong>.
@@ -164,17 +139,9 @@ export default function ArquitectoRetoPage() {
             const nivel = getNivel();
             return (
               <div className="text-center">
-<<<<<<< HEAD
-                <div className="text-6xl mb-4 animate-bounce">
-                  {totalScore >= 180 ? '🧭' : totalScore >= 120 ? '✅' : '⚠️'}
-                </div>
-                <h2 className="text-3xl font-extrabold text-gray-800 mb-2">Diseño Arquitectónico Completado</h2>
-                <p className="text-gray-500 mb-6">Has completado el análisis estructural del sistema</p>
-=======
                 <div className="text-6xl mb-4">{total >= 180 ? '🏆' : total >= 120 ? '🥈' : '🥉'}</div>
                 <h2 className="text-3xl font-extrabold text-gray-800 mb-2">¡Reto Completado!</h2>
                 <p className="text-gray-500 mb-6">Has completado las 2 actividades del rol <strong>Arquitecto de Software</strong></p>
->>>>>>> 8c0c92e (pendiente ajustar pantallas de arquitecto)
 
                 <div className="grid grid-cols-3 gap-3 mb-6">
                   {[
@@ -207,12 +174,8 @@ export default function ArquitectoRetoPage() {
                     href="/game"
                     className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-full transition-all shadow-md text-center"
                   >
-<<<<<<< HEAD
-                    &larr; Volver a la cancha
-=======
                     <span>&larr; Volver a la cancha</span>
                     <span className="text-xs font-normal mt-1 opacity-80">(Siguiente rol: Frontend)</span>
->>>>>>> 8c0c92e (pendiente ajustar pantallas de arquitecto)
                   </Link>
                 </div>
               </div>
