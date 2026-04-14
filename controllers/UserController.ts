@@ -39,13 +39,19 @@ export class UserController {
       // Buscar usuario por nombre
       let user = await this.userRepository.findByName(name.trim());
 
-      // Si no existe, crearlo
-      if (!user) {
-        user = await this.userRepository.create({ 
-          name: name.trim(),
-          salon: salon as '205M' | '206M'
-        });
+      // Si ya existe, retornar error
+      if (user) {
+        return NextResponse.json(
+          { error: 'Este nombre de usuario ya está en uso. Por favor elige otro nombre.' },
+          { status: 409 } // 409 Conflict
+        );
       }
+
+      // Crear nuevo usuario
+      user = await this.userRepository.create({ 
+        name: name.trim(),
+        salon: salon as '205M' | '206M'
+      });
 
       // Actualizar último login
       await this.userRepository.updateLastLogin(user.id);
