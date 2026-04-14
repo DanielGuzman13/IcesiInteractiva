@@ -18,9 +18,9 @@ const VB_W = 100;
 const VB_H = 56.25;
 
 const RIVAL_PATH_START = { x: 60, y: VB_H * 0.5 };
-const RIVAL_PATH_END   = { x: 8,  y: VB_H * 0.5 };
-const LATERAL_START    = { x: 70, y: VB_H * 0.85 };
-const LATERAL_RECOVER  = { x: 45, y: VB_H * 0.5 };
+const RIVAL_PATH_END = { x: 8, y: VB_H * 0.5 };
+const LATERAL_START = { x: 70, y: VB_H * 0.85 };
+const LATERAL_RECOVER = { x: 45, y: VB_H * 0.5 };
 
 const ACCIONES: Accion[] = [
   {
@@ -28,7 +28,7 @@ const ACCIONES: Accion[] = [
     label: 'Correr y Recuperar',
     emoji: '⚡',
     descripcion: 'Sprints a máxima velocidad para interceptar',
-    feedback: '¡Rollback ejecutado! Detectaste el fallo en producción y devolviste el sistema a un estado estable al instante. Esto es monitoreo proactivo y recuperación automática.',
+    feedback: '¡Rollback ejecutado! Como Lateral (DevOps), detectaste el fallo en producción y devolviste el sistema a un estado estable. Esto es monitoreo proactivo.',
     score: 100,
     resultado: 'correcto',
     color: 'border-gray-300 hover:bg-gray-50 text-gray-800',
@@ -38,7 +38,7 @@ const ACCIONES: Accion[] = [
     label: 'Pedir Apoyo',
     emoji: '📣',
     descripcion: 'Pides refuerzos a otro jugador',
-    feedback: 'Error detectado tarde. El sistema se salvó por poco gracias al equipo, pero un buen DevOps tiene alertas automáticas que no dependen de que alguien llame a otro.',
+    feedback: 'Error detectado tarde. Como Lateral (DevOps), el sistema se salvó por poco gracias al equipo, pero un buen DevOps tiene alertas automáticas.',
     score: 50,
     resultado: 'regular',
     color: 'border-gray-300 hover:bg-gray-50 text-gray-800',
@@ -48,7 +48,7 @@ const ACCIONES: Accion[] = [
     label: 'Quedarse Quieto',
     emoji: '🪨',
     descripcion: 'Confías en que el portero lo ataje',
-    feedback: '¡Gol! No tenías monitoreo activo del sistema. El error llegó al usuario final y destruyó la experiencia. Como DevOps, el uptime es tu responsabilidad 24/7.',
+    feedback: '¡Gol! No tenías monitoreo activo del sistema. El error llegó al usuario. Como Lateral (DevOps), el uptime es tu responsabilidad 24/7.',
     score: 0,
     resultado: 'incorrecto',
     color: 'border-gray-300 hover:bg-gray-50 text-gray-800',
@@ -95,7 +95,7 @@ export const Actividad2RegresoHeroico: React.FC<Props> = ({ onComplete }) => {
   };
 
   const colorBorde = { correcto: 'border-green-500', regular: 'border-yellow-500', incorrecto: 'border-red-500' };
-  const colorBg    = { correcto: 'bg-green-50',     regular: 'bg-yellow-50',     incorrecto: 'bg-red-50'     };
+  const colorBg = { correcto: 'bg-green-50', regular: 'bg-yellow-50', incorrecto: 'bg-red-50' };
 
   return (
     <div className="w-full">
@@ -111,24 +111,24 @@ export const Actividad2RegresoHeroico: React.FC<Props> = ({ onComplete }) => {
         style={{ background: '#2E7D32', paddingBottom: '56.25%' }}>
         <svg viewBox={`0 0 ${VB_W} ${VB_H}`} className="absolute inset-0 w-full h-full">
           <rect width={VB_W} height={VB_H} fill="#2E7D32" />
-          {[0,1,2,3,4].map(i => (
-            <rect key={i} x={i*20} y={0} width={10} height={VB_H} fill="#297528" opacity="0.35" />
+          {[0, 1, 2, 3, 4].map(i => (
+            <rect key={i} x={i * 20} y={0} width={10} height={VB_H} fill="#297528" opacity="0.35" />
           ))}
 
           {/* Área y arco izquierdo */}
-          <rect x={0} y={VB_H*0.22} width={VB_W*0.18} height={VB_H*0.56} fill="none" stroke="white" strokeWidth="0.5" opacity="0.6"/>
-          <rect x={0} y={VB_H*0.36} width={VB_W*0.08} height={VB_H*0.28} fill="none" stroke="white" strokeWidth="0.4" opacity="0.5"/>
-          <rect x={0} y={VB_H*0.38} width="2" height={VB_H*0.24} fill="#888" stroke="white" strokeWidth="0.6" rx="0.3"/>
+          <rect x={0} y={VB_H * 0.22} width={VB_W * 0.18} height={VB_H * 0.56} fill="none" stroke="white" strokeWidth="0.5" opacity="0.6" />
+          <rect x={0} y={VB_H * 0.36} width={VB_W * 0.08} height={VB_H * 0.28} fill="none" stroke="white" strokeWidth="0.4" opacity="0.5" />
+          <rect x={0} y={VB_H * 0.38} width="2" height={VB_H * 0.24} fill="#888" stroke="white" strokeWidth="0.6" rx="0.3" />
 
           {/* Portero propio */}
-          <circle cx={4} cy={VB_H*0.5} r="3" fill="#1d4ed8" stroke="white" strokeWidth="0.5" opacity="0.8"/>
-          <text x={4} y={VB_H*0.5+1} textAnchor="middle" fontSize="2.2" fill="white">PO</text>
+          <circle cx={4} cy={VB_H * 0.5} r="3" fill="#1d4ed8" stroke="white" strokeWidth="0.5" opacity="0.8" />
+          <text x={4} y={VB_H * 0.5 + 1} textAnchor="middle" fontSize="2.2" fill="white">PO</text>
 
           {/* Compañero de apoyo (visible si eligió apoyo) */}
           {elegida?.id === 'apoyo' && (
             <motion.g initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.5 }}>
-              <circle cx={30} cy={VB_H*0.3} r="3" fill="#1d4ed8" stroke="#67e8f9" strokeWidth="0.8"/>
-              <text x={30} y={VB_H*0.3+1} textAnchor="middle" fontSize="2.2" fill="white">A</text>
+              <circle cx={30} cy={VB_H * 0.3} r="3" fill="#1d4ed8" stroke="#67e8f9" strokeWidth="0.8" />
+              <text x={30} y={VB_H * 0.3 + 1} textAnchor="middle" fontSize="2.2" fill="white">A</text>
             </motion.g>
           )}
 
@@ -139,10 +139,10 @@ export const Actividad2RegresoHeroico: React.FC<Props> = ({ onComplete }) => {
               : { x: 0, y: 0 }}
             transition={{ duration: 1.5, ease: 'easeIn' }}
           >
-            <circle cx={RIVAL_PATH_START.x} cy={RIVAL_PATH_START.y} r="3.5" fill="#c0392b" stroke="white" strokeWidth="0.7"/>
-            <text x={RIVAL_PATH_START.x} y={RIVAL_PATH_START.y+1.2} textAnchor="middle" fontSize="2.5" fill="white" fontWeight="bold">R</text>
+            <circle cx={RIVAL_PATH_START.x} cy={RIVAL_PATH_START.y} r="3.5" fill="#c0392b" stroke="white" strokeWidth="0.7" />
+            <text x={RIVAL_PATH_START.x} y={RIVAL_PATH_START.y + 1.2} textAnchor="middle" fontSize="2.5" fill="white" fontWeight="bold">R</text>
             {/* Balón junto al rival */}
-            <text x={RIVAL_PATH_START.x+4} y={RIVAL_PATH_START.y+1} fontSize="3.5">⚽</text>
+            <text x={RIVAL_PATH_START.x + 4} y={RIVAL_PATH_START.y + 1} fontSize="3.5">⚽</text>
           </motion.g>
 
           {/* Lateral DevOps — solo se mueve si eligió "correr" */}
@@ -155,18 +155,18 @@ export const Actividad2RegresoHeroico: React.FC<Props> = ({ onComplete }) => {
             {/* Aura pulsante solo en fase elige */}
             {fase === 'elige' && (
               <circle cx={LATERAL_START.x} cy={LATERAL_START.y} r="7" fill="#06b6d4" opacity="0.2">
-                <animate attributeName="r" values="6;9;6" dur="1.2s" repeatCount="indefinite"/>
-                <animate attributeName="opacity" values="0.2;0.06;0.2" dur="1.2s" repeatCount="indefinite"/>
+                <animate attributeName="r" values="6;9;6" dur="1.2s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.2;0.06;0.2" dur="1.2s" repeatCount="indefinite" />
               </circle>
             )}
-            <circle cx={LATERAL_START.x} cy={LATERAL_START.y} r="3.5" fill="#0891b2" stroke="#67e8f9" strokeWidth="1"/>
-            <text x={LATERAL_START.x} y={LATERAL_START.y+1.2} textAnchor="middle" fontSize="2.6" fill="white" fontWeight="bold">DO</text>
+            <circle cx={LATERAL_START.x} cy={LATERAL_START.y} r="3.5" fill="#0891b2" stroke="#67e8f9" strokeWidth="1" />
+            <text x={LATERAL_START.x} y={LATERAL_START.y + 1.2} textAnchor="middle" fontSize="2.6" fill="white" fontWeight="bold">DO</text>
           </motion.g>
 
           {/* GOL */}
           <AnimatePresence>
             {golazo && (
-              <motion.text x={VB_W/2} y={VB_H/2} textAnchor="middle" fontSize="9"
+              <motion.text x={VB_W / 2} y={VB_H / 2} textAnchor="middle" fontSize="9"
                 fill="#ef4444" fontWeight="bold"
                 initial={{ opacity: 0, scale: 0.4 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
                 transition={{ duration: 0.5 }}>
@@ -212,7 +212,7 @@ export const Actividad2RegresoHeroico: React.FC<Props> = ({ onComplete }) => {
                   {elegida.score > 0 ? `+${elegida.score} pts` : '0 pts — Sistema caído'}
                 </span>
               </div>
-              <br/>
+              <br />
               <button onClick={() => onComplete(elegida.score)}
                 className="bg-cyan-600 hover:bg-cyan-700 active:scale-95 text-white font-bold py-3 px-8 rounded-full transition-all shadow-md">
                 Ver Resultado Final 🏆

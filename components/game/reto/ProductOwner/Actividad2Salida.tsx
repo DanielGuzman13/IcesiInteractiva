@@ -102,22 +102,15 @@ export const Actividad2Salida: React.FC<Props> = ({ onComplete }) => {
 
   return (
     <div className="w-full">
-      {/* Header */}
-      <div className="text-center mb-6">
-        <span className="inline-block bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full mb-2 uppercase tracking-wide">
-          Actividad 2 de 2
-        </span>
-        <h2 className="text-2xl font-extrabold text-gray-800">🎯 El Director de Salida</h2>
-        <p className="text-gray-500 mt-1 text-sm">Tienes el balón. Decide a quién pasarle para iniciar el avance</p>
-      </div>
+      <p className="text-gray-700 text-base font-semibold mb-4 text-center">Tienes el balón. Decide a quién pasarle para iniciar el avance</p>
 
       {/* Instrucción */}
-      <p className="text-center text-sm text-gray-600 mb-4">
+      {/* <p className="text-center text-sm text-gray-600 mb-4">
         👆 Haz clic en el jugador al que quieras pasarle
-      </p>
+      </p> */}
 
       {/* Campo SVG */}
-      <div className="relative w-full rounded-xl overflow-hidden shadow-inner border-4 border-green-900" style={{ background: '#2E7D32' }}>
+      <div className="relative w-full rounded-xl overflow-hidden shadow-inner border-4 border-green-800" style={{ background: '#2E7D32' }}>
         <svg viewBox="0 0 100 100" className="w-full" style={{ display: 'block', aspectRatio: '16/9', maxHeight: '340px' }}>
           <rect width="100" height="100" fill="#2E7D32" />
 
@@ -143,7 +136,7 @@ export const Actividad2Salida: React.FC<Props> = ({ onComplete }) => {
           {/* Portero / PO */}
           <circle cx={PO.cx} cy={PO.cy} r="4" fill="#1d4ed8" stroke="white" strokeWidth="0.8" />
           <text x={PO.cx} y={PO.cy + 1.2} textAnchor="middle" fontSize="3" fill="white" fontWeight="bold">PO</text>
-          <text x={PO.cx} y={PO.cy + 7} textAnchor="middle" fontSize="2.5" fill="white" opacity="0.8">Portero</text>
+          <text x={PO.cx} y={PO.cy + 7} textAnchor="middle" fontSize="2.5" fill="white" opacity="0.8">Portero (Product Owner)</text>
 
           {/* Compañeros clicables */}
           {COMPANEROS.map(comp => (
@@ -205,20 +198,18 @@ export const Actividad2Salida: React.FC<Props> = ({ onComplete }) => {
               ¡{elegido.label}!
             </h3>
             <p className="text-gray-600 mb-2 leading-relaxed">
-              El <strong>Product Owner</strong> da el &quot;primer pase&quot; de cada función del software.
-              Al elegir el <em>{elegido.label}</em>, decidiste{' '}
+              El <strong>Product Owner </strong> da el &quot;primer pase&quot; de cada función del software.
+              Al elegir el <strong>{elegido.label}</strong>, decidiste{' '}
               <strong className="text-blue-700">{elegido.equivalencia}</strong>
             </p>
-            <p className="text-xs text-gray-400 mb-4 italic">
+            <p className="text-xs text-gray-600 mb-4 italic">
               Esta decisión define si el equipo avanza lento y seguro, o rápido y con más riesgo.
             </p>
-            <div className="bg-blue-50 border border-blue-200 rounded-xl py-3 px-5 mb-6 inline-block">
-              <span className="text-blue-600 font-black text-2xl">+{elegido.score} pts</span>
-            </div>
+            {/* Score badge removed - redundant */}
             <br />
             <button
               onClick={handleFinalizar}
-              className="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold py-3 px-8 rounded-full transition-all shadow-md"
+              className="bg-gray-800 hover:bg-gray-900 active:scale-95 text-white font-bold py-3 px-8 rounded-full transition-all shadow-md"
             >
               Ver Resultado Final 🏆
             </button>

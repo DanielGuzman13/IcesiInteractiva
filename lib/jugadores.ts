@@ -17,7 +17,7 @@ export interface JugadorType {
 const equipoA: JugadorType[] = [
   {
     id: "a-portero",
-    rol: "Product Owner",
+    rol: "Portero (Product Owner)",
     equipo: "A",
     color: "bg-blue-600",
     posicion: { top: "50%", left: "5%" },
@@ -26,7 +26,7 @@ const equipoA: JugadorType[] = [
   },
   {
     id: "a-defensa-central-1",
-    rol: "QA / Tester",
+    rol: "Defensa (QA)",
     equipo: "A",
     color: "bg-blue-600",
     posicion: { top: "40%", left: "15%" },
@@ -35,7 +35,7 @@ const equipoA: JugadorType[] = [
   },
   {
     id: "a-defensa-central-2",
-    rol: "QA / Tester",
+    rol: "Defensa (QA)",
     equipo: "A",
     color: "bg-blue-600",
     posicion: { top: "60%", left: "15%" },
@@ -44,7 +44,7 @@ const equipoA: JugadorType[] = [
   },
   {
     id: "a-lateral-izquierdo",
-    rol: "DevOps",
+    rol: "Lateral (DevOps)",
     equipo: "A",
     color: "bg-blue-600",
     posicion: { top: "22%", left: "18%" },
@@ -53,7 +53,7 @@ const equipoA: JugadorType[] = [
   },
   {
     id: "a-lateral-derecho",
-    rol: "DevOps",
+    rol: "Lateral (DevOps)",
     equipo: "A",
     color: "bg-blue-600",
     posicion: { top: "78%", left: "18%" },
@@ -62,7 +62,7 @@ const equipoA: JugadorType[] = [
   },
   {
     id: "a-medio-centro-1",
-    rol: "Backend",
+    rol: "Mediocentro (Backend)",
     equipo: "A",
     color: "bg-blue-600",
     posicion: { top: "28%", left: "36%" },
@@ -71,7 +71,7 @@ const equipoA: JugadorType[] = [
   },
   {
     id: "a-medio-centro-2",
-    rol: "Backend",
+    rol: "Mediocentro (Backend)",
     equipo: "A",
     color: "bg-blue-600",
     posicion: { top: "72%", left: "36%" },
@@ -80,7 +80,7 @@ const equipoA: JugadorType[] = [
   },
   {
     id: "a-volante-ofensivo",
-    rol: "Team Manager",
+    rol: "Mediocampista (Team Manager)",
     equipo: "A",
     color: "bg-blue-600",
     posicion: { top: "50%", left: "33%" },
@@ -89,7 +89,7 @@ const equipoA: JugadorType[] = [
   },
   {
     id: "a-delantero-1",
-    rol: "Frontend",
+    rol: "Delantero (Frontend)",
     equipo: "A",
     color: "bg-blue-600",
     posicion: { top: "20%", left: "58%" },
@@ -98,7 +98,7 @@ const equipoA: JugadorType[] = [
   },
   {
     id: "a-delantero-2",
-    rol: "Frontend",
+    rol: "Delantero (Frontend)",
     equipo: "A",
     color: "bg-blue-600",
     posicion: { top: "50%", left: "63%" },
@@ -107,7 +107,7 @@ const equipoA: JugadorType[] = [
   },
   {
     id: "a-delantero-3",
-    rol: "Frontend",
+    rol: "Delantero (Frontend)",
     equipo: "A",
     color: "bg-blue-600",
     posicion: { top: "80%", left: "58%" },
@@ -116,7 +116,7 @@ const equipoA: JugadorType[] = [
   },
   {
     id: "a-tecnico",
-    rol: "Técnico",
+    rol: "Técnico (Arquitecto)",
     equipo: "A",
     color: "bg-indigo-700",
     posicion: { top: "50%", left: "50%" }, // no se usa dentro de la cancha

@@ -28,7 +28,7 @@ const DIRECCIONES: Direccion[] = [
     descripcion: 'Botas el balón fuera del área por la banda',
     score: 100,
     resultado: 'correcto',
-    feedback: '¡Balón fuera! Un buen QA sabe cuándo un error es tan grave que debe detener el proceso para limpiar el sistema. Priorizaste la seguridad del arco sobre el juego bonito.',
+    feedback: '¡Balón fuera! Como Defensa (QA), sabes cuándo un error es tan grave que debe detener el proceso para limpiar el sistema. Priorizaste la seguridad del arco sobre el juego bonito.',
     ballTarget: { x: 10, y: VB_H * 0.12 },
     angle: -130,
   },
@@ -39,7 +39,7 @@ const DIRECCIONES: Direccion[] = [
     descripcion: 'Despejas hacia medio campo, zona dividida',
     score: 50,
     resultado: 'regular',
-    feedback: 'Juego dividido. Reportaste el error pero lo dejaste en manos de otros sin asegurar que se eliminara el riesgo. El peligro sigue latente.',
+    feedback: 'Juego dividido. Como Defensa (QA), reportaste el error pero lo dejaste en manos de otros sin asegurar que se eliminara el riesgo. El peligro sigue latente.',
     ballTarget: { x: 50, y: VB_H * 0.5 },
     angle: 0,
   },
@@ -50,7 +50,7 @@ const DIRECCIONES: Direccion[] = [
     descripcion: 'Le devuelves el balón al portero bajo presión',
     score: 0,
     resultado: 'incorrecto',
-    feedback: '¡Error fatal! Intentar una solución rápida sin pensar en las consecuencias puede romper otras partes del sistema. Regalaste un gol por no ser precavido.',
+    feedback: '¡Error fatal! Como Defensa (QA), intentar una solución rápida sin pensar en las consecuencias puede romper otras partes del sistema. Regalaste un gol por no ser precavido.',
     ballTarget: { x: 6, y: VB_H * 0.85 },
     angle: 140,
   },
@@ -119,14 +119,14 @@ export const Actividad2DespejeSeg: React.FC<Props> = ({ onComplete }) => {
           className="absolute inset-0 w-full h-full"
         >
           <rect width={VB_W} height={VB_H} fill="#2E7D32" />
-          {[0,1,2,3,4].map(i => (
-            <rect key={i} x={i*20} y={0} width={10} height={VB_H} fill="#297528" opacity="0.35" />
+          {[0, 1, 2, 3, 4].map(i => (
+            <rect key={i} x={i * 20} y={0} width={10} height={VB_H} fill="#297528" opacity="0.35" />
           ))}
 
           {/* Líneas del campo */}
-          <rect x="0" y={VB_H*0.22} width={VB_W*0.18} height={VB_H*0.56} fill="none" stroke="white" strokeWidth="0.5" opacity="0.6" />
-          <rect x="0" y={VB_H*0.36} width={VB_W*0.08} height={VB_H*0.28} fill="none" stroke="white" strokeWidth="0.4" opacity="0.5" />
-          <rect x="0" y={VB_H*0.38} width="2" height={VB_H*0.24} fill="#888" stroke="white" strokeWidth="0.6" rx="0.3" />
+          <rect x="0" y={VB_H * 0.22} width={VB_W * 0.18} height={VB_H * 0.56} fill="none" stroke="white" strokeWidth="0.5" opacity="0.6" />
+          <rect x="0" y={VB_H * 0.36} width={VB_W * 0.08} height={VB_H * 0.28} fill="none" stroke="white" strokeWidth="0.4" opacity="0.5" />
+          <rect x="0" y={VB_H * 0.38} width="2" height={VB_H * 0.24} fill="#888" stroke="white" strokeWidth="0.6" rx="0.3" />
 
           {/* Punto penal */}
           <circle cx={BALL_POS.x} cy={BALL_POS.y} r="0.8" fill="white" opacity="0.7" />
@@ -221,7 +221,7 @@ export const Actividad2DespejeSeg: React.FC<Props> = ({ onComplete }) => {
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                 transition={{ duration: 0.6 }}
               >
-                <text x={VB_W/2} y={VB_H/2} textAnchor="middle" fontSize="9"
+                <text x={VB_W / 2} y={VB_H / 2} textAnchor="middle" fontSize="9"
                   fill="#ef4444" fontWeight="bold" opacity="0.95">¡GOL!</text>
               </motion.g>
             )}
@@ -239,7 +239,7 @@ export const Actividad2DespejeSeg: React.FC<Props> = ({ onComplete }) => {
               className={`flex flex-col items-center gap-1 rounded-xl border-2 border-dashed p-3 text-sm font-bold transition-all hover:scale-105 active:scale-95
                 ${d.resultado === 'correcto' ? 'border-gray-300 hover:bg-gray-50 text-gray-800'
                   : d.resultado === 'regular' ? 'border-gray-300 hover:bg-gray-50 text-gray-800'
-                  : 'border-gray-300 hover:bg-gray-50 text-gray-800'}`}
+                    : 'border-gray-300 hover:bg-gray-50 text-gray-800'}`}
             >
               <span className="text-2xl">{d.emoji}</span>
               <span>{d.label}</span>
