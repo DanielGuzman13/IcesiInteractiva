@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Actividad1PaseFiltrado } from '../../../../components/game/reto/manager/Actividad1PaseFiltrado';
 import { Actividad2CambioFrente } from '../../../../components/game/reto/manager/Actividad2CambioFrente';
+import { useGamePersistence } from '@/hooks/useGamePersistence';
 
 // Score persistido en localStorage (simula UserAnswer hasta que BD esté conectada)
 const guardarScore = (actividad: string, score: number) => {
@@ -17,6 +18,7 @@ const guardarScore = (actividad: string, score: number) => {
 type Paso = 'intro' | 'actividad1' | 'actividad2' | 'resultado';
 
 export default function ManagerRetoPage() {
+  const { saveAnswer } = useGamePersistence();
   const [paso, setPaso] = useState<Paso>('intro');
   const [scoreA1, setScoreA1] = useState(0);
   const [scoreA2, setScoreA2] = useState(0);
@@ -26,6 +28,9 @@ export default function ManagerRetoPage() {
     guardarScore('actividad1_pase', score);
     setPaso('actividad2');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Guardar respuesta en PostgreSQL
+    saveAnswer('manager-actividad-1', { score }, score > 0, score);
   };
 
   const handleA2Complete = (score: number) => {
@@ -33,6 +38,9 @@ export default function ManagerRetoPage() {
     guardarScore('actividad2_cambio', score);
     setPaso('resultado');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Guardar respuesta en PostgreSQL
+    saveAnswer('manager-actividad-2', { score }, score > 0, score);
   };
 
   const total = scoreA1 + scoreA2;

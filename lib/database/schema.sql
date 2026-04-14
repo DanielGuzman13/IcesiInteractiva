@@ -5,6 +5,7 @@ CREATE TABLE users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name VARCHAR(255) NOT NULL,
     name_normalized VARCHAR(255) UNIQUE NOT NULL,
+    salon VARCHAR(10) CHECK (salon IN ('205M', '206M')),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     last_login_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     total_score INTEGER DEFAULT 0,
@@ -89,8 +90,8 @@ CREATE TABLE user_play_progress (
 CREATE TABLE user_answers (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-    challenge_id UUID REFERENCES challenges(id) ON DELETE CASCADE,
-    play_step_id UUID REFERENCES play_steps(id) ON DELETE CASCADE,
+    challenge_id VARCHAR(255) NOT NULL,
+    play_step_id VARCHAR(255) NOT NULL,
     answer JSONB NOT NULL,
     is_correct BOOLEAN NOT NULL,
     response_time INTEGER NOT NULL, -- segundos
@@ -109,7 +110,7 @@ CREATE TABLE match_states (
     team_b_score INTEGER DEFAULT 0,
     ball_top VARCHAR(10) NOT NULL,
     ball_left VARCHAR(10) NOT NULL,
-    current_role VARCHAR(50),
+    current_game_role VARCHAR(50),
     ball_moving BOOLEAN DEFAULT FALSE,
     target_top VARCHAR(10),
     target_left VARCHAR(10),

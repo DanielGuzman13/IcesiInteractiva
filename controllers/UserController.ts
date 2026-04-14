@@ -12,7 +12,7 @@ export class UserController {
   async login(request: NextRequest) {
     try {
       const body = await request.json();
-      const { name } = body;
+      const { name, salon } = body;
 
       if (typeof name !== 'string' || name.trim().length === 0) {
         return NextResponse.json(
@@ -28,12 +28,23 @@ export class UserController {
         );
       }
 
+      // Validar salon si se proporciona
+      if (salon && salon !== '205M' && salon !== '206M') {
+        return NextResponse.json(
+          { error: 'El salón debe ser 205M o 206M' },
+          { status: 400 }
+        );
+      }
+
       // Buscar usuario por nombre
       let user = await this.userRepository.findByName(name.trim());
 
       // Si no existe, crearlo
       if (!user) {
-        user = await this.userRepository.create({ name: name.trim() });
+        user = await this.userRepository.create({ 
+          name: name.trim(),
+          salon: salon as '205M' | '206M'
+        });
       }
 
       // Actualizar último login
@@ -43,6 +54,7 @@ export class UserController {
         user: {
           id: user.id,
           name: user.name,
+          salon: user.salon,
           totalScore: user.totalScore,
           currentLevel: user.currentLevel
         }

@@ -4,10 +4,12 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Actividad1TiroLibre } from '@/components/game/reto/ProductOwner/Actividad1TiroLibre';
 import { Actividad2Salida } from '@/components/game/reto/ProductOwner/Actividad2Salida';
+import { useGamePersistence } from '@/hooks/useGamePersistence';
 
 type Paso = 'intro' | 'actividad1' | 'actividad2' | 'resultado';
 
 export default function PorteroRetoPage() {
+  const { saveAnswer } = useGamePersistence();
   const [paso, setPaso] = useState<Paso>('intro');
   const [scoreA1, setScoreA1] = useState(0);
   const [scoreA2, setScoreA2] = useState(0);
@@ -16,12 +18,18 @@ export default function PorteroRetoPage() {
     setScoreA1(score);
     setPaso('actividad2');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Guardar respuesta en PostgreSQL
+    saveAnswer('po-actividad-1', { score }, score > 0, score);
   };
 
   const handleA2Complete = (score: number) => {
     setScoreA2(score);
     setPaso('resultado');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Guardar respuesta en PostgreSQL
+    saveAnswer('po-actividad-2', { score }, score > 0, score);
   };
 
   const totalScore = scoreA1 + scoreA2;

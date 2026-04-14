@@ -15,6 +15,7 @@ import { Actividad1PaseFiltrado } from './reto/manager/Actividad1PaseFiltrado';
 import { Actividad2CambioFrente } from './reto/manager/Actividad2CambioFrente';
 import { Actividad1ClaridadArco } from './reto/frontend/Actividad1ClaridadArco';
 import { Actividad2RegateEfectivo } from './reto/frontend/Actividad2RegateEfectivo';
+import { useGamePersistence } from '../../hooks/useGamePersistence';
 
 // Tipos requeridos
 type GameFlowState = 
@@ -62,6 +63,7 @@ type GameFlowState =
 
 export const Cancha: React.FC = () => {
   const router = useRouter();
+  const { userId, sessionId, createGameSession, saveAnswer } = useGamePersistence();
   const [gameState, setGameState] = useState<GameFlowState>('init');
   const [isSecondHalf, setIsSecondHalf] = useState(false);
   const [goals, setGoals] = useState({ a: 0, b: 0 });
@@ -152,6 +154,13 @@ export const Cancha: React.FC = () => {
     }
   }, []);
 
+  // Crear sesión de juego en PostgreSQL (separado para evitar loop de dependencias)
+  useEffect(() => {
+    if (userId && !sessionId) {
+      createGameSession();
+    }
+  }, [userId, sessionId]);
+
   // Detectar animación de futbol
   useEffect(() => {
     if (futbolAnimationHandledRef.current) return;
@@ -232,6 +241,9 @@ export const Cancha: React.FC = () => {
     ans['actividad1'] = { score: score };
     localStorage.setItem(`${pre}_po_answers`, JSON.stringify(ans));
 
+    // Guardar respuesta en PostgreSQL
+    saveAnswer('po-actividad-1', { score }, score > 0, score);
+
     setTotalScore(prev => prev + score);
 
     if (score > 0) {
@@ -283,6 +295,9 @@ export const Cancha: React.FC = () => {
     const ans = JSON.parse(localStorage.getItem(`${pre}_po_answers`) || '{}');
     ans['actividad2'] = { score: score };
     localStorage.setItem(`${pre}_po_answers`, JSON.stringify(ans));
+
+    // Guardar respuesta en PostgreSQL
+    saveAnswer('po-actividad-2', { score }, score > 0, score);
 
     setTotalScore(prev => prev + score);
 
@@ -343,6 +358,9 @@ export const Cancha: React.FC = () => {
     ans['actividad1'] = { score: score };
     localStorage.setItem(`${pre}_qa_answers`, JSON.stringify(ans));
 
+    // Guardar respuesta en PostgreSQL
+    saveAnswer('qa-actividad-1', { score }, score > 0, score);
+
     setTotalScore(prev => prev + score);
 
     if (score > 0) {
@@ -379,6 +397,9 @@ export const Cancha: React.FC = () => {
     const ans = JSON.parse(localStorage.getItem(`${pre}_qa_answers`) || '{}');
     ans['actividad2'] = { score: score };
     localStorage.setItem(`${pre}_qa_answers`, JSON.stringify(ans));
+
+    // Guardar respuesta en PostgreSQL
+    saveAnswer('qa-actividad-2', { score }, score > 0, score);
 
     setTotalScore(prev => prev + score);
 
@@ -428,6 +449,9 @@ export const Cancha: React.FC = () => {
     ans['actividad1'] = { score: score };
     localStorage.setItem(`${pre}_devops_answers`, JSON.stringify(ans));
 
+    // Guardar respuesta en PostgreSQL
+    saveAnswer('devops-actividad-1', { score }, score > 0, score);
+
     setTotalScore(prev => prev + score);
 
     if (score === 100) {
@@ -476,6 +500,9 @@ export const Cancha: React.FC = () => {
     ans['actividad1'] = { score: score };
     localStorage.setItem(`${pre}_manager_answers`, JSON.stringify(ans));
 
+    // Guardar respuesta en PostgreSQL
+    saveAnswer('manager-actividad-1', { score }, score > 0, score);
+
     setTotalScore(prev => prev + score);
 
     if (score === 100) {
@@ -509,6 +536,9 @@ export const Cancha: React.FC = () => {
     const ans = JSON.parse(localStorage.getItem(`${pre}_manager_answers`) || '{}');
     ans['actividad2'] = { score: score };
     localStorage.setItem(`${pre}_manager_answers`, JSON.stringify(ans));
+
+    // Guardar respuesta en PostgreSQL
+    saveAnswer('manager-actividad-2', { score }, score > 0, score);
 
     setTotalScore(prev => prev + score);
 
@@ -546,6 +576,9 @@ export const Cancha: React.FC = () => {
   const handleFrontendAct1Choice = (score: number) => {
     setTotalScore(prev => prev + score);
     setGameState('frontend_act1_resolving');
+
+    // Guardar respuesta en PostgreSQL
+    saveAnswer('frontend-actividad-1', { score }, score > 0, score);
     if (score === 100) {
       setFeedback({ show: true, msg: '¡Golazo Visual! La jerarquía es perfecta y el usuario sabe exactamente qué hacer.', score, ok: true });
     } else if (score === 50) {
@@ -566,6 +599,9 @@ export const Cancha: React.FC = () => {
   const handleFrontendAct2Choice = (score: number) => {
     setTotalScore(prev => prev + score);
     setGameState('frontend_act2_resolving');
+
+    // Guardar respuesta en PostgreSQL
+    saveAnswer('frontend-actividad-2', { score }, score > 0, score);
     if (score === 100) {
       setFeedback({ show: true, msg: '¡Amague Veloz! Interacción ágil, sin fricciones. ¡El gol es inevitable!', score, ok: true });
     } else if (score === 50) {
@@ -620,6 +656,9 @@ export const Cancha: React.FC = () => {
   const handleDevopsAct2Choice = (score: number) => {
     setTotalScore(prev => prev + score);
     setGameState('devops_act2_resolving');
+
+    // Guardar respuesta en PostgreSQL
+    saveAnswer('devops-actividad-2', { score }, score > 0, score);
     if (score > 0) {
       setFeedback({ show: true, msg: '¡El despliegue está asegurado! El partido ha finalizado y el gol es válido.', score, ok: true });
     } else {
