@@ -33,8 +33,8 @@ export const Jugador: React.FC<JugadorProps> = ({ jugador }) => {
       </div>
 
       {/* Etiqueta de nombre estilizada estilo manager game */}
-      <div className="mt-1 bg-gray-900/90 text-white px-2 py-0.5 rounded shadow text-[9px] sm:text-[10px] font-bold whitespace-nowrap border border-white/20 z-30">
-        {jugador.rol}
+      <div className="mt-1 bg-black text-white px-2.5 py-1 rounded shadow-lg text-[11px] sm:text-xs font-black tracking-wide whitespace-nowrap border border-white/40 z-30 shadow-black/50">
+        {jugador.rol.toUpperCase()}
       </div>
     </div>
   );

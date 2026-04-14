@@ -16,7 +16,7 @@ export const Actividad2CambioFrente = ({ onComplete }: Props) => {
   const manejarEleccion = (opcion: Opcion) => {
     setEleccion(opcion);
     setFase('animando');
-    
+
     // Simulate animation duration then show feedback
     setTimeout(() => {
       setFase('feedback');
@@ -39,7 +39,7 @@ export const Actividad2CambioFrente = ({ onComplete }: Props) => {
           <p className="text-gray-600 mb-4">
             Estás atrapado en una esquina con <strong>muchos rivales encima</strong>. La presión es alta y casi pierdes el balón. Sin embargo, al otro lado de la cancha, un compañero (Azul) corre sin ninguna marca.
           </p>
-          
+
           <div className="bg-amber-50 border border-amber-200 p-4 rounded-xl mb-6">
             <h3 className="font-semibold text-amber-800 mb-1">Misión:</h3>
             <p className="text-sm text-amber-700">Decide cómo manejar la presión. Tratar de hacerlo todo tú mismo puede ser riesgoso.</p>
@@ -72,13 +72,13 @@ export const Actividad2CambioFrente = ({ onComplete }: Props) => {
                 {opcionSeleccionada.puntos} Puntos
               </h3>
               <p className="text-gray-700 mb-6 text-sm leading-relaxed p-4 bg-white rounded-xl shadow-inner text-left">
-                {opcionSeleccionada.id === 'cambio' && 
-                  <span>¡Qué visión! Sacaste el balón del desorden y lo mandaste a donde había espacio para jugar. <strong className="text-amber-700">(Como Manager, supiste Gestionar Recursos para evitar que una parte del equipo se sature de trabajo)</strong>.</span>
+                {opcionSeleccionada.id === 'cambio' &&
+                  <span>¡Qué visión! Sacaste el balón del desorden y lo mandaste a donde había espacio para jugar. <strong className="text-amber-700">(Como Mediocampista (Team Manager), supiste Gestionar Recursos para evitar que una parte del equipo se sature de trabajo)</strong>.</span>
                 }
-                {opcionSeleccionada.id === 'aguantar' && 
+                {opcionSeleccionada.id === 'aguantar' &&
                   <span>Te quedaste con la pelota pero el equipo sigue encerrado bajo presión. <strong className="text-amber-700">(Decidiste no delegar y que el equipo resolviera la Sobrecarga de Tareas sin ayuda externa)</strong>.</span>
                 }
-                {opcionSeleccionada.id === 'solo' && 
+                {opcionSeleccionada.id === 'solo' &&
                   <span>Te quitaron el balón por querer hacer todo tú. <strong className="text-amber-700">(Caíste en el Micromanagement; intentaste hacer el trabajo de todos y el proyecto se desordenó)</strong>.</span>
                 }
               </p>
@@ -95,7 +95,7 @@ export const Actividad2CambioFrente = ({ onComplete }: Props) => {
         {/* Mini Cancha Visualización */}
         <div className="w-full md:w-2/5 aspect-[3/4] bg-green-600 border-4 border-white shadow-xl rounded-md relative overflow-hidden flex-shrink-0">
           <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: 'linear-gradient(white 1px, transparent 1px), linear-gradient(90deg, white 1px, transparent 1px)', backgroundSize: '10% 10%' }}></div>
-          
+
           {/* Compañero - Libre en el otro extremo */}
           <div className="absolute w-8 h-8 bg-blue-600 border-2 border-white rounded-full flex items-center justify-center font-bold text-white shadow-md text-xs top-20 left-[85%] -translate-x-1/2 z-10 
             transition-transform duration-500" style={{ transform: fase === 'animando' && eleccion === 'cambio' ? 'translateX(-50%) scale(1.1)' : 'translateX(-50%)' }}>
@@ -117,24 +117,24 @@ export const Actividad2CambioFrente = ({ onComplete }: Props) => {
             className="absolute w-4 h-4 bg-white border border-slate-300 rounded-full flex items-center justify-center text-[10px] z-20 shadow-xl"
             initial={{ top: '75%', left: '15%', x: '-50%', y: '-10px', scale: 1 }}
             animate={
-              fase === 'animando' || fase === 'feedback' ? 
-              (eleccion === 'cambio' ? {
-                top: ['75%', '45%', '20%'], 
-                left: ['15%', '50%', '85%'],
-                scale: [1, 2.8, 1], // Pase largo aéreo
-                transition: { duration: 1.5, ease: 'easeInOut' }
-              } : eleccion === 'aguantar' ? {
-                top: ['75%', '72%', '78%', '75%'], 
-                left: ['15%', '18%', '12%', '15%'], 
-                scale: [1, 1, 1, 1], 
-                transition: { duration: 1.5, ease: 'easeInOut' } // Se queda ahí mismo
-              } : eleccion === 'solo' ? {
-                top: ['75%', '70%'], 
-                left: ['15%', '25%'], // Lo chocan y pierde el balón
-                scale: [1, 1], 
-                transition: { duration: 0.8, ease: 'easeOut' }
-              } : {})
-              : {}
+              fase === 'animando' || fase === 'feedback' ?
+                (eleccion === 'cambio' ? {
+                  top: ['75%', '45%', '20%'],
+                  left: ['15%', '50%', '85%'],
+                  scale: [1, 2.8, 1], // Pase largo aéreo
+                  transition: { duration: 1.5, ease: 'easeInOut' }
+                } : eleccion === 'aguantar' ? {
+                  top: ['75%', '72%', '78%', '75%'],
+                  left: ['15%', '18%', '12%', '15%'],
+                  scale: [1, 1, 1, 1],
+                  transition: { duration: 1.5, ease: 'easeInOut' } // Se queda ahí mismo
+                } : eleccion === 'solo' ? {
+                  top: ['75%', '70%'],
+                  left: ['15%', '25%'], // Lo chocan y pierde el balón
+                  scale: [1, 1],
+                  transition: { duration: 0.8, ease: 'easeOut' }
+                } : {})
+                : {}
             }
           >
             ⚽

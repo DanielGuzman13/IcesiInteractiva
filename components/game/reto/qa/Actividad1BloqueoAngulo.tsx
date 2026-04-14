@@ -23,7 +23,7 @@ const ZONAS: Zona[] = [
     descripcion: 'Cubres el ángulo inferior',
     score: 100,
     resultado: 'correcto',
-    feedback: '¡Gran bloqueo! Como QA, te posicionaste donde el error era más probable. Detectar un fallo antes de que el usuario lo vea es como evitar un gol en el último minuto.',
+    feedback: '¡Gran bloqueo! Como Defensa (QA), te posicionaste donde el error era más probable. Detectar un fallo antes de que el usuario lo vea es como evitar un gol en el último minuto.',
     ballTarget: { x: 14, y: 37 },
     defensaTarget: { x: 13, y: 38 },
   },
@@ -31,10 +31,10 @@ const ZONAS: Zona[] = [
     id: 'centro',
     label: 'Centro',
     emoji: '🟡',
-    descripcion: 'Cubres el centro del arco',
+    descripcion: 'Centro del arco',
     score: 50,
     resultado: 'regular',
-    feedback: 'Balón desviado. Encontraste el error, pero no lo solucionaste del todo. El riesgo sigue ahí, igual que un bug que se parchea mal y genera un tiro de esquina.',
+    feedback: 'Balón desviado. Encontraste el error, pero no lo solucionaste del todo. Como Defensa (QA), el riesgo sigue ahí, igual que un bug que se parchea mal.',
     ballTarget: { x: 14, y: 50 },
     defensaTarget: { x: 13, y: 50 },
   },
@@ -45,7 +45,7 @@ const ZONAS: Zona[] = [
     descripcion: 'Cubres el ángulo superior',
     score: 0,
     resultado: 'incorrecto',
-    feedback: '¡Gol en contra! No probaste la zona crítica. En software, si el QA no revisa donde es más peligroso, el error llega al cliente y el sistema falla.',
+    feedback: '¡Gol en contra! No probaste la zona crítica. Como Defensa (QA), si no revisas donde es más peligroso, el error llega al cliente y el sistema falla.',
     ballTarget: { x: 14, y: 62 },
     defensaTarget: { x: 13, y: 62 },
   },
@@ -56,8 +56,8 @@ const VB_W = 100;
 const VB_H = 56.25;
 
 const DELANTERO_START = { x: 40, y: 50 };
-const DEFENSA_START   = { x: 16, y: 50 };
-const BALL_START      = { x: 40, y: 50 };
+const DEFENSA_START = { x: 16, y: 50 };
+const BALL_START = { x: 40, y: 50 };
 
 interface Props {
   onComplete: (score: number) => void;
@@ -127,44 +127,44 @@ export const Actividad1BloqueoAngulo: React.FC<Props> = ({ onComplete }) => {
           {/* Césped */}
           <rect width={VB_W} height={VB_H} fill="#2E7D32" />
           {/* Franjas de césped */}
-          {[0,1,2,3,4].map(i => (
-            <rect key={i} x={i*20} y={0} width={10} height={VB_H} fill="#297528" opacity="0.4" />
+          {[0, 1, 2, 3, 4].map(i => (
+            <rect key={i} x={i * 20} y={0} width={10} height={VB_H} fill="#297528" opacity="0.4" />
           ))}
 
           {/* Línea de fondo izquierda */}
           <line x1="0" y1="0" x2="0" y2={VB_H} stroke="white" strokeWidth="0.5" />
           {/* Área penal izquierda */}
-          <rect x="0" y={VB_H*0.22} width={VB_W*0.18} height={VB_H*0.56}
+          <rect x="0" y={VB_H * 0.22} width={VB_W * 0.18} height={VB_H * 0.56}
             fill="none" stroke="white" strokeWidth="0.5" opacity="0.6" />
           {/* Área chica */}
-          <rect x="0" y={VB_H*0.36} width={VB_W*0.08} height={VB_H*0.28}
+          <rect x="0" y={VB_H * 0.36} width={VB_W * 0.08} height={VB_H * 0.28}
             fill="none" stroke="white" strokeWidth="0.4" opacity="0.5" />
           {/* Arco izquierdo */}
-          <rect x="0" y={VB_H*0.38} width="2" height={VB_H*0.24}
+          <rect x="0" y={VB_H * 0.38} width="2" height={VB_H * 0.24}
             fill="#888" stroke="white" strokeWidth="0.6" rx="0.3" />
 
           {/* Zonas de bloqueo sombreadas (solo en fase 'elige') */}
           {fase === 'elige' && (
             <>
               {/* Poste izquierdo */}
-              <rect x="10" y={VB_H*0.56} width="12" height={VB_H*0.22}
+              <rect x="10" y={VB_H * 0.56} width="12" height={VB_H * 0.22}
                 fill="#22c55e" opacity="0.25" rx="1"
                 className="cursor-pointer" onClick={() => handleElegir(ZONAS[0])}
               />
               {/* Centro */}
-              <rect x="10" y={VB_H*0.39} width="12" height={VB_H*0.22}
+              <rect x="10" y={VB_H * 0.39} width="12" height={VB_H * 0.22}
                 fill="#eab308" opacity="0.25" rx="1"
                 className="cursor-pointer" onClick={() => handleElegir(ZONAS[1])}
               />
               {/* Poste derecho */}
-              <rect x="10" y={VB_H*0.22} width="12" height={VB_H*0.22}
+              <rect x="10" y={VB_H * 0.22} width="12" height={VB_H * 0.22}
                 fill="#ef4444" opacity="0.25" rx="1"
                 className="cursor-pointer" onClick={() => handleElegir(ZONAS[2])}
               />
               {/* Etiquetas de zona */}
-              <text x="16" y={VB_H*0.72} textAnchor="middle" fontSize="2.2" fill="white" fontWeight="bold">Poste Izq.</text>
-              <text x="16" y={VB_H*0.52} textAnchor="middle" fontSize="2.2" fill="white" fontWeight="bold">Centro</text>
-              <text x="16" y={VB_H*0.34} textAnchor="middle" fontSize="2.2" fill="white" fontWeight="bold">Poste Der.</text>
+              <text x="16" y={VB_H * 0.72} textAnchor="middle" fontSize="2.2" fill="white" fontWeight="bold">Poste Izq.</text>
+              <text x="16" y={VB_H * 0.52} textAnchor="middle" fontSize="2.2" fill="white" fontWeight="bold">Centro</text>
+              <text x="16" y={VB_H * 0.34} textAnchor="middle" fontSize="2.2" fill="white" fontWeight="bold">Poste Der.</text>
             </>
           )}
 
@@ -237,8 +237,8 @@ export const Actividad1BloqueoAngulo: React.FC<Props> = ({ onComplete }) => {
               onClick={() => handleElegir(z)}
               className={`flex flex-col items-center gap-1 rounded-xl border-2 border-dashed p-3 text-sm font-bold transition-all hover:scale-105 active:scale-95 cursor-pointer
                 ${z.resultado === 'correcto' ? 'border-gray-300 hover:bg-gray-50 text-gray-800' :
-                  z.resultado === 'regular'  ? 'border-gray-300 hover:bg-gray-50 text-gray-800' :
-                  'border-gray-300 hover:bg-gray-50 text-gray-800'}`}
+                  z.resultado === 'regular' ? 'border-gray-300 hover:bg-gray-50 text-gray-800' :
+                    'border-gray-300 hover:bg-gray-50 text-gray-800'}`}
             >
               <span className="text-2xl">{z.emoji}</span>
               <span>{z.label}</span>
