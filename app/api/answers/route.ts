@@ -11,7 +11,10 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { userId, challengeId, playStepId, answer, isCorrect, responseTime, attempts, score } = body;
 
+    console.log('POST /api/answers received:', { userId, challengeId, playStepId, score });
+
     if (!userId || !challengeId || !playStepId) {
+      console.error('Missing required fields:', { userId, challengeId, playStepId });
       return NextResponse.json(
         { error: 'userId, challengeId, and playStepId are required' },
         { status: 400 }
@@ -19,6 +22,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Guardar respuesta
+    console.log('Creating user answer...');
     const userAnswer = await userAnswerRepository.create({
       userId,
       challengeId,
@@ -29,13 +33,16 @@ export async function POST(request: NextRequest) {
       attempts: attempts || 1,
       score: score || 0
     });
+    console.log('User answer created:', userAnswer);
 
     // Actualizar score del usuario
     if (score) {
+      console.log('Updating user score:', { userId, score });
       await userRepository.updateScore(userId, score);
+      console.log('User score updated successfully');
     }
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       answer: userAnswer,
       message: 'Respuesta guardada y score actualizado'
     });

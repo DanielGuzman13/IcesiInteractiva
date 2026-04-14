@@ -9,17 +9,17 @@ const ArquitectoGuide: React.FC<ArquitectoGuideProps> = ({ currentStep }) => {
     {
       title: "Paso 1: Identificar Clases",
       description: "Como un arquitecto que diseña los planos, primero identifica las entidades principales del sistema.",
-      example: "📋 Analiza el diagrama y arrastra los nombres correctos a cada clase."
+      example: "Analiza el diagrama y arrastra los nombres correctos a cada clase."
     },
     {
       title: "Paso 2: Asignar Atributos", 
       description: "Cada clase necesita sus propiedades específicas, como cada jugador tiene sus habilidades únicas.",
-      example: "⚙️ Arrastra los atributos restantes a las clases correspondientes."
+      example: "Arrastra los atributos restantes a las clases correspondientes."
     },
     {
       title: "Paso 3: Validar Diseño",
       description: "Un buen arquitecto siempre revisa su trabajo antes de construir.",
-      example: "✅ Revisa los errores y corrige antes de finalizar."
+      example: "Revisa los errores y corrige antes de finalizar."
     }
   ];
 
@@ -27,7 +27,7 @@ const ArquitectoGuide: React.FC<ArquitectoGuideProps> = ({ currentStep }) => {
     <div className="fixed right-4 top-20 w-80 bg-white rounded-lg shadow-xl border border-gray-200 p-4 z-40">
       <div className="mb-4">
         <h3 className="text-lg font-bold text-purple-800 mb-2 flex items-center gap-2">
-          🧭 Guía del Arquitecto
+           Guía del Arquitecto
         </h3>
         <div className="text-xs text-gray-500 mb-3">
           Rol: Diseñador Estructural del Sistema

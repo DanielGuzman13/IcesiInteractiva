@@ -16,7 +16,9 @@ export const HUD: React.FC = () => {
         const response = await fetch('/api/auth/me');
         if (response.ok && mounted) {
           const data = await response.json();
+          console.log('HUD fetchScore - User data:', data);
           if (data.user?.totalScore !== undefined) {
+            console.log('HUD fetchScore - Setting totalScore:', data.user.totalScore);
             setTotalScore(data.user.totalScore);
           }
         }
