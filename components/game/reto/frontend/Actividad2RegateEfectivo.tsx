@@ -94,13 +94,13 @@ export const Actividad2RegateEfectivo: React.FC<Props> = ({ onComplete }) => {
       <div className="relative w-full rounded-xl overflow-hidden border-4 border-green-900 shadow-inner" style={{ background: '#2E7D32', paddingBottom: '56.25%' }}>
         <svg viewBox={`0 0 ${VB_W} ${VB_H}`} className="absolute inset-0 w-full h-full">
           <rect width={VB_W} height={VB_H} fill="#2E7D32" />
-          {[0,1,2,3,4].map(i => (
-            <rect key={i} x={i*20} y={0} width={10} height={VB_H} fill="#297528" opacity="0.35" />
+          {[0, 1, 2, 3, 4].map(i => (
+            <rect key={i} x={i * 20} y={0} width={10} height={VB_H} fill="#297528" opacity="0.35" />
           ))}
 
           {/* Área y arco */}
-          <rect x={VB_W*0.82} y={VB_H*0.22} width={VB_W*0.18} height={VB_H*0.56} fill="none" stroke="white" strokeWidth="0.5" opacity="0.6"/>
-          <rect x={VB_W*0.9} y={VB_H*0.36} width={VB_W*0.1} height={VB_H*0.28} fill="none" stroke="white" strokeWidth="0.4" opacity="0.5"/>
+          <rect x={VB_W * 0.82} y={VB_H * 0.22} width={VB_W * 0.18} height={VB_H * 0.56} fill="none" stroke="white" strokeWidth="0.5" opacity="0.6" />
+          <rect x={VB_W * 0.9} y={VB_H * 0.36} width={VB_W * 0.1} height={VB_H * 0.28} fill="none" stroke="white" strokeWidth="0.4" opacity="0.5" />
 
           {/* Defensa Rival */}
           <motion.g
@@ -110,8 +110,8 @@ export const Actividad2RegateEfectivo: React.FC<Props> = ({ onComplete }) => {
             }
             transition={{ duration: 1.2, ease: 'linear' }}
           >
-            <circle cx={DF_START.x} cy={DF_START.y} r="3.5" fill="#1d4ed8" stroke="white" strokeWidth="0.7"/>
-            <text x={DF_START.x} y={DF_START.y+1.2} textAnchor="middle" fontSize="2.5" fill="white" fontWeight="bold">D</text>
+            <circle cx={DF_START.x} cy={DF_START.y} r="3.5" fill="#1d4ed8" stroke="white" strokeWidth="0.7" />
+            <text x={DF_START.x} y={DF_START.y + 1.2} textAnchor="middle" fontSize="2.5" fill="white" fontWeight="bold">D</text>
           </motion.g>
 
           {/* Delantero Frontend (Rojo) con el balón */}
@@ -121,14 +121,14 @@ export const Actividad2RegateEfectivo: React.FC<Props> = ({ onComplete }) => {
                 x: [0, 5, 10, 22],
                 y: [0, -15, 0, -20],
               } :
-              fase === 'choque' ? {
-                x: [0, 10, 6, 22],
-                y: [0, -20, -18, -20],
-              } :
-              fase === 'dudar' ? {
-                x: [0, 5, 2],
-                y: [0, -5, -4],
-              } : { x: 0, y: 0 }
+                fase === 'choque' ? {
+                  x: [0, 10, 6, 22],
+                  y: [0, -20, -18, -20],
+                } :
+                  fase === 'dudar' ? {
+                    x: [0, 5, 2],
+                    y: [0, -5, -4],
+                  } : { x: 0, y: 0 }
             }
             transition={{ duration: 1.5, ease: 'easeInOut' }}
           >
@@ -139,9 +139,9 @@ export const Actividad2RegateEfectivo: React.FC<Props> = ({ onComplete }) => {
               </circle>
             )}
             <circle cx={FE_START.x} cy={FE_START.y} r="3.5" fill="#e11d48" stroke="#fecdd3" strokeWidth="1" />
-            <text x={FE_START.x} y={FE_START.y+1.2} textAnchor="middle" fontSize="2.5" fill="white" fontWeight="bold">FE</text>
+            <text x={FE_START.x} y={FE_START.y + 1.2} textAnchor="middle" fontSize="2.5" fill="white" fontWeight="bold">FE</text>
             {/* Balón pegado */}
-            <text x={FE_START.x+2} y={FE_START.y-1} textAnchor="middle" fontSize="2.5">⚽</text>
+            <text x={FE_START.x + 2} y={FE_START.y - 1} textAnchor="middle" fontSize="2.5">⚽</text>
           </motion.g>
 
           <AnimatePresence>
@@ -152,13 +152,13 @@ export const Actividad2RegateEfectivo: React.FC<Props> = ({ onComplete }) => {
               </motion.text>
             )}
             {fase === 'dudar' && (
-              <motion.text x={DF_END.x-5} y={DF_END.y} textAnchor="middle" fontSize="6"
+              <motion.text x={DF_END.x - 5} y={DF_END.y} textAnchor="middle" fontSize="6"
                 initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1.2 }} exit={{ opacity: 0 }} transition={{ delay: 1.0 }}>
                 ❌
               </motion.text>
             )}
             {fase === 'amague' && (
-              <motion.text x={VB_W*0.92} y={VB_H*0.4} textAnchor="middle" fontSize="8" fill="#22c55e" fontWeight="bold"
+              <motion.text x={VB_W * 0.92} y={VB_H * 0.4} textAnchor="middle" fontSize="8" fill="#22c55e" fontWeight="bold"
                 initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 1.3 }}>
                 ¡GOL!
               </motion.text>
@@ -200,7 +200,7 @@ export const Actividad2RegateEfectivo: React.FC<Props> = ({ onComplete }) => {
                   {elegido.score > 0 ? `+${elegido.score} pts` : '0 pts — UX Frustrante'}
                 </span>
               </div>
-              <br/>
+              <br />
               <button onClick={() => onComplete(elegido.score)}
                 className="bg-pink-600 hover:bg-pink-700 active:scale-95 text-white font-bold py-3 px-8 rounded-full transition-all shadow-md">
                 Ver Goleadores 🏆

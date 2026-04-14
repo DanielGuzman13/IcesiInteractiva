@@ -4,6 +4,7 @@ import { getPostgresPool } from '../lib/database/postgres';
 interface UserRow {
   id: string;
   name: string;
+  salon: string | null;
   created_at: Date;
   last_login_at: Date;
   total_score: number;
@@ -30,6 +31,7 @@ if (process.env.NODE_ENV !== 'production') {
 const mapUser = (row: UserRow): User => ({
   id: row.id,
   name: row.name,
+  salon: row.salon as '205M' | '206M' | undefined,
   createdAt: row.created_at,
   lastLoginAt: row.last_login_at,
   totalScore: row.total_score,
@@ -67,6 +69,7 @@ export class UserRepository extends BaseRepository<User> {
       const user: User = {
         id: crypto.randomUUID(),
         name,
+        salon: userData.salon,
         createdAt: now,
         lastLoginAt: now,
         totalScore: 0,
@@ -83,11 +86,11 @@ export class UserRepository extends BaseRepository<User> {
     try {
       const result = await pool.query<UserRow>(
         `
-          INSERT INTO users (name, name_normalized)
-          VALUES ($1, $2)
-          RETURNING id, name, created_at, last_login_at, total_score, current_level
+          INSERT INTO users (name, name_normalized, salon)
+          VALUES ($1, $2, $3)
+          RETURNING id, name, salon, created_at, last_login_at, total_score, current_level
         `,
-        [name, normalizedName]
+        [name, normalizedName, userData.salon || null]
       );
 
       return mapUser(result.rows[0]);
@@ -110,7 +113,7 @@ export class UserRepository extends BaseRepository<User> {
     const pool = getPostgresPool();
     const result = await pool.query<UserRow>(
       `
-        SELECT id, name, created_at, last_login_at, total_score, current_level
+        SELECT id, name, salon, created_at, last_login_at, total_score, current_level
         FROM users
         WHERE id = $1
         LIMIT 1
@@ -137,6 +140,7 @@ export class UserRepository extends BaseRepository<User> {
       const updatedUser: User = {
         ...existingUser,
         name: updatedName,
+        salon: typeof data.salon === 'string' ? data.salon as '205M' | '206M' : existingUser.salon,
         totalScore: typeof data.totalScore === 'number' ? data.totalScore : existingUser.totalScore,
         currentLevel: typeof data.currentLevel === 'number' ? data.currentLevel : existingUser.currentLevel,
         lastLoginAt: data.lastLoginAt instanceof Date ? data.lastLoginAt : existingUser.lastLoginAt,
@@ -169,6 +173,11 @@ export class UserRepository extends BaseRepository<User> {
       updates.push(`total_score = $${values.length}`);
     }
 
+    if (typeof data.salon === 'string') {
+      values.push(data.salon);
+      updates.push(`salon = $${values.length}`);
+    }
+
     if (typeof data.currentLevel === 'number') {
       values.push(data.currentLevel);
       updates.push(`current_level = $${values.length}`);
@@ -194,7 +203,7 @@ export class UserRepository extends BaseRepository<User> {
         UPDATE users
         SET ${updates.join(', ')}
         WHERE id = $${values.length}
-        RETURNING id, name, created_at, last_login_at, total_score, current_level
+        RETURNING id, name, salon, created_at, last_login_at, total_score, current_level
       `,
       values
     );
@@ -259,7 +268,7 @@ export class UserRepository extends BaseRepository<User> {
 
     const result = await pool.query<UserRow>(
       `
-        SELECT id, name, created_at, last_login_at, total_score, current_level
+        SELECT id, name, salon, created_at, last_login_at, total_score, current_level
         FROM users
         ${whereClause}
         ORDER BY created_at ASC
@@ -285,7 +294,7 @@ export class UserRepository extends BaseRepository<User> {
     const pool = getPostgresPool();
     const result = await pool.query<UserRow>(
       `
-        SELECT id, name, created_at, last_login_at, total_score, current_level
+        SELECT id, name, salon, created_at, last_login_at, total_score, current_level
         FROM users
         WHERE name_normalized = $1
         LIMIT 1
@@ -322,7 +331,7 @@ export class UserRepository extends BaseRepository<User> {
         UPDATE users
         SET total_score = total_score + $1
         WHERE id = $2
-        RETURNING id, name, created_at, last_login_at, total_score, current_level
+        RETURNING id, name, salon, created_at, last_login_at, total_score, current_level
       `,
       [score, userId]
     );
@@ -352,7 +361,7 @@ export class UserRepository extends BaseRepository<User> {
 
     const result = await pool.query<UserRow>(
       `
-        SELECT id, name, created_at, last_login_at, total_score, current_level
+        SELECT id, name, salon, created_at, last_login_at, total_score, current_level
         FROM users
         ORDER BY total_score DESC, last_login_at DESC
         LIMIT $1
@@ -385,7 +394,7 @@ export class UserRepository extends BaseRepository<User> {
         UPDATE users
         SET last_login_at = CURRENT_TIMESTAMP
         WHERE id = $1
-        RETURNING id, name, created_at, last_login_at, total_score, current_level
+        RETURNING id, name, salon, created_at, last_login_at, total_score, current_level
       `,
       [userId]
     );

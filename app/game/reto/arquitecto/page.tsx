@@ -4,10 +4,12 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Actividad1DiagramaClases from '@/components/game/reto/arquitecto/Actividad1DiagramaClases';
 import Actividad2AsignarAtributos from '@/components/game/reto/arquitecto/Actividad2AsignarAtributos';
+import { useGamePersistence } from '@/hooks/useGamePersistence';
 
 type Paso = 'intro' | 'actividad1' | 'actividad2' | 'resultado';
 
 export default function ArquitectoRetoPage() {
+  const { saveAnswer } = useGamePersistence();
   const [paso, setPaso] = useState<Paso>('intro');
   const [scoreA1, setScoreA1] = useState(0);
   const [scoreA2, setScoreA2] = useState(0);
@@ -17,7 +19,10 @@ export default function ArquitectoRetoPage() {
     setScoreA1(score);
     setPaso('actividad2');
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    
+
+    // Guardar respuesta en PostgreSQL
+    saveAnswer('arquitecto-actividad-1', { score }, score > 0, score);
+
     // Mostrar mensaje de transición
     const mensajes = [
       "¡Excelente! Como un técnico que define las posiciones, has identificado las clases del sistema.",
@@ -38,7 +43,10 @@ export default function ArquitectoRetoPage() {
     const ans = JSON.parse(localStorage.getItem(`${val}_arquitecto_answers`) || '{}');
     ans['score'] = scoreA1 + score;
     localStorage.setItem(`${val}_arquitecto_answers`, JSON.stringify(ans));
-    
+
+    // Guardar respuesta en PostgreSQL
+    saveAnswer('arquitecto-actividad-2', { score }, score > 0, score);
+
     // Mostrar mensaje final
     const mensajes = [
       "¡Increíble! Has completado el diseño arquitectónico del sistema.",

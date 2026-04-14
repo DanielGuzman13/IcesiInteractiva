@@ -104,14 +104,14 @@ export const Actividad1ClaridadArco: React.FC<Props> = ({ onComplete }) => {
       <div className="relative w-full rounded-xl overflow-hidden border-4 border-green-900 shadow-inner" style={{ background: '#2E7D32', paddingBottom: '56.25%' }}>
         <svg viewBox={`0 0 ${VB_W} ${VB_H}`} className="absolute inset-0 w-full h-full">
           <rect width={VB_W} height={VB_H} fill="#2E7D32" />
-          {[0,1,2,3,4].map(i => (
-            <rect key={i} x={i*20} y={0} width={10} height={VB_H} fill="#297528" opacity="0.35" />
+          {[0, 1, 2, 3, 4].map(i => (
+            <rect key={i} x={i * 20} y={0} width={10} height={VB_H} fill="#297528" opacity="0.35" />
           ))}
 
           {/* Área rival y portería */}
-          <rect x={VB_W*0.82} y={VB_H*0.22} width={VB_W*0.18} height={VB_H*0.56} fill="none" stroke="white" strokeWidth="0.5" opacity="0.6" />
-          <rect x={VB_W*0.9} y={VB_H*0.36} width={VB_W*0.1} height={VB_H*0.28} fill="none" stroke="white" strokeWidth="0.4" opacity="0.5" />
-          <rect x={VB_W*0.97} y={VB_H*0.38} width="3" height={VB_H*0.24} fill="#888" stroke="white" strokeWidth="0.6" rx="0.3" />
+          <rect x={VB_W * 0.82} y={VB_H * 0.22} width={VB_W * 0.18} height={VB_H * 0.56} fill="none" stroke="white" strokeWidth="0.5" opacity="0.6" />
+          <rect x={VB_W * 0.9} y={VB_H * 0.36} width={VB_W * 0.1} height={VB_H * 0.28} fill="none" stroke="white" strokeWidth="0.4" opacity="0.5" />
+          <rect x={VB_W * 0.97} y={VB_H * 0.38} width="3" height={VB_H * 0.24} fill="#888" stroke="white" strokeWidth="0.6" rx="0.3" />
 
           {/* Delantero Frontend (Rojo) */}
           {fase === 'elige' && (
@@ -127,20 +127,20 @@ export const Actividad1ClaridadArco: React.FC<Props> = ({ onComplete }) => {
           {/* Defensas bloqueando el pasillo inferior */}
           <circle cx={83} cy={VB_H * 0.75} r="2.5" fill="#1d4ed8" stroke="white" strokeWidth="0.5" />
           <circle cx={83} cy={VB_H * 0.82} r="2.5" fill="#1d4ed8" stroke="white" strokeWidth="0.5" />
-          
+
           {/* Defensa bloqueando parcialmente el pasillo superior */}
           <circle cx={85} cy={VB_H * 0.3} r="2.5" fill="#1d4ed8" stroke="white" strokeWidth="0.5" />
           <circle cx={86} cy={VB_H * 0.42} r="2.5" fill="#1d4ed8" stroke="white" strokeWidth="0.5" />
 
           {/* Zonas de Pasillos */}
           {fase === 'elige' && PASILLOS.map(p => {
-             const colors = { correcto: '#22c55e', regular: '#eab308', incorrecto: '#ef4444' };
-             return (
-               <g key={p.id} onClick={() => handleElegir(p)} style={{ cursor: 'pointer' }}>
-                 <circle cx={p.ballTarget.x} cy={p.ballTarget.y} r="4" fill={colors[p.resultado]} opacity="0.3" />
-                 <text x={p.ballTarget.x} y={p.ballTarget.y + 1.5} textAnchor="middle" fontSize="4">{p.emoji}</text>
-               </g>
-             );
+            const colors = { correcto: '#22c55e', regular: '#eab308', incorrecto: '#ef4444' };
+            return (
+              <g key={p.id} onClick={() => handleElegir(p)} style={{ cursor: 'pointer' }}>
+                <circle cx={p.ballTarget.x} cy={p.ballTarget.y} r="4" fill={colors[p.resultado]} opacity="0.3" />
+                <text x={p.ballTarget.x} y={p.ballTarget.y + 1.5} textAnchor="middle" fontSize="4">{p.emoji}</text>
+              </g>
+            );
           })}
 
           <motion.text textAnchor="middle" fontSize="4"
@@ -160,7 +160,7 @@ export const Actividad1ClaridadArco: React.FC<Props> = ({ onComplete }) => {
 
           <AnimatePresence>
             {fase === 'animar' && elegido?.resultado === 'correcto' && (
-              <motion.text x={VB_W*0.93} y={VB_H/2} textAnchor="middle" fontSize="8" fill="#22c55e" fontWeight="bold"
+              <motion.text x={VB_W * 0.93} y={VB_H / 2} textAnchor="middle" fontSize="8" fill="#22c55e" fontWeight="bold"
                 initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.8 }}>
                 ¡GOL!
               </motion.text>
@@ -202,7 +202,7 @@ export const Actividad1ClaridadArco: React.FC<Props> = ({ onComplete }) => {
                   {elegido.score > 0 ? `+${elegido.score} pts` : '0 pts — Diseño Confuso'}
                 </span>
               </div>
-              <br/>
+              <br />
               <button onClick={() => onComplete(elegido.score)}
                 className="bg-pink-600 hover:bg-pink-700 active:scale-95 text-white font-bold py-3 px-8 rounded-full transition-all shadow-md">
                 Actividad 2 →

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Actividad1BloqueoAngulo } from '../../../../components/game/reto/qa/Actividad1BloqueoAngulo';
 import { Actividad2DespejeSeg } from '../../../../components/game/reto/qa/Actividad2DespejeSeg';
+import { useGamePersistence } from '@/hooks/useGamePersistence';
 
 // Score persistido en localStorage (simula UserAnswer hasta que BD esté conectada)
 const guardarScore = (actividad: string, score: number) => {
@@ -16,6 +17,7 @@ const guardarScore = (actividad: string, score: number) => {
 type Paso = 'intro' | 'actividad1' | 'actividad2' | 'resultado';
 
 export default function QARetoPage() {
+  const { saveAnswer } = useGamePersistence();
   const [paso, setPaso] = useState<Paso>('intro');
   const [scoreA1, setScoreA1] = useState(0);
   const [scoreA2, setScoreA2] = useState(0);
@@ -25,6 +27,9 @@ export default function QARetoPage() {
     guardarScore('actividad1_bloqueo', score);
     setPaso('actividad2');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Guardar respuesta en PostgreSQL
+    saveAnswer('qa-actividad-1', { score }, score > 0, score);
   };
 
   const handleA2Complete = (score: number) => {
@@ -32,6 +37,9 @@ export default function QARetoPage() {
     guardarScore('actividad2_despeje', score);
     setPaso('resultado');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Guardar respuesta en PostgreSQL
+    saveAnswer('qa-actividad-2', { score }, score > 0, score);
   };
 
   const total = scoreA1 + scoreA2;

@@ -20,8 +20,8 @@ const VB_H = 56.25;
 
 // Lateral DevOps empieza en la banda derecha y avanza
 const LATERAL_START = { x: 72, y: 90 };
-const LATERAL_RUN   = { x: 85, y: 72 };
-const BALL_START    = { x: 72, y: 90 };
+const LATERAL_RUN = { x: 85, y: 72 };
+const BALL_START = { x: 72, y: 90 };
 
 const DESTINOS: Destino[] = [
   {
@@ -29,7 +29,7 @@ const DESTINOS: Destino[] = [
     label: 'Punto Ganador',
     emoji: '🎯',
     descripcion: 'Centro perfecto al segundo palo',
-    feedback: '¡Centro perfecto! Automatizaste el envío del código (CI/CD) para que llegara exactamente donde se necesitaba, sin intervención manual. El pipeline hizo su trabajo.',
+    feedback: '¡Centro perfecto! Como Lateral (DevOps), automatizaste el envío del código (CI/CD) para que llegara exactamente donde se necesitaba. El pipeline hizo su trabajo.',
     score: 100,
     resultado: 'correcto',
     cx: 92,
@@ -40,7 +40,7 @@ const DESTINOS: Destino[] = [
     label: 'Punto Lento',
     emoji: '🐢',
     descripcion: 'Centro al primer palo, difícil de rematar',
-    feedback: 'Funcionó, pero fue lento. Hiciste un despliegue manual sin automatización. El equipo llegó al objetivo pero con más esfuerzo y riesgo de errores humanos.',
+    feedback: 'Funcionó, pero fue lento. Como Lateral (DevOps), hiciste un despliegue manual sin automatización. El equipo llegó al objetivo pero con más esfuerzo.',
     score: 50,
     resultado: 'regular',
     cx: 88,
@@ -51,7 +51,7 @@ const DESTINOS: Destino[] = [
     label: 'Centro Fallido',
     emoji: '❌',
     descripcion: 'Balón se va fuera del área',
-    feedback: '¡Despliegue fallido! No confiaste en tus herramientas de automatización, el código llegó roto al servidor. La pipeline es tu mejor aliado como DevOps.',
+    feedback: '¡Despliegue fallido! Como Lateral (DevOps), no confiaste en tus herramientas de automatización, el código llegó roto al servidor. La pipeline es tu mejor aliado.',
     score: 0,
     resultado: 'incorrecto',
     cx: 82,
@@ -66,8 +66,8 @@ interface Props {
 export const Actividad1CentroPrecision: React.FC<Props> = ({ onComplete }) => {
   const [fase, setFase] = useState<'elige' | 'animando' | 'modal'>('elige');
   const [elegido, setElegido] = useState<Destino | null>(null);
-  const [lateralPos, setLateralPos]   = useState(LATERAL_START);
-  const [ballPos, setBallPos]         = useState(BALL_START);
+  const [lateralPos, setLateralPos] = useState(LATERAL_START);
+  const [ballPos, setBallPos] = useState(BALL_START);
   const [lateralAnimate, setLateralAnimate] = useState(false);
 
   const handleElegir = (dest: Destino) => {
@@ -95,7 +95,7 @@ export const Actividad1CentroPrecision: React.FC<Props> = ({ onComplete }) => {
   };
 
   const colorBorde = { correcto: 'border-green-500', regular: 'border-yellow-500', incorrecto: 'border-red-500' };
-  const colorBg    = { correcto: 'bg-green-50',     regular: 'bg-yellow-50',     incorrecto: 'bg-red-50'     };
+  const colorBg = { correcto: 'bg-green-50', regular: 'bg-yellow-50', incorrecto: 'bg-red-50' };
 
   return (
     <div className="w-full">
@@ -112,17 +112,17 @@ export const Actividad1CentroPrecision: React.FC<Props> = ({ onComplete }) => {
         style={{ background: '#2E7D32', paddingBottom: '56.25%' }}>
         <svg viewBox={`0 0 ${VB_W} ${VB_H}`} className="absolute inset-0 w-full h-full">
           <rect width={VB_W} height={VB_H} fill="#2E7D32" />
-          {[0,1,2,3,4].map(i => (
-            <rect key={i} x={i*20} y={0} width={10} height={VB_H} fill="#297528" opacity="0.35" />
+          {[0, 1, 2, 3, 4].map(i => (
+            <rect key={i} x={i * 20} y={0} width={10} height={VB_H} fill="#297528" opacity="0.35" />
           ))}
 
           {/* Línea de fondo derecha y área */}
-          <rect x={VB_W*0.82} y={VB_H*0.22} width={VB_W*0.18} height={VB_H*0.56} fill="none" stroke="white" strokeWidth="0.5" opacity="0.6"/>
-          <rect x={VB_W*0.9}  y={VB_H*0.36} width={VB_W*0.1}  height={VB_H*0.28} fill="none" stroke="white" strokeWidth="0.4" opacity="0.5"/>
-          <rect x={VB_W*0.97} y={VB_H*0.38} width="3" height={VB_H*0.24} fill="#888" stroke="white" strokeWidth="0.6" rx="0.3"/>
+          <rect x={VB_W * 0.82} y={VB_H * 0.22} width={VB_W * 0.18} height={VB_H * 0.56} fill="none" stroke="white" strokeWidth="0.5" opacity="0.6" />
+          <rect x={VB_W * 0.9} y={VB_H * 0.36} width={VB_W * 0.1} height={VB_H * 0.28} fill="none" stroke="white" strokeWidth="0.4" opacity="0.5" />
+          <rect x={VB_W * 0.97} y={VB_H * 0.38} width="3" height={VB_H * 0.24} fill="#888" stroke="white" strokeWidth="0.6" rx="0.3" />
 
           {/* Banda derecha */}
-          <line x1={VB_W} y1={0} x2={VB_W} y2={VB_H} stroke="white" strokeWidth="0.5" opacity="0.4"/>
+          <line x1={VB_W} y1={0} x2={VB_W} y2={VB_H} stroke="white" strokeWidth="0.5" opacity="0.4" />
 
           {/* Puntos de destino (solo en fase elige) */}
           {fase === 'elige' && DESTINOS.map(d => {
@@ -130,25 +130,25 @@ export const Actividad1CentroPrecision: React.FC<Props> = ({ onComplete }) => {
             return (
               <g key={d.id} onClick={() => handleElegir(d)} style={{ cursor: 'pointer' }}>
                 <circle cx={d.cx} cy={d.cy} r="5" fill={cols[d.resultado]} opacity="0.3">
-                  <animate attributeName="r" values="4;6;4" dur="1.3s" repeatCount="indefinite"/>
+                  <animate attributeName="r" values="4;6;4" dur="1.3s" repeatCount="indefinite" />
                 </circle>
-                <circle cx={d.cx} cy={d.cy} r="2.5" fill={cols[d.resultado]} stroke="white" strokeWidth="0.6"/>
+                <circle cx={d.cx} cy={d.cy} r="2.5" fill={cols[d.resultado]} stroke="white" strokeWidth="0.6" />
                 <text x={d.cx} y={d.cy + 6.5} textAnchor="middle" fontSize="2.2" fill="white" fontWeight="bold">{d.label}</text>
               </g>
             );
           })}
 
           {/* Compañeros en el área */}
-          {[{cx: 90, cy: VB_H*0.5}, {cx: 88, cy: VB_H*0.32}].map((p, i) => (
+          {[{ cx: 90, cy: VB_H * 0.5 }, { cx: 88, cy: VB_H * 0.32 }].map((p, i) => (
             <g key={i}>
-              <circle cx={p.cx} cy={p.cy} r="2.5" fill="#1d4ed8" stroke="white" strokeWidth="0.5" opacity="0.7"/>
-              <text x={p.cx} y={p.cy+1} textAnchor="middle" fontSize="2" fill="white">A</text>
+              <circle cx={p.cx} cy={p.cy} r="2.5" fill="#1d4ed8" stroke="white" strokeWidth="0.5" opacity="0.7" />
+              <text x={p.cx} y={p.cy + 1} textAnchor="middle" fontSize="2" fill="white">A</text>
             </g>
           ))}
 
           {/* Defensa rival */}
-          <circle cx={89} cy={VB_H*0.6} r="2.5" fill="#c0392b" stroke="white" strokeWidth="0.5" opacity="0.7"/>
-          <text x={89} y={VB_H*0.6+1} textAnchor="middle" fontSize="2" fill="white">R</text>
+          <circle cx={89} cy={VB_H * 0.6} r="2.5" fill="#c0392b" stroke="white" strokeWidth="0.5" opacity="0.7" />
+          <text x={89} y={VB_H * 0.6 + 1} textAnchor="middle" fontSize="2" fill="white">R</text>
 
           {/* Trayectoria del centro */}
           {elegido && (
@@ -169,12 +169,12 @@ export const Actividad1CentroPrecision: React.FC<Props> = ({ onComplete }) => {
             {/* Aura cyan pulsante */}
             {fase === 'elige' && (
               <circle cx={LATERAL_START.x} cy={LATERAL_START.y} r="7" fill="#06b6d4" opacity="0.2">
-                <animate attributeName="r" values="6;9;6" dur="1.2s" repeatCount="indefinite"/>
-                <animate attributeName="opacity" values="0.2;0.06;0.2" dur="1.2s" repeatCount="indefinite"/>
+                <animate attributeName="r" values="6;9;6" dur="1.2s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.2;0.06;0.2" dur="1.2s" repeatCount="indefinite" />
               </circle>
             )}
-            <circle cx={LATERAL_START.x} cy={LATERAL_START.y} r="3.5" fill="#0891b2" stroke="#67e8f9" strokeWidth="1"/>
-            <text x={LATERAL_START.x} y={LATERAL_START.y+1.2} textAnchor="middle" fontSize="2.6" fill="white" fontWeight="bold">DO</text>
+            <circle cx={LATERAL_START.x} cy={LATERAL_START.y} r="3.5" fill="#0891b2" stroke="#67e8f9" strokeWidth="1" />
+            <text x={LATERAL_START.x} y={LATERAL_START.y + 1.2} textAnchor="middle" fontSize="2.6" fill="white" fontWeight="bold">DO</text>
           </motion.g>
 
           {/* Balón */}
@@ -194,7 +194,7 @@ export const Actividad1CentroPrecision: React.FC<Props> = ({ onComplete }) => {
               className={`flex flex-col items-center gap-1 rounded-xl border-2 border-dashed p-3 text-sm font-bold transition-all hover:scale-105 active:scale-95
                 ${d.resultado === 'correcto' ? 'border-gray-300 hover:bg-gray-50 text-gray-800'
                   : d.resultado === 'regular' ? 'border-gray-300 hover:bg-gray-50 text-gray-800'
-                  : 'border-gray-300 hover:bg-gray-50 text-gray-800'}`}>
+                    : 'border-gray-300 hover:bg-gray-50 text-gray-800'}`}>
               <span className="text-2xl">{d.emoji}</span>
               <span>{d.label}</span>
               <span className="text-xs text-gray-500 font-normal">{d.descripcion}</span>
@@ -224,7 +224,7 @@ export const Actividad1CentroPrecision: React.FC<Props> = ({ onComplete }) => {
                   {elegido.score > 0 ? `+${elegido.score} pts` : '0 pts — Pipeline roto'}
                 </span>
               </div>
-              <br/>
+              <br />
               <button onClick={() => onComplete(elegido.score)}
                 className="bg-cyan-600 hover:bg-cyan-700 active:scale-95 text-white font-bold py-3 px-8 rounded-full transition-all shadow-md">
                 Actividad 2 →

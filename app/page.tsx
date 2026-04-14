@@ -7,6 +7,7 @@ import { FormEvent, useState } from 'react';
 export default function Home() {
   const router = useRouter();
   const [name, setName] = useState('');
+  const [salon, setSalon] = useState<'205M' | '206M' | ''>('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -21,6 +22,11 @@ export default function Home() {
       return;
     }
 
+    if (!salon) {
+      setError('Debes seleccionar tu salón (205M o 206M).');
+      return;
+    }
+
     // Guardar el identificador del jugador actual para aislar sus puntajes
     if (typeof window !== 'undefined') {
       localStorage.setItem('currentPlayer', trimmedName);
@@ -32,7 +38,7 @@ export default function Home() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name: trimmedName }),
+        body: JSON.stringify({ name: trimmedName, salon }),
       });
 
       const data = await response.json();
@@ -72,6 +78,31 @@ export default function Home() {
             className="w-full rounded-xl border border-gray-300 px-4 py-3 text-lg font-bold outline-none focus:ring-2 focus:ring-blue-500 bg-white text-black"
             style={{ zIndex: 10, position: 'relative' }}
           />
+
+          <div className="flex gap-3">
+            <button
+              type="button"
+              onClick={() => setSalon('205M')}
+              className={`flex-1 py-3 px-6 rounded-full font-bold transition-all hover:scale-105 active:scale-95 shadow-lg ${
+                salon === '205M'
+                  ? 'bg-blue-600 text-white ring-4 ring-blue-300'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              205M
+            </button>
+            <button
+              type="button"
+              onClick={() => setSalon('206M')}
+              className={`flex-1 py-3 px-6 rounded-full font-bold transition-all hover:scale-105 active:scale-95 shadow-lg ${
+                salon === '206M'
+                  ? 'bg-blue-600 text-white ring-4 ring-blue-300'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              206M
+            </button>
+          </div>
 
           {error && <p className="text-red-600 text-sm text-left">{error}</p>}
 
