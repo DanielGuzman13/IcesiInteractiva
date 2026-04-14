@@ -372,6 +372,37 @@ export class UserRepository extends BaseRepository<User> {
     return result.rows.map(mapUser);
   }
 
+  async getTopPlayersBySalon(salon: string, limit: number = 10): Promise<User[]> {
+    const safeLimit = Number.isFinite(limit) ? Math.max(1, Math.min(limit, 100)) : 10;
+
+    if (!hasDatabaseConfig()) {
+      return Array.from(inMemoryUsersById.values())
+        .filter(user => user.salon === salon)
+        .sort((a, b) => {
+          if (b.totalScore !== a.totalScore) {
+            return b.totalScore - a.totalScore;
+          }
+          return b.lastLoginAt.getTime() - a.lastLoginAt.getTime();
+        })
+        .slice(0, safeLimit);
+    }
+
+    const pool = getPostgresPool();
+
+    const result = await pool.query<UserRow>(
+      `
+        SELECT id, name, salon, created_at, last_login_at, total_score, current_level
+        FROM users
+        WHERE salon = $1
+        ORDER BY total_score DESC, last_login_at DESC
+        LIMIT $2
+      `,
+      [salon, safeLimit]
+    );
+
+    return result.rows.map(mapUser);
+  }
+
   async updateLastLogin(userId: string): Promise<User> {
     if (!hasDatabaseConfig()) {
       const existingUser = inMemoryUsersById.get(userId);

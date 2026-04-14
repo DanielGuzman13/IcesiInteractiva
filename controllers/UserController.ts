@@ -171,4 +171,39 @@ export class UserController {
       );
     }
   }
+
+  // Obtener ranking de jugadores por salón
+  async getRankingBySalon(request: NextRequest) {
+    try {
+      const { searchParams } = new URL(request.url);
+      const salon = searchParams.get('salon');
+      const limit = parseInt(searchParams.get('limit') || '10');
+
+      if (!salon || (salon !== '205M' && salon !== '206M')) {
+        return NextResponse.json(
+          { error: 'El salón debe ser 205M o 206M' },
+          { status: 400 }
+        );
+      }
+
+      const topPlayers = await this.userRepository.getTopPlayersBySalon(salon, limit);
+
+      return NextResponse.json({
+        salon,
+        players: topPlayers.map(player => ({
+          id: player.id,
+          name: player.name,
+          salon: player.salon,
+          totalScore: player.totalScore,
+          currentLevel: player.currentLevel
+        }))
+      });
+    } catch (error) {
+      console.error('Error al obtener ranking por salón:', error);
+      return NextResponse.json(
+        { error: 'Error interno del servidor' },
+        { status: 500 }
+      );
+    }
+  }
 }
