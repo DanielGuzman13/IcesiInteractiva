@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Actividad1ClaridadArco } from '@/components/game/reto/frontend/Actividad1ClaridadArco';
 import { Actividad2RegateEfectivo } from '@/components/game/reto/frontend/Actividad2RegateEfectivo';
+import { useGamePersistence } from '@/hooks/useGamePersistence';
 
 const guardarScore = (score: number) => {
   if (typeof window === 'undefined') return;
@@ -16,6 +17,7 @@ const guardarScore = (score: number) => {
 type Paso = 'intro' | 'actividad1' | 'actividad2' | 'resultado';
 
 export default function FrontendRetoPage() {
+  const { saveAnswer } = useGamePersistence();
   const [paso, setPaso] = useState<Paso>('intro');
   const [scoreA1, setScoreA1] = useState(0);
   const [scoreA2, setScoreA2] = useState(0);
@@ -24,6 +26,9 @@ export default function FrontendRetoPage() {
     setScoreA1(score);
     setPaso('actividad2');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Guardar respuesta en PostgreSQL
+    saveAnswer('frontend-actividad-1', { score }, score > 0, score);
   };
 
   const handleA2Complete = (score: number) => {
@@ -31,6 +36,9 @@ export default function FrontendRetoPage() {
     guardarScore(scoreA1 + score);
     setPaso('resultado');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Guardar respuesta en PostgreSQL
+    saveAnswer('frontend-actividad-2', { score }, score > 0, score);
   };
 
   const total = scoreA1 + scoreA2;

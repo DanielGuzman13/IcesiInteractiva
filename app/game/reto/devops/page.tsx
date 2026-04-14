@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Actividad1CentroPrecision } from '@/components/game/reto/devops/Actividad1CentroPrecision';
 import { Actividad2RegresoHeroico } from '@/components/game/reto/devops/Actividad2RegresoHeroico';
+import { useGamePersistence } from '@/hooks/useGamePersistence';
 
 const guardarScore = (score: number) => {
   if (typeof window === 'undefined') return;
@@ -16,6 +17,7 @@ const guardarScore = (score: number) => {
 type Paso = 'intro' | 'actividad1' | 'actividad2' | 'resultado';
 
 export default function DevOpsRetoPage() {
+  const { saveAnswer } = useGamePersistence();
   const [paso, setPaso] = useState<Paso>('intro');
   const [scoreA1, setScoreA1] = useState(0);
   const [scoreA2, setScoreA2] = useState(0);
@@ -24,6 +26,9 @@ export default function DevOpsRetoPage() {
     setScoreA1(score);
     setPaso('actividad2');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Guardar respuesta en PostgreSQL
+    saveAnswer('devops-actividad-1', { score }, score > 0, score);
   };
 
   const handleA2Complete = (score: number) => {
@@ -31,6 +36,9 @@ export default function DevOpsRetoPage() {
     guardarScore(scoreA1 + score);
     setPaso('resultado');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Guardar respuesta en PostgreSQL
+    saveAnswer('devops-actividad-2', { score }, score > 0, score);
   };
 
   const total = scoreA1 + scoreA2;

@@ -5,6 +5,7 @@ export interface User {
   id: string;
   name: string;
   nameNormalized?: string;
+  salon?: '205M' | '206M';
   createdAt: Date;
   lastLoginAt: Date;
   totalScore: number;
