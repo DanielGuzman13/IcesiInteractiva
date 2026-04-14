@@ -1,18 +1,138 @@
 # ICESI INTERACTIVA ⚽ - Simulación de Desarrollo de Software
 
 **Versión:** 0.1.0  
-**Tecnologías:** Next.js (App Router), TypeScript, Tailwind CSS, React 19.
+**Tecnologías:** Next.js (App Router), TypeScript, Tailwind CSS, React 19, PostgreSQL.
 
-## ¿Qué es este proyecto?
+## 📋 Requisitos Previos
 
-"ICESI INTERACTIVA" es una experiencia gamificada donde un partido de fútbol 2D (vista superior) simula el flujo de un equipo de desarrollo de software real.
+Antes de instalar y ejecutar el proyecto, asegúrate de tener instalado:
 
-La simulación muestra un **partido 11 vs 11 en curso**:
-- **Equipo A (Azul)**: Los 11 jugadores representan los distintos **roles de ingeniería de software** con analogías futboleras precisas. Son **interactivos** — al hacer click llevas al reto del rol.
-- **Equipo B (Rojo)**: 11 jugadores rivales **solo visuales** (sin roles ni interacción). Representan el equipo contrario.
-- **Capitanes**: Cada equipo tiene 1 capitán indicado con el distintivo "C" dorado.
+- **Node.js** v20 o superior ([descargar aquí](https://nodejs.org/))
+- **NPM** (viene incluido con Node.js)
+- **PostgreSQL** v14 o superior ([descargar aquí](https://www.postgresql.org/download/))
 
-## Distribución de Roles (Equipo A)
+## 🚀 Instalación y Configuración
+
+### 1. Clonar el repositorio
+
+```bash
+git clone <url-del-repositorio>
+cd IcesiInteractiva
+```
+
+### 2. Instalar dependencias
+
+```bash
+npm install
+```
+
+### 3. Configurar PostgreSQL
+
+Tienes dos opciones: instalación local o Docker.
+
+#### Opción A: Instalación Local
+
+##### 3.1. Crear la base de datos
+
+Abre una terminal o usa pgAdmin para crear la base de datos:
+
+```bash
+# Acceder a PostgreSQL
+psql -U postgres
+
+# Crear la base de datos
+CREATE DATABASE icesi_interactiva;
+
+# Salir de PostgreSQL
+\q
+```
+
+##### 3.2. Ejecutar el esquema de la base de datos
+
+```bash
+psql -U postgres -d icesi_interactiva -f lib/database/schema.sql
+```
+
+#### Opción B: Docker (Recomendado)
+
+Si prefieres usar Docker para PostgreSQL, ejecuta:
+
+```bash
+# Crear y ejecutar contenedor de PostgreSQL
+docker run --name icesi-postgres \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=postgres \
+  -e POSTGRES_DB=icesi_interactiva \
+  -p 5432:5432 \
+  -d postgres:14
+
+# Esperar unos segundos para que el contenedor inicie
+
+# Ejecutar el esquema de la base de datos
+docker exec -i icesi-postgres psql -U postgres -d icesi_interactiva < lib/database/schema.sql
+```
+
+**Comandos útiles de Docker:**
+
+```bash
+# Ver logs del contenedor
+docker logs icesi-postgres
+
+# Detener el contenedor
+docker stop icesi-postgres
+
+# Iniciar el contenedor
+docker start icesi-postgres
+
+# Eliminar el contenedor
+docker rm icesi-postgres
+```
+
+Esto creará todas las tablas necesarias incluyendo:
+- `users` - Usuarios/Estudiantes
+- `game_sessions` - Sesiones de juego
+- `user_answers` - Respuestas de usuarios
+- `challenges` - Retos/Desafíos
+- Y más tablas de soporte
+
+### 4. Configurar variables de entorno
+
+Crea un archivo `.env.local` en la raíz del proyecto con el siguiente contenido:
+
+```env
+DATABASE_URL=postgresql://postgres:tu_password@localhost:5432/icesi_interactiva
+```
+
+**Importante:** Reemplaza `tu_password` con la contraseña de tu usuario de PostgreSQL.
+
+### 5. Ejecutar el proyecto
+
+```bash
+npm run dev
+```
+
+El proyecto estará disponible en [http://localhost:3000](http://localhost:3000)
+
+## 🎮 Rutas Disponibles
+
+| Ruta | Descripción |
+|------|-------------|
+| `/` | Landing page del juego |
+| `/game` | Cancha interactiva 11 vs 11 |
+| `/game/reto/[rol]` | Página del reto del rol (ej. `/game/reto/backend`) |
+| `/admin/ranking` | Ranking en vivo por salón (requiere contraseña) |
+
+## 🔐 Ranking de Administración
+
+El ranking en tiempo real está disponible en `/admin/ranking` con las siguientes características:
+
+- **Contraseña de acceso:** `icesi2024`
+- **Funcionalidades:**
+  - Ranking por salón (205M y 206M)
+  - Actualización automática cada 3 segundos
+  - Visualización de puntajes en tiempo real mientras los jugadores juegan
+
+## 🏆 Distribución de Roles (Equipo A)
 
 ### 🥅 Portero — Product Owner
 - **Función**: Define la estrategia del producto, decide qué entra y qué no
@@ -38,106 +158,100 @@ La simulación muestra un **partido 11 vs 11 en curso**:
 - **Función**: Define estructura global, no juega cada jugada pero define cómo juega el equipo
 - **Analogía**: Es como un "director invisible" del sistema
 
-## Requisitos e Instalación
-
-1. **Node.js v20+** y **NPM** deben estar instalados.
-2. Instala las dependencias del proyecto:
-```bash
-npm install
-```
-
-## ¿Cómo ejecutarlo?
-
-Antes de iniciar, configura tu conexión a PostgreSQL:
-
-1. Crea el archivo `.env.local` con base en `.env.example`.
-2. Define `DATABASE_URL` apuntando a tu base de datos.
-3. Ejecuta el esquema y datos iniciales:
-
-```bash
-psql "$DATABASE_URL" -f lib/database/schema.sql
-psql "$DATABASE_URL" -f lib/database/seed-data.sql
-```
-
-```bash
-npm run dev
-```
-Luego abre [http://localhost:3000](http://localhost:3000) en tu navegador.
-
-### Rutas disponibles:
-| Ruta | Descripción |
-|------|-------------|
-| `/` | Landing page del juego |
-| `/game` | Cancha interactiva 11 vs 11 |
-| `/game/reto/[rol]` | Página del reto del rol (ej. `/game/reto/backend`) |
-
-## Estructura del Proyecto
-
-### 📁 Arquitectura Cliente-Servidor
-```
-📁 models/                    # Entidades de datos
-  📄 User.ts                  # Usuario/Estudiante
-  📄 GameSession.ts           # Sesión de juego
-  📄 Play.ts                  # Jugadas predefinidas
-  📄 Challenge.ts             # Retos/Desafíos
-  📄 UserPlayProgress.ts      # Progreso del usuario
-  📄 UserAnswer.ts            # Respuestas del usuario
-  📄 MatchState.ts            # Estado del partido
-
-📁 repositories/              # Capa de datos (Repository Pattern)
-  📄 UserRepository.ts        # Gestión de usuarios
-  📄 GameSessionRepository.ts  # Sesiones de juego
-  📄 index.ts                 # Exports centralizados
-
-📁 controllers/               # Lógica de negocio
-  📄 UserController.ts         # Login, perfiles, ranking
-  📄 index.ts                 # Exports
-
-📁 app/api/                   # Next.js API Routes
-  📁 auth/login/route.ts       # POST /api/auth/login
-  📁 users/[userId]/route.ts   # GET/PUT /api/users/[userId]
-  📁 ranking/route.ts          # GET /api/ranking
-
-📁 lib/database/              # Base de datos
-  📄 schema.sql                # Esquema PostgreSQL
-  📄 seed-data.sql             # Datos iniciales
-```
-
-### 🎮 Componentes del Juego
-| Archivo | Descripción |
-|---------|-------------|
-| `lib/jugadores.ts` | Fuente de verdad: 22 jugadores con roles actualizados |
-| `components/game/Cancha.tsx` | Campo de fútbol 2D (16:9), CSS puro + Tailwind |
-| `components/game/Jugador.tsx` | Componente por jugador: Equipo A interactivo, Equipo B visual |
-| `app/game/page.tsx` | Página principal del partido |
-| `app/game/reto/[rol]/page.tsx` | Ruta dinámica de reto por rol |
-
-### 🔧 Nuevas Características
-- **Login simplificado**: Solo nombre de usuario único
-- **API REST**: Endpoints para usuarios y ranking
-- **Base de datos**: PostgreSQL con esquema completo
-- **Arquitectura limpia**: Models, Repositories, Controllers separados
-- **Roles actualizados**: Distribución futbolera realista
-
 ## 🚀 API Endpoints
 
 ### Autenticación
 ```bash
 POST /api/auth/login
-Body: { "name": "nombre-usuario" }
+Body: { "name": "nombre-usuario", "salon": "205M" }
 ```
 
 ### Usuarios
 ```bash
-GET /api/users/[userId]           # Perfil
-PUT /api/users/[userId]           # Actualizar score
-GET /api/ranking?limit=10         # Ranking top jugadores
+GET /api/auth/me                    # Usuario actual
+GET /api/ranking?limit=10          # Ranking global
+GET /api/ranking-salon?salon=205M   # Ranking por salón
 ```
 
-## Próximos Pasos
+### Sesiones de Juego
+```bash
+POST /api/sessions                 # Crear sesión
+GET /api/sessions?userId=xxx       # Obtener sesión activa
+```
 
-- [ ] Retos reales por rol dentro de `app/game/reto/[rol]/page.tsx`
-- [ ] Balón dinámico que fluye entre roles
-- [ ] Animaciones (Framer Motion)
-- [ ] Puntuación y estado global del partido
-- [ ] Integración con Blockly / API externa
+### Respuestas de Usuario
+```bash
+POST /api/answers                  # Guardar respuesta
+GET /api/answers?userId=xxx        # Obtener respuestas
+```
+
+## 📁 Estructura del Proyecto
+
+```
+📁 app/
+  📁 api/                          # Next.js API Routes
+    📁 auth/login/route.ts         # Login
+    📁 auth/me/route.ts            # Usuario actual
+    📁 sessions/route.ts           # Sesiones de juego
+    📁 answers/route.ts            # Respuestas de usuario
+    📁 ranking/route.ts           # Ranking global
+    📁 ranking-salon/route.ts      # Ranking por salón
+  📁 admin/ranking/page.tsx       # Página de ranking admin
+  📁 game/                         # Páginas del juego
+
+📁 components/game/                # Componentes del juego
+  � Cancha.tsx                   # Campo de fútbol 2D
+  📄 HUD.tsx                      # HUD con puntaje y tiempo
+  📄 reto/arquitecto/             # Retos del arquitecto
+
+� models/                        # Entidades de datos
+  📄 User.ts                      # Usuario
+  📄 GameSession.ts               # Sesión de juego
+  📄 UserAnswer.ts                # Respuestas
+
+📁 repositories/                  # Capa de datos
+  📄 UserRepository.ts            # Gestión de usuarios
+  📄 GameSessionRepository.ts     # Sesiones de juego
+  📄 UserAnswerRepository.ts      # Respuestas de usuario
+
+📁 controllers/                   # Lógica de negocio
+  📄 UserController.ts            # Login, perfiles, ranking
+
+� lib/database/                  # Base de datos
+  � schema.sql                    # Esquema PostgreSQL
+  � postgres.ts                  # Configuración de conexión
+
+📁 hooks/                         # React hooks
+  📄 useGamePersistence.ts        # Hook de persistencia
+```
+
+## 🔧 Scripts Disponibles
+
+```bash
+npm run dev      # Iniciar servidor de desarrollo
+npm run build    # Compilar para producción
+npm run start    # Iniciar servidor de producción
+npm run lint     # Ejecutar linter
+```
+
+## � Notas Importantes
+
+- El proyecto usa **cookies httpOnly** para autenticación
+- El puntaje se guarda en **PostgreSQL** y se actualiza en tiempo real
+- El ranking de administración usa **polling** cada 3 segundos para actualización en tiempo real
+- Los usuarios pueden seleccionar su salón (205M o 206M) al iniciar sesión
+
+## 🐛 Solución de Problemas
+
+### Error de conexión a PostgreSQL
+- Verifica que PostgreSQL esté ejecutándose
+- Verifica que la base de datos `icesi_interactiva` exista
+- Verifica que la contraseña en `.env.local` sea correcta
+
+### Error de dependencias
+- Elimina `node_modules` y `package-lock.json`
+- Ejecuta `npm install` nuevamente
+
+## 📄 Licencia
+
+Este proyecto es propiedad de la Universidad Icesi.
