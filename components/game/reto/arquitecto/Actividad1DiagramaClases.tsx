@@ -309,7 +309,7 @@ const Actividad1DiagramaClases: React.FC<{ onComplete: (score: number) => void }
                             className="ml-1 text-red-500 hover:text-red-700 text-xs"
                             title="Quitar"
                           >
-                            ×
+                            🗑️
                           </button>
                         )}
                       </div>
