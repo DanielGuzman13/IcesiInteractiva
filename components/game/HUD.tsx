@@ -8,25 +8,39 @@ export const HUD: React.FC = () => {
   const [seconds, setSeconds] = useState(0);
 
   useEffect(() => {
-    const readScore = () => {
+    let mounted = true;
+
+    // Obtener puntaje desde la API
+    const fetchScore = async () => {
       try {
-        const pre = localStorage.getItem('currentPlayer') || 'guest';
-        const saved = parseInt(localStorage.getItem(`${pre}_total_score`) || '0', 10);
-        setTotalScore(saved);
-      } catch (e) {
-        console.error(e);
+        const response = await fetch('/api/auth/me');
+        if (response.ok && mounted) {
+          const data = await response.json();
+          if (data.user?.totalScore !== undefined) {
+            setTotalScore(data.user.totalScore);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching score:', error);
       }
     };
 
-    readScore(); // run once immediately
+    fetchScore();
 
     // Timer
     const interval = setInterval(() => {
       setSeconds(s => s + 1);
     }, 1000);
 
+    // Actualizar puntaje cada 3 segundos
+    const scoreInterval = setInterval(() => {
+      fetchScore();
+    }, 3000);
+
     return () => {
+      mounted = false;
       clearInterval(interval);
+      clearInterval(scoreInterval);
     };
   }, []);
 
