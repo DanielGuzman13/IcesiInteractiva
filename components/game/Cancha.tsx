@@ -440,7 +440,7 @@ export const Cancha: React.FC = () => {
       if (score > 0) {
         setFeedback({
           show: true,
-          msg: '¡Regression Testing exitoso! Defensa estable.',
+          msg: '¡Testing exitoso! Defensa estable.',
           score: score,
           ok: true,
           onContinue: () => {
