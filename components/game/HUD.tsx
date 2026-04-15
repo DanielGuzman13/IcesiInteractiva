@@ -3,7 +3,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
-export const HUD: React.FC = () => {
+export interface HUDProps {
+  goalsA?: number;
+  goalsB?: number;
+  minuteText?: string;
+  totalScoreOverride?: number;
+}
+
+export const HUD: React.FC<HUDProps> = ({ goalsA = 0, goalsB = 0, minuteText = "00:00", totalScoreOverride }) => {
   const [totalScore, setTotalScore] = useState(0);
   const [seconds, setSeconds] = useState(0);
 
@@ -52,6 +59,8 @@ export const HUD: React.FC = () => {
     return `${m}:${s}`;
   };
 
+  const displayScore = totalScoreOverride !== undefined ? totalScoreOverride : totalScore;
+
   return (
     <motion.div
       initial={{ y: -50, opacity: 0 }}
@@ -65,32 +74,38 @@ export const HUD: React.FC = () => {
       {/* Puntaje Total */}
       <div className="flex-1 flex justify-start items-center p-2">
         <div className="bg-gray-800 border border-gray-600 rounded-lg px-4 py-2 flex items-center gap-3">
-          <span className="text-2xl">�</span>
           <div className="flex flex-col">
             <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Puntaje Total</span>
             <span className="text-xl font-black text-yellow-400">
-              {totalScore.toLocaleString()} <span className="text-sm font-bold text-gray-300">pts</span>
+              {displayScore.toLocaleString()} <span className="text-sm font-bold text-gray-300">pts</span>
             </span>
           </div>
         </div>
       </div>
 
       {/* Marcador Central */}
-      <div className="flex-[2] flex justify-center items-center gap-6 my-4 md:my-0">
-        <div className="text-right">
-          <div className="text-xs text-blue-300 font-bold uppercase tracking-widest mb-1">Squad A</div>
-          <div className="text-lg font-bold">Ingeniería</div>
-        </div>
+      <div className="flex-[2] flex flex-col justify-center items-center my-4 md:my-0">
+        <div className="flex justify-center items-center gap-4 sm:gap-6">
+          <div className="text-right">
+            <div className="text-xs text-blue-300 font-bold uppercase tracking-widest mb-1">Equipo A</div>
+            <div className="text-lg font-bold">Ingeniería</div>
+          </div>
 
-        <div className="flex items-center gap-3 bg-black/50 border border-gray-700 px-6 py-3 rounded-xl shadow-inner">
-          <span className="text-4xl font-mono font-black text-blue-500">0</span>
-          <span className="text-xl text-gray-500">:</span>
-          <span className="text-4xl font-mono font-black text-red-500">0</span>
-        </div>
+          <div className="flex flex-col items-center gap-1">
+            <div className="text-[10px] text-gray-300 font-black tracking-widest uppercase bg-black/40 px-3 py-0.5 rounded-full mb-1">
+              MINUTO: {minuteText}
+            </div>
+            <div className="flex items-center gap-3 bg-black/50 border border-gray-700 px-6 py-2 rounded-xl shadow-inner">
+              <span className="text-4xl font-mono font-black text-blue-500">{goalsA}</span>
+              <span className="text-xl text-gray-500">:</span>
+              <span className="text-4xl font-mono font-black text-red-500">{goalsB}</span>
+            </div>
+          </div>
 
-        <div className="text-left">
-          <div className="text-xs text-red-300 font-bold uppercase tracking-widest mb-1">Squad B</div>
-          <div className="text-lg font-bold">Bugs</div>
+          <div className="text-left">
+            <div className="text-xs text-red-300 font-bold uppercase tracking-widest mb-1">Equipo B</div>
+            <div className="text-lg font-bold">Bugs</div>
+          </div>
         </div>
       </div>
 

@@ -48,16 +48,16 @@ export default function DetallesRolesPage() {
   const [showIntroModal, setShowIntroModal] = React.useState(true);
 
   return (
-    <main className="h-screen w-full max-w-full bg-[#F8FAFC] flex flex-col font-sans text-slate-900 border-t-[6px] border-indigo-600 overflow-hidden overflow-x-hidden">
-      <div className="flex-1 flex flex-col max-w-7xl mx-auto w-full px-4 md:px-6 py-4 md:py-6 overflow-hidden">
+    <main className="min-h-screen w-full max-w-full bg-[#F8FAFC] flex flex-col font-sans text-slate-900 border-t-[6px] border-indigo-600 overflow-x-hidden">
+      <div className="flex-1 flex flex-col max-w-7xl mx-auto w-full px-4 md:px-6 py-8 md:py-12">
         {/* Header Section */}
-        <header className="text-center mb-4 flex-none">
+        <header className="text-center mb-8 flex-none">
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h1 className="text-3xl md:text-5xl font-black text-slate-800 mb-1 tracking-tight">
+            <h1 className="text-3xl md:text-5xl font-black text-slate-800 mb-2 tracking-tight">
               Especialidades Técnicas
             </h1>
             <p className="text-sm md:text-base text-slate-500 font-medium italic">
@@ -66,8 +66,8 @@ export default function DetallesRolesPage() {
           </motion.div>
         </header>
 
-        {/* Roles Grid Section (Scrollable) */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden flex items-center shadow-inner rounded-xl bg-slate-50/30">
+        {/* Roles Grid Section (Natural Browser Scroll) */}
+        <div className="w-full">
           <div className="flex flex-wrap justify-center gap-4 md:gap-8 py-4 w-full h-fit max-w-6xl mx-auto">
             {ROLES.map((role, index) => (
               <motion.div
@@ -104,6 +104,23 @@ export default function DetallesRolesPage() {
             ))}
           </div>
         </div>
+
+        {/* Action Footer */}
+        <motion.footer
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8, duration: 0.5 }}
+          className="mt-12 mb-8 text-center"
+        >
+          <button
+            onClick={() => router.push('/')}
+            className="group relative inline-flex items-center gap-3 bg-slate-900 hover:bg-slate-950 text-white font-black py-5 px-14 rounded-full transition-all shadow-2xl active:scale-95 text-xl tracking-tight overflow-hidden"
+          >
+            <span className="relative z-10">VOLVER A JUGAR</span>
+            <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <span className="relative z-10 group-hover:translate-x-1 transition-transform">→</span>
+          </button>
+        </motion.footer>
       </div>
 
       {/* Intro Modal Overlay */}

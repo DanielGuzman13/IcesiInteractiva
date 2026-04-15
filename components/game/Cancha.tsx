@@ -16,6 +16,8 @@ import { Actividad2CambioFrente } from './reto/manager/Actividad2CambioFrente';
 import { Actividad1ClaridadArco } from './reto/frontend/Actividad1ClaridadArco';
 import { Actividad2RegateEfectivo } from './reto/frontend/Actividad2RegateEfectivo';
 import { useGamePersistence } from '../../hooks/useGamePersistence';
+import { HUD } from './HUD';
+import RetoArquitectoFlow from './reto/arquitecto/RetoArquitectoFlow';
 
 // Tipos requeridos
 type GameFlowState =
@@ -47,6 +49,7 @@ type GameFlowState =
   | 'manager_act2_frozen'
   | 'manager_act2_resolving'
   | 'halftime_idle'
+  | 'arquitecto_frozen'
   | 'frontend_act1_intro'
   | 'frontend_act1_frozen'
   | 'frontend_act1_resolving'
@@ -592,7 +595,7 @@ export const Cancha: React.FC = () => {
           setBallParams({ top: backend.top, left: backend.left, scale: 1, text: '⚽' });
           setFeedback({ 
             show: true, 
-            msg: `[Total: ${totalScore + score} PTS] ¡Estrategia definida! El Mediocampista (Team Manager) deja el balón servido para el Mediocentro (Backend).`, 
+            msg: `!Estrategia definida! El Mediocampista (Team Manager) deja el balón servido para el Mediocentro (Backend).`, 
             score: 0, 
             ok: true,
             onContinue: () => {
@@ -604,6 +607,25 @@ export const Cancha: React.FC = () => {
         } else {
           startManagerAct2();
         }
+      }
+    });
+  };
+  const handleArquitectoDone = () => {
+    setIsSecondHalf(true);
+    const frontendPos = getJugadorPos('a-delantero-1');
+    setGameState('frontend_act1_intro');
+    setBallParams({ top: '50%', left: '50%', scale: 1, text: '⚽' });
+    setFeedback({ 
+      show: true, 
+      msg: '¡Inicia el Segundo Tiempo! Tras la charla técnica del Técnico (Arquitecto), el equipo sale con estructura sólida y el Delantero (Frontend) recibe el balón.', 
+      score: 0, 
+      ok: true,
+      onContinue: () => {
+        setFeedback(f => ({ ...f, show: false }));
+        setBallParams({ top: frontendPos.top, left: frontendPos.left, scale: 1, text: '⚽' });
+        setTimeout(() => {
+          setGameState('frontend_act1_frozen');
+        }, 1000);
       }
     });
   };
@@ -731,17 +753,12 @@ export const Cancha: React.FC = () => {
         )}
       </AnimatePresence>
 
-      <div className="flex-none flex justify-center mb-1 text-sm font-black tracking-wider transition-colors duration-500" style={{ color: gameState.includes('po_act2') ? '#ef4444' : '#374151' }}>
-        MINUTO: {gameState === 'pre_kickoff' || gameState === 'kickoff_anim' ? "00:00" : gameState.includes('act1') ? "15:00" : gameState.includes('act2') ? "15:00 ⏩ 15:10" : "30:00"}
-      </div>
-
-      <div className="flex-none flex justify-between items-center px-6 mb-2">
-        <div className="flex bg-blue-900 border-2 border-blue-500 rounded-lg overflow-hidden shadow-xl text-white font-mono font-black text-xl">
-          <div className="px-4 py-1 bg-blue-700">AZUL</div>
-          <div className="px-4 py-1 bg-black">{goals.a} - {goals.b}</div>
-          <div className="px-4 py-1 bg-red-700">ROJO</div>
-        </div>
-      </div>
+      <HUD 
+        goalsA={goals.a}
+        goalsB={goals.b}
+        minuteText={gameState === 'pre_kickoff' || gameState === 'kickoff_anim' ? "00:00" : gameState.includes('act1') ? "15:00" : gameState.includes('act2') ? "15:10" : "30:00"}
+        totalScoreOverride={totalScore}
+      />
 
       <div className="flex-1 min-h-[0] w-full flex flex-col items-center justify-center overflow-hidden relative">
         <motion.div
@@ -749,7 +766,7 @@ export const Cancha: React.FC = () => {
             scale: (gameState === 'pre_kickoff' || gameState.includes('_frozen') || gameState.includes('_resolving')) ? 1 : cameraScale
           }}
           transition={{ duration: 1.5, type: 'spring' }}
-          className="relative aspect-video w-full max-h-full rounded-xl overflow-hidden border-4 border-white/20 bg-[#2b722d] shadow-2xl"
+          className="relative aspect-video w-full max-h-full rounded-xl border-4 border-white/20 bg-[#2b722d] shadow-2xl"
           style={{ 
             maxHeight: '100%', 
             maxWidth: 'calc(100vh * 16 / 9)',
@@ -758,15 +775,18 @@ export const Cancha: React.FC = () => {
             WebkitFontSmoothing: 'antialiased'
           }}>
 
-          <div className="absolute inset-0 flex">
-            {[...Array(14)].map((_, i) => (
-              <div key={i} className={`flex-1 h-full ${i % 2 === 0 ? 'bg-white/5' : 'bg-transparent'}`} />
-            ))}
-          </div>
+          {/* Decor Wrapper to keep grass lines inside rounded corners */}
+          <div className="absolute inset-0 rounded-lg overflow-hidden pointer-events-none">
+            <div className="absolute inset-0 flex">
+              {[...Array(14)].map((_, i) => (
+                <div key={i} className={`flex-1 h-full ${i % 2 === 0 ? 'bg-white/5' : 'bg-transparent'}`} />
+              ))}
+            </div>
 
-          {/* Cancha decor */}
-          <div className="absolute top-0 left-1/2 w-1 h-full bg-white/60 -translate-x-1/2"></div>
-          <div className="absolute top-1/2 left-0 w-[13%] h-[55%] border-t-4 border-r-4 border-b-4 border-white/60 -translate-y-1/2 pointer-events-none"></div>
+            {/* Cancha decor */}
+            <div className="absolute top-0 left-1/2 w-1 h-full bg-white/60 -translate-x-1/2"></div>
+            <div className="absolute top-1/2 left-0 w-[13%] h-[55%] border-t-4 border-r-4 border-b-4 border-white/60 -translate-y-1/2"></div>
+          </div>
 
           {/* Jugadores y Zona Técnica */}
           {jugadoresData.map(jugador => {
@@ -1021,13 +1041,22 @@ export const Cancha: React.FC = () => {
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <button
-                      onClick={() => router.push('/game/reto/arquitecto')}
-                      className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-full transition-colors text-lg"
+                      onClick={() => setGameState('arquitecto_frozen')}
+                      className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-full transition-colors text-lg shadow-lg active:scale-95"
                     >
                       Ir al Vestuario (Técnico (Arquitecto))
                     </button>
                   </div>
                 </div>
+              </motion.div>
+            )}
+
+            {/* Arquitecto OVERLAY */}
+            {gameState === 'arquitecto_frozen' && (
+              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
+                className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
+              >
+                 <RetoArquitectoFlow onFinish={handleArquitectoDone} />
               </motion.div>
             )}
 

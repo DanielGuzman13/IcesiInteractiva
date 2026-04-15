@@ -13,7 +13,7 @@ const ROLES = [
   { title: 'Arquitecto', id: 'arquitecto' },
   { title: 'Frontend Developer', id: 'frontend' },
   { title: 'Backend Developer', id: 'backend' },
-  { title: 'QA Engineer', id: 'qa' },
+  { title: 'QA/Tester', id: 'qa' },
   { title: 'DevOps Engineer', id: 'devops' },
   { title: 'Team Manager', id: 'team-manager' }
 ];
@@ -79,17 +79,17 @@ export default function ResumenRolesPage() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
-      className="h-screen w-full max-w-full bg-[#F8FAFC] flex flex-col font-sans text-slate-900 border-t-[6px] border-blue-600 overflow-hidden overflow-x-hidden"
+      className="min-h-screen w-full max-w-full bg-[#F8FAFC] flex flex-col font-sans text-slate-900 border-t-[6px] border-blue-600 overflow-x-hidden"
     >
-      <div className="flex-1 flex flex-col max-w-7xl mx-auto w-full px-4 md:px-6 py-4 md:py-6 overflow-hidden">
+      <div className="flex-1 flex flex-col max-w-7xl mx-auto w-full px-4 md:px-6 py-8 md:py-12">
         {/* Header Section (Compact) */}
-        <header className="text-center mb-4 flex-none">
+        <header className="text-center mb-8 flex-none">
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h1 className="text-3xl md:text-5xl font-black text-slate-800 mb-1 tracking-tight">
+            <h1 className="text-3xl md:text-5xl font-black text-slate-800 mb-2 tracking-tight">
               Siguiente Paso
             </h1>
             <p className="text-sm md:text-base text-slate-500 font-medium italic">
@@ -100,8 +100,8 @@ export default function ResumenRolesPage() {
           </motion.div>
         </header>
 
-        {/* Roles Grid Section (Flexible with Scroll) */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden flex items-center">
+        {/* Roles Grid Section (Natural Browser Scroll) */}
+        <div className="w-full">
           <div className="flex flex-wrap justify-center gap-4 md:gap-8 py-4 w-full h-fit max-w-6xl mx-auto">
             {ROLES.map((role, index) => {
               const isThisAnswered = answeredRoles.includes(role.id);

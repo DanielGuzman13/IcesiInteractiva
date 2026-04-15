@@ -20,8 +20,6 @@ export default async function GamePage() {
         </div>
       </div>
       
-      <HUD />
-
       <Cancha />
     </main>
   );

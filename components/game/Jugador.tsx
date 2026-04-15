@@ -13,12 +13,19 @@ export const Jugador: React.FC<JugadorProps> = ({ jugador }) => {
     <div className="flex flex-col items-center justify-center relative translate-y-3 cursor-pointer">
       <div className="relative">
         <div
-          className={`w-11 h-11 sm:w-12 sm:h-12 rounded-full overflow-hidden flex items-center justify-center border-2 shadow-lg transition-transform box-border
-            ${jugador.ruta ? 'group-hover:scale-110 group-hover:border-yellow-400 group-hover:shadow-yellow-400/50' : 'cursor-default'}
-            ${isEquipoA ? 'border-blue-400 shadow-blue-500/30' : 'border-red-400 opacity-80'}`}
+          className={`relative transition-transform flex items-center justify-center
+            ${jugador.ruta ? 'group-hover:scale-110' : 'cursor-default'}
+            ${jugador.imagen ? 'w-14 h-14 sm:w-16 sm:h-16 shadow-none' : 'w-11 h-11 sm:w-12 sm:h-12 rounded-full overflow-hidden border-2 shadow-lg box-border'}
+            ${!jugador.imagen && isEquipoA ? 'border-blue-400 shadow-blue-500/30' : ''}
+            ${!jugador.imagen && !isEquipoA ? 'border-red-400 opacity-80' : ''}
+            ${!jugador.imagen && jugador.ruta ? 'group-hover:border-yellow-400 group-hover:shadow-yellow-400/50' : ''}`}
         >
           {jugador.imagen ? (
-            <img src={jugador.imagen} alt={jugador.rol} className="w-full h-full object-cover" />
+            <img 
+              src={jugador.imagen} 
+              alt={jugador.rol} 
+              className="w-full h-full object-contain filter drop-shadow-md" 
+            />
           ) : (
             <div className={`w-full h-full ${jugador.color}`} />
           )}
