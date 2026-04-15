@@ -290,7 +290,7 @@ export default function FutbolPage() {
                      Continuar al Vestuario →
                    </Link>
                 </div>
-              )}
+              )} 
             </div>
 
             {/* Pseudocode */}
