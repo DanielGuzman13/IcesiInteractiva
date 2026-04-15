@@ -270,7 +270,7 @@ export default function FutbolPage() {
                      El siguiente paso es el vestuario, donde el Arquitecto ajustará la estructura.
                    </p>
                    <Link 
-                     href="/game/reto/arquitecto" 
+                     href="/game" 
                      className="block text-center bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded transition-colors"
                    >
                      Continuar al Vestuario →
