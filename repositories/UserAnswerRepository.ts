@@ -17,6 +17,16 @@ interface UserAnswerRow {
 
 const hasDatabaseConfig = (): boolean => Boolean(process.env.DATABASE_URL);
 
+const globalForAnswerRepo = globalThis as typeof globalThis & {
+  __icesiAnswersById?: Map<string, UserAnswer>;
+};
+
+const inMemoryAnswersById = globalForAnswerRepo.__icesiAnswersById ?? new Map<string, UserAnswer>();
+
+if (process.env.NODE_ENV !== 'production') {
+  globalForAnswerRepo.__icesiAnswersById = inMemoryAnswersById;
+}
+
 const mapUserAnswer = (row: UserAnswerRow): UserAnswer => ({
   id: row.id,
   userId: row.user_id,
@@ -33,7 +43,20 @@ const mapUserAnswer = (row: UserAnswerRow): UserAnswer => ({
 export class UserAnswerRepository extends BaseRepository<UserAnswer> {
   async create(answerData: CreateUserAnswerInput): Promise<UserAnswer> {
     if (!hasDatabaseConfig()) {
-      throw new Error('Database configuration required');
+      const answer: UserAnswer = {
+        id: crypto.randomUUID(),
+        userId: answerData.userId,
+        challengeId: answerData.challengeId,
+        playStepId: answerData.playStepId,
+        answer: answerData.answer,
+        isCorrect: answerData.isCorrect,
+        responseTime: answerData.responseTime,
+        attempts: answerData.attempts,
+        score: answerData.score,
+        answeredAt: new Date(),
+      };
+      inMemoryAnswersById.set(answer.id, answer);
+      return answer;
     }
 
     const pool = getPostgresPool();
@@ -60,7 +83,7 @@ export class UserAnswerRepository extends BaseRepository<UserAnswer> {
 
   async findById(id: string): Promise<UserAnswer | null> {
     if (!hasDatabaseConfig()) {
-      throw new Error('Database configuration required');
+      return inMemoryAnswersById.get(id) ?? null;
     }
 
     const pool = getPostgresPool();
@@ -83,7 +106,20 @@ export class UserAnswerRepository extends BaseRepository<UserAnswer> {
 
   async update(id: string, data: Partial<UserAnswer>): Promise<UserAnswer> {
     if (!hasDatabaseConfig()) {
-      throw new Error('Database configuration required');
+      const existing = inMemoryAnswersById.get(id);
+      if (!existing) throw new Error('Respuesta de usuario no encontrada');
+      
+      const updated: UserAnswer = {
+        ...existing,
+        answer: data.answer !== undefined ? data.answer : existing.answer,
+        isCorrect: typeof data.isCorrect === 'boolean' ? data.isCorrect : existing.isCorrect,
+        responseTime: typeof data.responseTime === 'number' ? data.responseTime : existing.responseTime,
+        attempts: typeof data.attempts === 'number' ? data.attempts : existing.attempts,
+        score: typeof data.score === 'number' ? data.score : existing.score,
+      };
+      
+      inMemoryAnswersById.set(id, updated);
+      return updated;
     }
 
     const pool = getPostgresPool();
@@ -144,7 +180,7 @@ export class UserAnswerRepository extends BaseRepository<UserAnswer> {
 
   async delete(id: string): Promise<boolean> {
     if (!hasDatabaseConfig()) {
-      throw new Error('Database configuration required');
+      return inMemoryAnswersById.delete(id);
     }
 
     const pool = getPostgresPool();
@@ -154,7 +190,12 @@ export class UserAnswerRepository extends BaseRepository<UserAnswer> {
 
   async findAll(filters?: Partial<UserAnswer>): Promise<UserAnswer[]> {
     if (!hasDatabaseConfig()) {
-      throw new Error('Database configuration required');
+      let answers = Array.from(inMemoryAnswersById.values());
+      if (filters?.userId) answers = answers.filter(a => a.userId === filters.userId);
+      if (filters?.challengeId) answers = answers.filter(a => a.challengeId === filters.challengeId);
+      if (filters?.playStepId) answers = answers.filter(a => a.playStepId === filters.playStepId);
+      if (typeof filters?.isCorrect === 'boolean') answers = answers.filter(a => a.isCorrect === filters.isCorrect);
+      return answers.sort((a, b) => b.answeredAt.getTime() - a.answeredAt.getTime());
     }
 
     const pool = getPostgresPool();
@@ -199,7 +240,9 @@ export class UserAnswerRepository extends BaseRepository<UserAnswer> {
   // Métodos específicos
   async findByUserId(userId: string): Promise<UserAnswer[]> {
     if (!hasDatabaseConfig()) {
-      throw new Error('Database configuration required');
+      return Array.from(inMemoryAnswersById.values())
+        .filter(a => a.userId === userId)
+        .sort((a, b) => b.answeredAt.getTime() - a.answeredAt.getTime());
     }
 
     const pool = getPostgresPool();
@@ -218,7 +261,9 @@ export class UserAnswerRepository extends BaseRepository<UserAnswer> {
 
   async findByChallengeId(challengeId: string): Promise<UserAnswer[]> {
     if (!hasDatabaseConfig()) {
-      throw new Error('Database configuration required');
+      return Array.from(inMemoryAnswersById.values())
+        .filter(a => a.challengeId === challengeId)
+        .sort((a, b) => b.answeredAt.getTime() - a.answeredAt.getTime());
     }
 
     const pool = getPostgresPool();
@@ -242,7 +287,14 @@ export class UserAnswerRepository extends BaseRepository<UserAnswer> {
     totalScore: number;
   }> {
     if (!hasDatabaseConfig()) {
-      throw new Error('Database configuration required');
+      const answers = Array.from(inMemoryAnswersById.values()).filter(a => a.userId === userId);
+      const totalAnswers = answers.length;
+      const correctAnswers = answers.filter(a => a.isCorrect).length;
+      const totalScore = answers.reduce((sum, a) => sum + (a.score || 0), 0);
+      const sumTime = answers.reduce((sum, a) => sum + (a.responseTime || 0), 0);
+      const averageResponseTime = totalAnswers > 0 ? sumTime / totalAnswers : 0;
+
+      return { totalAnswers, correctAnswers, averageResponseTime, totalScore };
     }
 
     const pool = getPostgresPool();

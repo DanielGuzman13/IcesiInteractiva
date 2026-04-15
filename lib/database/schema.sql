@@ -172,16 +172,16 @@ BEGIN
             SELECT COALESCE(SUM(score), 0)
             FROM user_answers
             WHERE user_id = NEW.user_id
-            AND answered_at >= (SELECT started_at FROM game_sessions WHERE id = NEW.play_step_id)
+            AND answered_at >= (SELECT started_at FROM game_sessions WHERE id = NEW.play_step_id::uuid)
         ),
         completed_challenges = (
             SELECT COUNT(*)
             FROM user_answers
             WHERE user_id = NEW.user_id
             AND is_correct = TRUE
-            AND answered_at >= (SELECT started_at FROM game_sessions WHERE id = NEW.play_step_id)
+            AND answered_at >= (SELECT started_at FROM game_sessions WHERE id = NEW.play_step_id::uuid)
         )
-    WHERE id = NEW.play_step_id;
+    WHERE id = NEW.play_step_id::uuid;
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;

@@ -211,7 +211,7 @@ export const Actividad2Salida: React.FC<Props> = ({ onComplete }) => {
               onClick={handleFinalizar}
               className="bg-gray-800 hover:bg-gray-900 active:scale-95 text-white font-bold py-3 px-8 rounded-full transition-all shadow-md"
             >
-              Ver Resultado Final 🏆
+              Continuar
             </button>
           </div>
         </div>
