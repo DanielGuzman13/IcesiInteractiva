@@ -382,7 +382,7 @@ export const Cancha: React.FC = () => {
     if (score > 0) {
       setFeedback({ 
         show: true, 
-        msg: '¡Smoke Test superado! Amenaza inicial controlada.', 
+        msg: '¡Test superado! Amenaza inicial controlada.', 
         score: score, 
         ok: true,
         onContinue: () => {
@@ -924,14 +924,14 @@ export const Cancha: React.FC = () => {
               </motion.div>
             )}
 
-            {/* QA Actividad 1 - Smoke Test OVERLAY */}
+            {/* QA Actividad 1 - Test OVERLAY */}
             {gameState === 'qa_act1_frozen' && (
               <motion.div key="qa-act1-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
                 className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
               >
                 <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-blue-600">
                   <div className="bg-blue-700 px-4 py-3 text-white flex justify-between items-center shadow">
-                    <h2 className="font-black text-xl">🛡️ ¡SMOKE TEST: BLOQUEO RÁPIDO!</h2>
+                    <h2 className="font-black text-xl">🛡️ ¡TEST: BLOQUEO RÁPIDO!</h2>
                     <span className="text-sm bg-black/30 px-3 py-1 rounded-full border border-white/20">Jugador: Defensa (QA)</span>
                   </div>
                   <div className="overflow-y-auto bg-blue-50 relative p-4 md:p-6">
@@ -1092,15 +1092,23 @@ export const Cancha: React.FC = () => {
                   <p className="text-2xl font-medium text-gray-700 mb-8 leading-relaxed">
                     ¡Has recorrido todos los perfiles de ingeniería y construido el partido perfecto! El gol es seguro y el sistema está desplegado de forma permanente.
                   </p>
-                  <button
-                    onClick={() => {
-                      localStorage.clear();
-                      window.location.reload();
-                    }}
-                    className="bg-yellow-500 hover:bg-yellow-600 text-white font-black py-4 px-8 rounded-full transition-colors text-2xl shadow-xl"
-                  >
-                    JUGAR DE NUEVO
-                  </button>
+                  <div className="flex flex-col sm:flex-row gap-6 justify-center">
+                    <button
+                      onClick={() => {
+                        localStorage.clear();
+                        window.location.reload();
+                      }}
+                      className="bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold py-4 px-8 rounded-full transition-all text-xl shadow-lg active:scale-95 border-2 border-gray-200"
+                    >
+                      JUGAR DE NUEVO
+                    </button>
+                    <button
+                      onClick={() => router.push('/game/resumen-roles')}
+                      className="bg-yellow-500 hover:bg-yellow-600 text-white font-black py-4 px-10 rounded-full transition-all text-2xl shadow-2xl active:scale-95 border-b-4 border-yellow-700"
+                    >
+                      CONTINUAR →
+                    </button>
+                  </div>
                 </div>
               </motion.div>
             )}
