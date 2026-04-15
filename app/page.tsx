@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
@@ -59,78 +60,96 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-blue-50 p-6">
-      <div className="text-center max-w-2xl w-full bg-white p-10 rounded-3xl shadow-2xl">
-        <h1 className="text-5xl font-extrabold text-blue-900 mb-6 tracking-tight">
-          ICESI INTERACTIVA ⚽
-        </h1>
-
-        <p className="text-xl text-gray-700 mb-8">
-          Escribe tu nombre para entrar a la partida y comenzar el juego.
-        </p>
-
-        <form onSubmit={handleJoin} className="flex flex-col gap-4 mb-8">
-          <input
-            type="text"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-            placeholder="Tu nombre"
-            maxLength={60}
-            className="w-full rounded-xl border border-gray-300 px-4 py-3 text-lg font-bold outline-none focus:ring-2 focus:ring-blue-500 bg-white text-black"
-            style={{ zIndex: 10, position: 'relative' }}
-          />
-
-          <div className="flex gap-3">
-            <button
-              type="button"
-              onClick={() => setSalon('205M')}
-              className={`flex-1 py-3 px-6 rounded-full font-bold transition-all hover:scale-105 active:scale-95 shadow-lg ${
-                salon === '205M'
-                  ? 'bg-blue-600 text-white ring-4 ring-blue-300'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-            >
-              205M
-            </button>
-            <button
-              type="button"
-              onClick={() => setSalon('206M')}
-              className={`flex-1 py-3 px-6 rounded-full font-bold transition-all hover:scale-105 active:scale-95 shadow-lg ${
-                salon === '206M'
-                  ? 'bg-blue-600 text-white ring-4 ring-blue-300'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-            >
-              206M
-            </button>
+    <main
+      className="flex min-h-screen items-center justify-center p-6 bg-center bg-cover bg-no-repeat"
+      style={{ backgroundImage: "url('/images/fondo/fondo.jpg')" }}
+    >
+      <div className="w-full max-w-6xl bg-white p-8 md:p-10 rounded-3xl shadow-2xl">
+        <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-10">
+          <div className="w-full lg:w-2/5 flex items-center justify-center">
+            <Image
+              src="/Logo_universidad_icesi.svg.png"
+              alt="Logo Universidad Icesi"
+              width={560}
+              height={560}
+              className="w-full max-w-[320px] md:max-w-[380px] lg:max-w-[420px] h-auto object-contain"
+              priority
+            />
           </div>
 
-          {error && <p className="text-red-600 text-sm text-left">{error}</p>}
+          <div className="text-center w-full lg:w-3/5">
+          <h1 className="text-5xl font-extrabold text-blue-900 mb-6 tracking-tight">
+            ICESI INTERACTIVA 2026
+          </h1>
 
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-bold py-4 px-10 rounded-full text-xl transition-all hover:scale-105 active:scale-95 shadow-lg"
-          >
-            {isLoading ? 'Entrando...' : 'Entrar a la partida'}
-          </button>
-        </form>
+          <p className="text-xl text-gray-700 mb-8">
+            Escribe tu nombre para entrar a la partida y comenzar el juego.
+          </p>
 
-        {/* <div className="flex flex-wrap justify-center gap-3">
-          <Link
-            href="/futbol"
-            className="inline-block bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-full transition-all hover:scale-105 active:scale-95 shadow-lg"
-          >
-            ⚽ Editor Fútbol
-          </Link>
+          <form onSubmit={handleJoin} className="flex flex-col gap-4 mb-8">
+            <input
+              type="text"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              placeholder="Tu nombre"
+              maxLength={60}
+              className="w-full rounded-xl border border-gray-300 px-4 py-3 text-lg font-bold outline-none focus:ring-2 focus:ring-blue-500 bg-white text-black"
+              style={{ zIndex: 10, position: 'relative' }}
+            />
 
-          <Link
-            href="/blockly"
-            className="inline-block bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-full transition-all hover:scale-105 active:scale-95 shadow-lg"
-          >
-            Blockly Editor
-          </Link>
-        </div> */}
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => setSalon('205M')}
+                className={`flex-1 py-3 px-6 rounded-full font-bold transition-all hover:scale-105 active:scale-95 shadow-lg ${
+                  salon === '205M'
+                    ? 'bg-blue-600 text-white ring-4 ring-blue-300'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                205M
+              </button>
+              <button
+                type="button"
+                onClick={() => setSalon('206M')}
+                className={`flex-1 py-3 px-6 rounded-full font-bold transition-all hover:scale-105 active:scale-95 shadow-lg ${
+                  salon === '206M'
+                    ? 'bg-blue-600 text-white ring-4 ring-blue-300'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                206M
+              </button>
+            </div>
+
+            {error && <p className="text-red-600 text-sm text-left">{error}</p>}
+
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-bold py-4 px-10 rounded-full text-xl transition-all hover:scale-105 active:scale-95 shadow-lg"
+            >
+              {isLoading ? 'Entrando...' : 'Entrar a la partida'}
+            </button>
+          </form>
+
+            {/* <div className="flex flex-wrap justify-center gap-3">
+              <Link
+                href="/futbol"
+                className="inline-block bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-full transition-all hover:scale-105 active:scale-95 shadow-lg"
+              >
+                ⚽ Editor Fútbol
+              </Link>
+
+              <Link
+                href="/blockly"
+                className="inline-block bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-full transition-all hover:scale-105 active:scale-95 shadow-lg"
+              >
+                Blockly Editor
+              </Link>
+            </div> */}
+          </div>
+        </div>
       </div>
     </main>
   );
