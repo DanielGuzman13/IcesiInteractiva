@@ -86,7 +86,7 @@ export const Actividad2CambioFrente = ({ onComplete }: Props) => {
                 onClick={() => onComplete(opcionSeleccionada.puntos)}
                 className="bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-10 rounded-full transition-all shadow-md w-full sm:w-auto"
               >
-                Ver resultado final →
+                Continuar
               </button>
             </div>
           )}

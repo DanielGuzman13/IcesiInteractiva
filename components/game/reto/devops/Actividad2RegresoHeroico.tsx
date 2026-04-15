@@ -215,7 +215,7 @@ export const Actividad2RegresoHeroico: React.FC<Props> = ({ onComplete }) => {
               <br />
               <button onClick={() => onComplete(elegida.score)}
                 className="bg-cyan-600 hover:bg-cyan-700 active:scale-95 text-white font-bold py-3 px-8 rounded-full transition-all shadow-md">
-                Ver Resultado Final 🏆
+                Continuar
               </button>
             </motion.div>
           </motion.div>

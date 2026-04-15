@@ -18,7 +18,7 @@ type Companero = {
 const COMPANEROS: Companero[] = [
   {
     id: 'corto',
-    emoji: '🟢',
+    emoji: '🟢1️⃣',
     label: 'Pase Corto',
     descripcion: 'Al compañero más cercano — seguro y controlado.',
     equivalencia: 'mejorar y estabilizar lo que ya funciona. Menos risk, avance gradual y mayor confianza del equipo.',
@@ -160,7 +160,7 @@ export const Actividad2Salida: React.FC<Props> = ({ onComplete }) => {
                 opacity={elegido && elegido.id !== comp.id ? 0.4 : 1}
               />
               <text x={comp.cx} y={comp.cy + 1.5} textAnchor="middle" fontSize="3.5" fill="white">
-                {comp.id === 'corto' ? '🟢' : comp.id === 'medio' ? '🟡' : '🔴'}
+                {comp.id === 'corto' ? '🟢1️⃣' : comp.id === 'medio' ? '🟡' : '🔴'}
               </text>
               <text x={comp.cx} y={comp.cy + 8} textAnchor="middle" fontSize="2.5" fill="white" opacity="0.9">
                 {comp.label}
@@ -211,7 +211,7 @@ export const Actividad2Salida: React.FC<Props> = ({ onComplete }) => {
               onClick={handleFinalizar}
               className="bg-gray-800 hover:bg-gray-900 active:scale-95 text-white font-bold py-3 px-8 rounded-full transition-all shadow-md"
             >
-              Ver Resultado Final 🏆
+              Continuar
             </button>
           </div>
         </div>

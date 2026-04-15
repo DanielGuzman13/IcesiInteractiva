@@ -19,7 +19,7 @@ const ZONAS: Zona[] = [
   {
     id: 'izquierdo',
     label: 'Poste Izquierdo',
-    emoji: '🟢',
+    emoji: '🟢1️⃣',
     descripcion: 'Cubres el ángulo inferior',
     score: 100,
     resultado: 'correcto',

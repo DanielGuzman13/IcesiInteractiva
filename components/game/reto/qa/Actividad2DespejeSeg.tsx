@@ -115,7 +115,7 @@ export const Actividad2DespejeSeg: React.FC<Props> = ({ onComplete }) => {
         style={{ background: '#2E7D32', paddingBottom: '56.25%' }}
       >
         <svg
-          viewBox={`0 0 ${VB_W} ${VB_H}`}
+          viewBox="0 10 64 36"
           className="absolute inset-0 w-full h-full"
         >
           <rect width={VB_W} height={VB_H} fill="#2E7D32" />
@@ -139,28 +139,28 @@ export const Actividad2DespejeSeg: React.FC<Props> = ({ onComplete }) => {
             }
             transition={{ duration: 0.8, delay: 0.5 }}
           >
-            <circle cx={BALL_POS.x + 6} cy={BALL_POS.y - 5} r="3" fill="#c0392b" stroke="white" strokeWidth="0.5" />
-            <text x={BALL_POS.x + 6} y={BALL_POS.y - 3.8} textAnchor="middle" fontSize="2.5" fill="white" fontWeight="bold">R</text>
+            <circle cx={BALL_POS.x + 6} cy={BALL_POS.y - 5} r="2.5" fill="#c0392b" stroke="white" strokeWidth="0.5" />
+            <text x={BALL_POS.x + 6} y={BALL_POS.y - 4.1} textAnchor="middle" fontSize="2.2" fill="white" fontWeight="bold">R</text>
           </motion.g>
 
           {/* Defensa QA (azul) con aura — jugador activo */}
           {fase === 'elige' && (
-            <circle cx={BALL_POS.x - 3} cy={BALL_POS.y} r="7" fill="#3b82f6" opacity="0.2">
-              <animate attributeName="r" values="6;9;6" dur="1.2s" repeatCount="indefinite" />
+            <circle cx={BALL_POS.x - 3} cy={BALL_POS.y} r="6" fill="#3b82f6" opacity="0.2">
+              <animate attributeName="r" values="5;7.5;5" dur="1.2s" repeatCount="indefinite" />
               <animate attributeName="opacity" values="0.2;0.06;0.2" dur="1.2s" repeatCount="indefinite" />
             </circle>
           )}
-          <circle cx={BALL_POS.x - 3} cy={BALL_POS.y} r="3.5" fill="#1d4ed8" stroke="#93c5fd" strokeWidth="1" />
-          <text x={BALL_POS.x - 3} y={BALL_POS.y + 1.2} textAnchor="middle" fontSize="2.6" fill="white" fontWeight="bold">QA</text>
+          <circle cx={BALL_POS.x - 3} cy={BALL_POS.y} r="2.8" fill="#1d4ed8" stroke="#93c5fd" strokeWidth="1" />
+          <text x={BALL_POS.x - 3} y={BALL_POS.y + 1.0} textAnchor="middle" fontSize="2.3" fill="white" fontWeight="bold">QA</text>
 
           {/* Portero (esquina inferior izquierda) */}
-          <circle cx={6} cy={VB_H * 0.5} r="3" fill="#1d4ed8" stroke="white" strokeWidth="0.5" opacity="0.85" />
-          <text x={6} y={VB_H * 0.5 + 1} textAnchor="middle" fontSize="2.2" fill="white">PO</text>
+          <circle cx={6} cy={VB_H * 0.5} r="2.5" fill="#1d4ed8" stroke="white" strokeWidth="0.5" opacity="0.85" />
+          <text x={6} y={VB_H * 0.5 + 0.9} textAnchor="middle" fontSize="1.9" fill="white">PO</text>
 
           {/* Flechas de dirección (solo en fase elige) */}
           {fase === 'elige' && DIRECCIONES.map(dir => {
             const angle = dir.angle * (Math.PI / 180);
-            const len = 10;
+            const len = 14;
             const x2 = BALL_POS.x + Math.cos(angle) * len;
             const y2 = BALL_POS.y + Math.sin(angle) * len;
             const colors = { correcto: '#22c55e', regular: '#eab308', incorrecto: '#ef4444' };
@@ -174,14 +174,14 @@ export const Actividad2DespejeSeg: React.FC<Props> = ({ onComplete }) => {
                   x1={BALL_POS.x} y1={BALL_POS.y}
                   x2={x2} y2={y2}
                   stroke={colors[dir.resultado]}
-                  strokeWidth="1.5"
+                  strokeWidth="0.8"
                   markerEnd={`url(#arrow-${dir.id})`}
                   opacity="0.85"
                 />
                 {/* Zona clicable transparente alrededor de la flecha */}
-                <circle cx={x2} cy={y2} r="4" fill={colors[dir.resultado]} opacity="0.25" />
-                <text x={x2} y={y2 + 1} textAnchor="middle" fontSize="2.8">{dir.emoji}</text>
-                <text x={x2} y={y2 + 4.5} textAnchor="middle" fontSize="2" fill="white" fontWeight="bold">{dir.label}</text>
+                <circle cx={x2} cy={y2} r="3" fill={colors[dir.resultado]} opacity="0.25" />
+                <text x={x2} y={y2 + 0.8} textAnchor="middle" fontSize="2.4">{dir.emoji}</text>
+                <text x={x2} y={y2 + 3.5} textAnchor="middle" fontSize="1.6" fill="white" fontWeight="bold">{dir.label}</text>
               </g>
             );
           })}
@@ -192,7 +192,7 @@ export const Actividad2DespejeSeg: React.FC<Props> = ({ onComplete }) => {
               const colors = { correcto: '#22c55e', regular: '#eab308', incorrecto: '#ef4444' };
               return (
                 <marker key={dir.id} id={`arrow-${dir.id}`} viewBox="0 0 10 10" refX="10" refY="5"
-                  markerWidth="4" markerHeight="4" orient="auto">
+                  markerWidth="2.5" markerHeight="2.5" orient="auto">
                   <path d="M 0 0 L 10 5 L 0 10 z" fill={colors[dir.resultado]} />
                 </marker>
               );
@@ -286,7 +286,7 @@ export const Actividad2DespejeSeg: React.FC<Props> = ({ onComplete }) => {
                 onClick={() => onComplete(elegida.score)}
                 className="bg-gray-800 hover:bg-gray-900 active:scale-95 text-white font-bold py-3 px-8 rounded-full transition-all shadow-md"
               >
-                Ver Resultado Final 🏆
+                Continuar
               </button>
             </motion.div>
           </motion.div>

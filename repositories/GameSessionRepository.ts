@@ -15,6 +15,16 @@ interface GameSessionRow {
 
 const hasDatabaseConfig = (): boolean => Boolean(process.env.DATABASE_URL);
 
+const globalForSessionRepo = globalThis as typeof globalThis & {
+  __icesiSessionsById?: Map<string, GameSession>;
+};
+
+const inMemorySessionsById = globalForSessionRepo.__icesiSessionsById ?? new Map<string, GameSession>();
+
+if (process.env.NODE_ENV !== 'production') {
+  globalForSessionRepo.__icesiSessionsById = inMemorySessionsById;
+}
+
 const mapGameSession = (row: GameSessionRow): GameSession => ({
   id: row.id,
   userId: row.user_id,
@@ -29,7 +39,17 @@ const mapGameSession = (row: GameSessionRow): GameSession => ({
 export class GameSessionRepository extends BaseRepository<GameSession> {
   async create(sessionData: CreateGameSessionInput): Promise<GameSession> {
     if (!hasDatabaseConfig()) {
-      throw new Error('Database configuration required');
+      const session: GameSession = {
+        id: crypto.randomUUID(),
+        userId: sessionData.userId,
+        startedAt: new Date(),
+        currentPlayId: sessionData.currentPlayId || null,
+        score: 0,
+        completedChallenges: 0,
+        status: 'active',
+      };
+      inMemorySessionsById.set(session.id, session);
+      return session;
     }
 
     const pool = getPostgresPool();
@@ -47,7 +67,7 @@ export class GameSessionRepository extends BaseRepository<GameSession> {
 
   async findById(id: string): Promise<GameSession | null> {
     if (!hasDatabaseConfig()) {
-      throw new Error('Database configuration required');
+      return inMemorySessionsById.get(id) ?? null;
     }
 
     const pool = getPostgresPool();
@@ -70,7 +90,20 @@ export class GameSessionRepository extends BaseRepository<GameSession> {
 
   async update(id: string, data: UpdateGameSessionInput): Promise<GameSession> {
     if (!hasDatabaseConfig()) {
-      throw new Error('Database configuration required');
+      const existing = inMemorySessionsById.get(id);
+      if (!existing) throw new Error('Sesión de juego no encontrada');
+      
+      const updated: GameSession = {
+        ...existing,
+        currentPlayId: data.currentPlayId !== undefined ? data.currentPlayId : existing.currentPlayId,
+        score: typeof data.score === 'number' ? data.score : existing.score,
+        completedChallenges: typeof data.completedChallenges === 'number' ? data.completedChallenges : existing.completedChallenges,
+        status: data.status ? (data.status as any) : existing.status,
+        completedAt: data.completedAt !== undefined ? data.completedAt : existing.completedAt,
+      };
+      
+      inMemorySessionsById.set(id, updated);
+      return updated;
     }
 
     const pool = getPostgresPool();
@@ -131,7 +164,7 @@ export class GameSessionRepository extends BaseRepository<GameSession> {
 
   async delete(id: string): Promise<boolean> {
     if (!hasDatabaseConfig()) {
-      throw new Error('Database configuration required');
+      return inMemorySessionsById.delete(id);
     }
 
     const pool = getPostgresPool();
@@ -141,7 +174,10 @@ export class GameSessionRepository extends BaseRepository<GameSession> {
 
   async findAll(filters?: Partial<GameSession>): Promise<GameSession[]> {
     if (!hasDatabaseConfig()) {
-      throw new Error('Database configuration required');
+      let sessions = Array.from(inMemorySessionsById.values());
+      if (filters?.userId) sessions = sessions.filter(s => s.userId === filters.userId);
+      if (filters?.status) sessions = sessions.filter(s => s.status === filters.status);
+      return sessions.sort((a, b) => b.startedAt.getTime() - a.startedAt.getTime());
     }
 
     const pool = getPostgresPool();
@@ -176,7 +212,9 @@ export class GameSessionRepository extends BaseRepository<GameSession> {
   // Métodos específicos
   async findActiveSessions(): Promise<GameSession[]> {
     if (!hasDatabaseConfig()) {
-      throw new Error('Database configuration required');
+      return Array.from(inMemorySessionsById.values())
+        .filter(s => s.status === 'active')
+        .sort((a, b) => b.startedAt.getTime() - a.startedAt.getTime());
     }
 
     const pool = getPostgresPool();
@@ -194,7 +232,9 @@ export class GameSessionRepository extends BaseRepository<GameSession> {
 
   async findByUserId(userId: string): Promise<GameSession[]> {
     if (!hasDatabaseConfig()) {
-      throw new Error('Database configuration required');
+      return Array.from(inMemorySessionsById.values())
+        .filter(s => s.userId === userId)
+        .sort((a, b) => b.startedAt.getTime() - a.startedAt.getTime());
     }
 
     const pool = getPostgresPool();
@@ -213,7 +253,11 @@ export class GameSessionRepository extends BaseRepository<GameSession> {
 
   async updateScore(sessionId: string, score: number): Promise<GameSession> {
     if (!hasDatabaseConfig()) {
-      throw new Error('Database configuration required');
+      const existing = inMemorySessionsById.get(sessionId);
+      if (!existing) throw new Error('Sesión de juego no encontrada');
+      const updated = { ...existing, score: existing.score + score };
+      inMemorySessionsById.set(sessionId, updated);
+      return updated;
     }
 
     const pool = getPostgresPool();
@@ -236,7 +280,11 @@ export class GameSessionRepository extends BaseRepository<GameSession> {
 
   async completeSession(sessionId: string): Promise<GameSession> {
     if (!hasDatabaseConfig()) {
-      throw new Error('Database configuration required');
+      const existing = inMemorySessionsById.get(sessionId);
+      if (!existing) throw new Error('Sesión de juego no encontrada');
+      const updated: GameSession = { ...existing, status: 'completed', completedAt: new Date() };
+      inMemorySessionsById.set(sessionId, updated);
+      return updated;
     }
 
     const pool = getPostgresPool();

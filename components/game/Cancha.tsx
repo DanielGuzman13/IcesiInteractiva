@@ -347,6 +347,7 @@ export const Cancha: React.FC = () => {
 
       const target = getJugadorPos(targetIdMap[optId]);
       setBallParams({ top: target.top, left: target.left, scale: optId === 'largo' ? 2 : 1, text: '⚽' });
+      setPoPos({ top: '50%', left: '5%' }); // Portero regresa al arco
 
       setGoals(g => ({ ...g, a: g.a + 1 }));
 
