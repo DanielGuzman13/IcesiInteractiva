@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Actividad1PaseFiltrado } from '../../../../components/game/reto/manager/Actividad1PaseFiltrado';
 import { Actividad2CambioFrente } from '../../../../components/game/reto/manager/Actividad2CambioFrente';
 import { useGamePersistence } from '@/hooks/useGamePersistence';
+import RoleDialogueOverlay from '@/components/game/reto/RoleDialogueOverlay';
 
 // Score persistido en localStorage (simula UserAnswer hasta que BD esté conectada)
 const guardarScore = (actividad: string, score: number) => {
@@ -16,18 +17,19 @@ const guardarScore = (actividad: string, score: number) => {
 };
 
 type Paso = 'intro' | 'actividad1' | 'actividad2' | 'resultado';
+type DialogoPendiente = { activity: 1 | 2; nextStep: 'actividad2' | 'resultado' } | null;
 
 export default function ManagerRetoPage() {
   const { saveAnswer } = useGamePersistence();
   const [paso, setPaso] = useState<Paso>('intro');
   const [scoreA1, setScoreA1] = useState(0);
   const [scoreA2, setScoreA2] = useState(0);
+  const [dialogoPendiente, setDialogoPendiente] = useState<DialogoPendiente>(null);
 
   const handleA1Complete = (score: number) => {
     setScoreA1(score);
     guardarScore('actividad1_pase', score);
-    setPaso('actividad2');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setDialogoPendiente({ activity: 1, nextStep: 'actividad2' });
 
     // Guardar respuesta en PostgreSQL
     saveAnswer('manager-actividad-1', { score }, score > 0, score);
@@ -36,11 +38,17 @@ export default function ManagerRetoPage() {
   const handleA2Complete = (score: number) => {
     setScoreA2(score);
     guardarScore('actividad2_cambio', score);
-    setPaso('resultado');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setDialogoPendiente({ activity: 2, nextStep: 'resultado' });
 
     // Guardar respuesta en PostgreSQL
     saveAnswer('manager-actividad-2', { score }, score > 0, score);
+  };
+
+  const handleContinueDialog = () => {
+    if (!dialogoPendiente) return;
+    setPaso(dialogoPendiente.nextStep);
+    setDialogoPendiente(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const total = scoreA1 + scoreA2;
@@ -55,6 +63,10 @@ export default function ManagerRetoPage() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-amber-900 via-amber-800 to-yellow-700 flex flex-col items-center py-8 px-4">
+      {dialogoPendiente && (
+        <RoleDialogueOverlay role="manager" activity={dialogoPendiente.activity} onContinue={handleContinueDialog} />
+      )}
+
       {/* Top bar */}
       <div className="w-full max-w-4xl flex justify-between items-center mb-6">
         <Link href="/game" className="text-white/80 hover:text-white text-sm font-semibold flex items-center gap-1 transition-colors">

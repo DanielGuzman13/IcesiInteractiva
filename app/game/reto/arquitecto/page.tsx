@@ -5,8 +5,10 @@ import Link from 'next/link';
 import Actividad1DiagramaClases from '@/components/game/reto/arquitecto/Actividad1DiagramaClases';
 import Actividad2AsignarAtributos from '@/components/game/reto/arquitecto/Actividad2AsignarAtributos';
 import { useGamePersistence } from '@/hooks/useGamePersistence';
+import RoleDialogueOverlay from '@/components/game/reto/RoleDialogueOverlay';
 
 type Paso = 'intro' | 'actividad1' | 'actividad2' | 'resultado';
+type DialogoPendiente = { activity: 1 | 2; nextStep: 'actividad2' | 'resultado' } | null;
 
 export default function ArquitectoRetoPage() {
   const { saveAnswer } = useGamePersistence();
@@ -14,11 +16,11 @@ export default function ArquitectoRetoPage() {
   const [scoreA1, setScoreA1] = useState(0);
   const [scoreA2, setScoreA2] = useState(0);
   const [mensajeEmergente, setMensajeEmergente] = useState<string | null>(null);
+  const [dialogoPendiente, setDialogoPendiente] = useState<DialogoPendiente>(null);
 
   const handleA1Complete = (score: number) => {
     setScoreA1(score);
-    setPaso('actividad2');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setDialogoPendiente({ activity: 1, nextStep: 'actividad2' });
 
     // Guardar respuesta en PostgreSQL
     saveAnswer('arquitecto-actividad-1', { score }, score > 0, score);
@@ -35,8 +37,7 @@ export default function ArquitectoRetoPage() {
 
   const handleA2Complete = (score: number) => {
     setScoreA2(score);
-    setPaso('resultado');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setDialogoPendiente({ activity: 2, nextStep: 'resultado' });
 
     // Guardar en Storage
     const val = localStorage.getItem('currentPlayer') || 'guest';
@@ -57,6 +58,13 @@ export default function ArquitectoRetoPage() {
     setTimeout(() => setMensajeEmergente(null), 4000);
   };
 
+  const handleContinueDialog = () => {
+    if (!dialogoPendiente) return;
+    setPaso(dialogoPendiente.nextStep);
+    setDialogoPendiente(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const totalScore = scoreA1 + scoreA2;
 
   const getNivel = () => {
@@ -70,6 +78,10 @@ export default function ArquitectoRetoPage() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-700 flex flex-col items-center py-8 px-4">
+      {dialogoPendiente && (
+        <RoleDialogueOverlay role="arquitecto" activity={dialogoPendiente.activity} onContinue={handleContinueDialog} />
+      )}
+
       {/* Top bar */}
       <div className="w-full max-w-3xl flex justify-between items-center mb-6">
         <Link href="/game" className="text-white/80 hover:text-white text-sm font-semibold flex items-center gap-1 transition-colors">

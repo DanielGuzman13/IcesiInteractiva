@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Actividad1ClaridadArco } from '@/components/game/reto/frontend/Actividad1ClaridadArco';
 import { Actividad2RegateEfectivo } from '@/components/game/reto/frontend/Actividad2RegateEfectivo';
 import { useGamePersistence } from '@/hooks/useGamePersistence';
+import RoleDialogueOverlay from '@/components/game/reto/RoleDialogueOverlay';
 
 const guardarScore = (score: number) => {
   if (typeof window === 'undefined') return;
@@ -15,17 +16,18 @@ const guardarScore = (score: number) => {
 };
 
 type Paso = 'intro' | 'actividad1' | 'actividad2' | 'resultado';
+type DialogoPendiente = { activity: 1 | 2; nextStep: 'actividad2' | 'resultado' } | null;
 
 export default function FrontendRetoPage() {
   const { saveAnswer } = useGamePersistence();
   const [paso, setPaso] = useState<Paso>('intro');
   const [scoreA1, setScoreA1] = useState(0);
   const [scoreA2, setScoreA2] = useState(0);
+  const [dialogoPendiente, setDialogoPendiente] = useState<DialogoPendiente>(null);
 
   const handleA1Complete = (score: number) => {
     setScoreA1(score);
-    setPaso('actividad2');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setDialogoPendiente({ activity: 1, nextStep: 'actividad2' });
 
     // Guardar respuesta en PostgreSQL
     saveAnswer('frontend-actividad-1', { score }, score > 0, score);
@@ -34,11 +36,17 @@ export default function FrontendRetoPage() {
   const handleA2Complete = (score: number) => {
     setScoreA2(score);
     guardarScore(scoreA1 + score);
-    setPaso('resultado');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setDialogoPendiente({ activity: 2, nextStep: 'resultado' });
 
     // Guardar respuesta en PostgreSQL
     saveAnswer('frontend-actividad-2', { score }, score > 0, score);
+  };
+
+  const handleContinueDialog = () => {
+    if (!dialogoPendiente) return;
+    setPaso(dialogoPendiente.nextStep);
+    setDialogoPendiente(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const total = scoreA1 + scoreA2;
@@ -52,6 +60,10 @@ export default function FrontendRetoPage() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-rose-900 via-pink-800 to-rose-700 flex flex-col items-center py-8 px-4">
+      {dialogoPendiente && (
+        <RoleDialogueOverlay role="frontend" activity={dialogoPendiente.activity} onContinue={handleContinueDialog} />
+      )}
+
       {/* Top bar */}
       <div className="w-full max-w-3xl flex justify-between items-center mb-6">
         <Link href="/game" className="text-white/80 hover:text-white text-sm font-semibold flex items-center gap-1 transition-colors">

@@ -15,6 +15,7 @@ import { Actividad1PaseFiltrado } from './reto/manager/Actividad1PaseFiltrado';
 import { Actividad2CambioFrente } from './reto/manager/Actividad2CambioFrente';
 import { Actividad1ClaridadArco } from './reto/frontend/Actividad1ClaridadArco';
 import { Actividad2RegateEfectivo } from './reto/frontend/Actividad2RegateEfectivo';
+import RoleDialogueOverlay from './reto/RoleDialogueOverlay';
 import { useGamePersistence } from '../../hooks/useGamePersistence';
 
 // Tipos requeridos
@@ -59,6 +60,12 @@ type GameFlowState =
   | 'game_over'
   | 'next_roles';
 
+type PendingRoleDialog = {
+  role: 'product-owner' | 'qa' | 'devops' | 'manager' | 'frontend';
+  activity: 1 | 2;
+  onContinue: () => void;
+} | null;
+
 // Opciones originales removidas porque ahora se usan los componentes completos
 
 export const Cancha: React.FC = () => {
@@ -77,6 +84,7 @@ export const Cancha: React.FC = () => {
   // Futbol Animation
   const [futbolAnimation, setFutbolAnimation] = useState<{ show: boolean; points: number; logicMode: string }>({ show: false, points: 0, logicMode: '' });
   const futbolAnimationHandledRef = useRef(false);
+  const [pendingRoleDialog, setPendingRoleDialog] = useState<PendingRoleDialog>(null);
 
   // Feedback Data
   const [feedback, setFeedback] = useState<{ 
@@ -89,6 +97,14 @@ export const Cancha: React.FC = () => {
 
   // Storage logic
   const [pre, setPre] = useState('guest');
+
+  const showRoleDialog = (
+    role: 'product-owner' | 'qa' | 'devops' | 'manager' | 'frontend',
+    activity: 1 | 2,
+    onContinue: () => void
+  ) => {
+    setPendingRoleDialog({ role, activity, onContinue });
+  };
 
   // Helper para buscar posición de jugadores
   const getJugadorPos = (id: string, defLeft = '50%') => {
@@ -254,18 +270,14 @@ export const Cancha: React.FC = () => {
     ans['actividad1'] = { score: score };
     localStorage.setItem(`${pre}_po_answers`, JSON.stringify(ans));
 
-    // Guardar respuesta en PostgreSQL
     saveAnswer('po-actividad-1', { score }, score > 0, score);
 
-    setTotalScore(prev => prev + score);
-
     if (score > 0) {
-      // Exito: Portero atrapa
       setBallParams({ top: '50%', left: '5%', scale: 1, text: '⚽' });
-      setFeedback({ 
-        show: true, 
-        msg: '¡Balón atrapado! Riesgo contenido.', 
-        score: score, 
+      setFeedback({
+        show: true,
+        msg: '¡Balón atrapado! Riesgo contenido.',
+        score: score,
         ok: true,
         onContinue: () => {
           setFeedback(f => ({ ...f, show: false }));
@@ -273,20 +285,19 @@ export const Cancha: React.FC = () => {
         }
       });
     } else {
-      // Fallo: Gol rival
-      setBallParams({ top: '50%', left: '0%', scale: 1.5, text: '⚽' }); // Entra al arco rojo
+      setBallParams({ top: '50%', left: '0%', scale: 1.5, text: '⚽' });
       setShowFlash(true);
       setTimeout(() => setShowFlash(false), 500);
       setGoals(g => ({ ...g, b: g.b + 1 }));
 
-      setFeedback({ 
-        show: true, 
-        msg: '¡Gol en contra! Repitiendo saque de centro.', 
-        score: 0, 
+      setFeedback({
+        show: true,
+        msg: '¡Gol en contra! Repitiendo saque de centro.',
+        score: 0,
         ok: false,
         onContinue: () => {
           setFeedback(f => ({ ...f, show: false }));
-          setGameState('pre_kickoff'); // Regresa al kickoff
+          setGameState('pre_kickoff');
           setBallParams({ top: '50%', left: '50%', scale: 1, text: '⚽' });
         }
       });
@@ -310,53 +321,50 @@ export const Cancha: React.FC = () => {
   };
 
   const handleAct2Choice = (score: number) => {
-    setTotalScore(prev => prev + score);
-    setGameState('po_act2_resolving');
+    showRoleDialog('product-owner', 2, () => {
+      setPendingRoleDialog(null);
+      setTotalScore(prev => prev + score);
+      setGameState('po_act2_resolving');
 
-    const ans = JSON.parse(localStorage.getItem(`${pre}_po_answers`) || '{}');
-    ans['actividad2'] = { score: score };
-    localStorage.setItem(`${pre}_po_answers`, JSON.stringify(ans));
+      const ans = JSON.parse(localStorage.getItem(`${pre}_po_answers`) || '{}');
+      ans['actividad2'] = { score: score };
+      localStorage.setItem(`${pre}_po_answers`, JSON.stringify(ans));
 
-    // Guardar respuesta en PostgreSQL
-    saveAnswer('po-actividad-2', { score }, score > 0, score);
+      saveAnswer('po-actividad-2', { score }, score > 0, score);
 
-    setTotalScore(prev => prev + score);
+      let optId = 'corto';
+      if (score === 15) optId = 'medio';
+      if (score === 5) optId = 'largo';
 
-    // Selecciona el target según el score de Actividad2
-    // En Actividad2Salida.tsx: Corto/Central = 30pts, Medio = 15pts, Largo = 5pts
-    let optId = 'corto';
-    if (score === 15) optId = 'medio';
-    if (score === 5) optId = 'largo';
+      const targetIdMap: Record<string, string> = {
+        'corto': 'a-defensa-central-1',
+        'medio': 'a-defensa-central-1',
+        'largo': 'a-defensa-central-1'
+      };
 
-    const targetIdMap: Record<string, string> = {
-      'corto': 'a-defensa-central-1', // SIEMPRE OBLIGAMOS A QUE LE CAIGA AL QA SEGUN PROM.MD
-      'medio': 'a-defensa-central-1',
-      'largo': 'a-defensa-central-1'
-    };
+      const target = getJugadorPos(targetIdMap[optId]);
+      setBallParams({ top: target.top, left: target.left, scale: optId === 'largo' ? 2 : 1, text: '⚽' });
 
-    // Animación física del pase al QA
-    const target = getJugadorPos(targetIdMap[optId]);
-    setBallParams({ top: target.top, left: target.left, scale: optId === 'largo' ? 2 : 1, text: '⚽' });
+      setGoals(g => ({ ...g, a: g.a + 1 }));
 
-    setGoals(g => ({ ...g, a: g.a + 1 }));
-
-    setFeedback({ 
-      show: true, 
-      msg: `Pase de salida ejecutado con éxito.`, 
-      score: score, 
-      ok: true,
-      onContinue: () => {
-        setFeedback({ 
-          show: true, 
-          msg: 'El Portero (Product Owner) ha validado la entrada; ahora el sistema entra en fase de pruebas. El balón le cae al Defensa (QA), quien debe asegurar que el ataque rival no encuentre vulnerabilidades.', 
-          score: 0, 
-          ok: true,
-          onContinue: () => {
-            setFeedback(f => ({ ...f, show: false }));
-            startQaAct1();
-          }
-        });
-      }
+      setFeedback({
+        show: true,
+        msg: `Pase de salida ejecutado con éxito.`,
+        score: score,
+        ok: true,
+        onContinue: () => {
+          setFeedback({
+            show: true,
+            msg: 'El Portero (Product Owner) ha validado la entrada; ahora el sistema entra en fase de pruebas. El balón le cae al Defensa (QA), quien debe asegurar que el ataque rival no encuentre vulnerabilidades.',
+            score: 0,
+            ok: true,
+            onContinue: () => {
+              setFeedback(f => ({ ...f, show: false }));
+              startQaAct1();
+            }
+          });
+        }
+      });
     });
   };
 
@@ -374,16 +382,15 @@ export const Cancha: React.FC = () => {
     ans['actividad1'] = { score: score };
     localStorage.setItem(`${pre}_qa_answers`, JSON.stringify(ans));
 
-    // Guardar respuesta en PostgreSQL
     saveAnswer('qa-actividad-1', { score }, score > 0, score);
 
     setTotalScore(prev => prev + score);
 
     if (score > 0) {
-      setFeedback({ 
-        show: true, 
-        msg: '¡Smoke Test superado! Amenaza inicial controlada.', 
-        score: score, 
+      setFeedback({
+        show: true,
+        msg: '¡Smoke Test superado! Amenaza inicial controlada.',
+        score: score,
         ok: true,
         onContinue: () => {
           setFeedback(f => ({ ...f, show: false }));
@@ -394,10 +401,10 @@ export const Cancha: React.FC = () => {
       setShowFlash(true);
       setTimeout(() => setShowFlash(false), 500);
       setGoals(g => ({ ...g, b: g.b + 1 }));
-      setFeedback({ 
-        show: true, 
-        msg: '¡Pipeline de defensa roto! El Bug se ha filtrado a producción. Reiniciando bloque de pruebas...', 
-        score: 0, 
+      setFeedback({
+        show: true,
+        msg: '¡Pipeline de defensa roto! El Bug se ha filtrado a producción. Reiniciando bloque de pruebas...',
+        score: 0,
         ok: false,
         onContinue: () => {
           setFeedback(f => ({ ...f, show: false }));
@@ -415,53 +422,55 @@ export const Cancha: React.FC = () => {
   };
 
   const handleQaAct2Choice = (score: number) => {
-    setGameState('qa_act2_resolving');
-    const ans = JSON.parse(localStorage.getItem(`${pre}_qa_answers`) || '{}');
-    ans['actividad2'] = { score: score };
-    localStorage.setItem(`${pre}_qa_answers`, JSON.stringify(ans));
+    showRoleDialog('qa', 2, () => {
+      setPendingRoleDialog(null);
+      setGameState('qa_act2_resolving');
+      const ans = JSON.parse(localStorage.getItem(`${pre}_qa_answers`) || '{}');
+      ans['actividad2'] = { score: score };
+      localStorage.setItem(`${pre}_qa_answers`, JSON.stringify(ans));
 
-    // Guardar respuesta en PostgreSQL
-    saveAnswer('qa-actividad-2', { score }, score > 0, score);
+      saveAnswer('qa-actividad-2', { score }, score > 0, score);
 
-    setTotalScore(prev => prev + score);
+      setTotalScore(prev => prev + score);
 
-    if (score > 0) {
-      setFeedback({ 
-        show: true, 
-        msg: '¡Regression Testing exitoso! Defensa estable.', 
-        score: score, 
-        ok: true,
-        onContinue: () => {
-          setFeedback(f => ({ ...f, show: false }));
-          const devops = getJugadorPos('a-lateral-izquierdo');
-          setBallParams({ top: devops.top, left: devops.left, scale: 1, text: '⚽' });
-          setFeedback({ 
-            show: true, 
-            msg: 'Con los errores corregidos y la defensa firme, el Defensa (QA) le entrega el balón al Lateral (DevOps), el encargado de que el sistema esté listo.', 
-            score: 0, 
-            ok: true,
-            onContinue: () => {
-              setFeedback(f => ({ ...f, show: false }));
-              startDevopsAct1();
-            }
-          });
-        }
-      });
-    } else {
-      setShowFlash(true);
-      setTimeout(() => setShowFlash(false), 500);
-      setGoals(g => ({ ...g, b: g.b + 1 }));
-      setFeedback({ 
-        show: true, 
-        msg: '¡Defensa Inestable ante el parche! El regresivo falló y regalaste un contraataque.', 
-        score: 0, 
-        ok: false,
-        onContinue: () => {
-          setFeedback(f => ({ ...f, show: false }));
-          startQaAct2();
-        }
-      });
-    }
+      if (score > 0) {
+        setFeedback({
+          show: true,
+          msg: '¡Regression Testing exitoso! Defensa estable.',
+          score: score,
+          ok: true,
+          onContinue: () => {
+            setFeedback(f => ({ ...f, show: false }));
+            const devops = getJugadorPos('a-lateral-izquierdo');
+            setBallParams({ top: devops.top, left: devops.left, scale: 1, text: '⚽' });
+            setFeedback({
+              show: true,
+              msg: 'Con los errores corregidos y la defensa firme, el Defensa (QA) le entrega el balón al Lateral (DevOps), el encargado de que el sistema esté listo.',
+              score: 0,
+              ok: true,
+              onContinue: () => {
+                setFeedback(f => ({ ...f, show: false }));
+                startDevopsAct1();
+              }
+            });
+          }
+        });
+      } else {
+        setShowFlash(true);
+        setTimeout(() => setShowFlash(false), 500);
+        setGoals(g => ({ ...g, b: g.b + 1 }));
+        setFeedback({
+          show: true,
+          msg: '¡Defensa Inestable ante el parche! El regresivo falló y regalaste un contraataque.',
+          score: 0,
+          ok: false,
+          onContinue: () => {
+            setFeedback(f => ({ ...f, show: false }));
+            startQaAct2();
+          }
+        });
+      }
+    });
   };
 
   const startDevopsAct1 = () => {
@@ -477,7 +486,6 @@ export const Cancha: React.FC = () => {
     ans['actividad1'] = { score: score };
     localStorage.setItem(`${pre}_devops_answers`, JSON.stringify(ans));
 
-    // Guardar respuesta en PostgreSQL
     saveAnswer('devops-actividad-1', { score }, score > 0, score);
 
     setTotalScore(prev => prev + score);
@@ -488,20 +496,20 @@ export const Cancha: React.FC = () => {
       0: '¡Despliegue fallido! El código llegó roto al servidor.'
     };
 
-    setFeedback({ 
-      show: true, 
-      msg: msgs[score as keyof typeof msgs] || 'Resultado promediado.', 
-      score: score, 
+    setFeedback({
+      show: true,
+      msg: msgs[score as keyof typeof msgs] || 'Resultado promediado.',
+      score: score,
       ok: score > 0,
       onContinue: () => {
         setFeedback(f => ({ ...f, show: false }));
         if (score > 0) {
           const manager = getJugadorPos('a-volante-ofensivo');
           setBallParams({ top: manager.top, left: manager.left, scale: 1.5, text: '⚽' });
-          setFeedback({ 
-            show: true, 
-            msg: 'El balón viaja por el pipeline y llega al mediocampo. Ahora el Mediocampista (Team Manager) debe gestionar el esfuerzo del equipo.', 
-            score: 0, 
+          setFeedback({
+            show: true,
+            msg: 'El balón viaja por el pipeline y llega al mediocampo. Ahora el Mediocampista (Team Manager) debe gestionar el esfuerzo del equipo.',
+            score: 0,
             ok: true,
             onContinue: () => {
               setBallParams({ top: manager.top, left: manager.left, scale: 1, text: '⚽' });
@@ -529,7 +537,6 @@ export const Cancha: React.FC = () => {
     ans['actividad1'] = { score: score };
     localStorage.setItem(`${pre}_manager_answers`, JSON.stringify(ans));
 
-    // Guardar respuesta en PostgreSQL
     saveAnswer('manager-actividad-1', { score }, score > 0, score);
 
     setTotalScore(prev => prev + score);
@@ -540,10 +547,10 @@ export const Cancha: React.FC = () => {
       0: '¡Balón perdido! Falta de comunicación técnica.'
     };
 
-    setFeedback({ 
-      show: true, 
-      msg: msgs[score as keyof typeof msgs] || 'Pase procesado.', 
-      score: score, 
+    setFeedback({
+      show: true,
+      msg: msgs[score as keyof typeof msgs] || 'Pase procesado.',
+      score: score,
       ok: score > 0,
       onContinue: () => {
         setFeedback(f => ({ ...f, show: false }));
@@ -564,54 +571,55 @@ export const Cancha: React.FC = () => {
   };
 
   const handleManagerAct2Choice = (score: number) => {
-    setGameState('manager_act2_resolving');
-    const ans = JSON.parse(localStorage.getItem(`${pre}_manager_answers`) || '{}');
-    ans['actividad2'] = { score: score };
-    localStorage.setItem(`${pre}_manager_answers`, JSON.stringify(ans));
+    showRoleDialog('manager', 2, () => {
+      setPendingRoleDialog(null);
+      setGameState('manager_act2_resolving');
+      const ans = JSON.parse(localStorage.getItem(`${pre}_manager_answers`) || '{}');
+      ans['actividad2'] = { score: score };
+      localStorage.setItem(`${pre}_manager_answers`, JSON.stringify(ans));
 
-    // Guardar respuesta en PostgreSQL
-    saveAnswer('manager-actividad-2', { score }, score > 0, score);
+      saveAnswer('manager-actividad-2', { score }, score > 0, score);
 
-    setTotalScore(prev => prev + score);
+      setTotalScore(prev => prev + score);
 
-    const msgs = {
-      100: '¡Excelente gestión! Mandaste el balón al espacio libre para evitar sobrecargar al equipo.',
-      50: '¡Aguardaste bajo presión! Has mantenido posesión pero no delegaste.',
-      0: '¡Micromanagement! Intentaste hacerlo todo solo y perdiste el balón.'
-    };
+      const msgs = {
+        100: '¡Excelente gestión! Mandaste el balón al espacio libre para evitar sobrecargar al equipo.',
+        50: '¡Aguardaste bajo presión! Has mantenido posesión pero no delegaste.',
+        0: '¡Micromanagement! Intentaste hacerlo todo solo y perdiste el balón.'
+      };
 
-    setFeedback({ 
-      show: true, 
-      msg: msgs[score as keyof typeof msgs] || 'Gestión finalizada.', 
-      score: score, 
-      ok: score > 0,
-      onContinue: () => {
-        setFeedback(f => ({ ...f, show: false }));
-        if (score > 0) {
-          const backend = getJugadorPos('a-medio-centro-2');
-          setBallParams({ top: backend.top, left: backend.left, scale: 1, text: '⚽' });
-          setFeedback({ 
-            show: true, 
-            msg: `[Total: ${totalScore + score} PTS] ¡Estrategia definida! El Mediocampista (Team Manager) deja el balón servido para el Mediocentro (Backend).`, 
-            score: 0, 
-            ok: true,
-            onContinue: () => {
-              setFeedback(f => ({ ...f, show: false }));
-              setGameState('next_roles'); 
-              router.push('/futbol');
-            }
-          });
-        } else {
-          startManagerAct2();
+      setFeedback({
+        show: true,
+        msg: msgs[score as keyof typeof msgs] || 'Gestión finalizada.',
+        score: score,
+        ok: score > 0,
+        onContinue: () => {
+          setFeedback(f => ({ ...f, show: false }));
+          if (score > 0) {
+            const backend = getJugadorPos('a-medio-centro-2');
+            setBallParams({ top: backend.top, left: backend.left, scale: 1, text: '⚽' });
+            setFeedback({
+              show: true,
+              msg: `[Total: ${totalScore + score} PTS] ¡Estrategia definida! El Mediocampista (Team Manager) deja el balón servido para el Mediocentro (Backend).`,
+              score: 0,
+              ok: true,
+              onContinue: () => {
+                setFeedback(f => ({ ...f, show: false }));
+                setGameState('next_roles');
+                router.push('/futbol');
+              }
+            });
+          } else {
+            startManagerAct2();
+          }
         }
-      }
+      });
     });
   };
 
   const handleFrontendAct1Choice = (score: number) => {
     setGameState('frontend_act1_resolving');
 
-    // Guardar respuesta en PostgreSQL
     saveAnswer('frontend-actividad-1', { score }, score > 0, score);
 
     setTotalScore(prev => prev + score);
@@ -621,10 +629,10 @@ export const Cancha: React.FC = () => {
       0: '¡Bloqueado! Diseño confuso.'
     };
 
-    setFeedback({ 
-      show: true, 
-      msg: msgs[score as keyof typeof msgs] || 'Diseño validado.', 
-      score: score, 
+    setFeedback({
+      show: true,
+      msg: msgs[score as keyof typeof msgs] || 'Diseño validado.',
+      score: score,
       ok: score > 0,
       onContinue: () => {
         setFeedback(f => ({ ...f, show: false }));
@@ -638,87 +646,91 @@ export const Cancha: React.FC = () => {
   };
 
   const handleFrontendAct2Choice = (score: number) => {
-    setGameState('frontend_act2_resolving');
+    showRoleDialog('frontend', 2, () => {
+      setPendingRoleDialog(null);
+      setGameState('frontend_act2_resolving');
 
-    // Guardar respuesta en PostgreSQL
-    saveAnswer('frontend-actividad-2', { score }, score > 0, score);
+      saveAnswer('frontend-actividad-2', { score }, score > 0, score);
 
-    setTotalScore(prev => prev + score);
-    const msgs = {
-      100: '¡Amague Veloz! Interacción ágil, sin fricciones.',
-      50: '¡Choque fuerte! La interacción fue pesada.',
-      0: '¡Duda! Te quedaste estático.'
-    };
+      setTotalScore(prev => prev + score);
+      const msgs = {
+        100: '¡Amague Veloz! Interacción ágil, sin fricciones.',
+        50: '¡Choque fuerte! La interacción fue pesada.',
+        0: '¡Duda! Te quedaste estático.'
+      };
 
-    setFeedback({ 
-      show: true, 
-      msg: msgs[score as keyof typeof msgs] || 'Interacción procesada.', 
-      score: score, 
-      ok: score > 0,
-      onContinue: () => {
-        setFeedback(f => ({ ...f, show: false }));
-        if (score > 0) {
-          setFeedback({ 
-            show: true, 
-            msg: '¡GOLAAAAAZO! El Delantero (Frontend) facilita que cada interacción se sienta natural.', 
-            score: 0, 
-            ok: true,
-            onContinue: () => {
-              setFeedback(f => ({ ...f, show: false }));
-              setBallParams({ top: '50%', left: isSecondHalf ? '95%' : '5%', scale: 1, text: '⚽' });
-              setFeedback({ 
-                show: true, 
-                msg: '¡Gol del Delantero (Frontend)! Pero el rival saca rápido aprovechando un descuido...', 
-                score: 0, 
-                ok: false,
-                onContinue: () => {
-                  setFeedback(f => ({ ...f, show: false }));
-                  setBallParams({ top: '50%', left: '50%', scale: 1, text: '⚽' });
-                  const rival1 = getJugadorPos('b-medio-centro-1');
-                  setBallParams({ top: rival1.top, left: rival1.left, scale: 1, text: '⚽' });
-                  setTimeout(() => {
-                    const rival2 = getJugadorPos('b-volante-ofensivo');
-                    setBallParams({ top: rival2.top, left: rival2.left, scale: 1, text: '⚽' });
+      setFeedback({
+        show: true,
+        msg: msgs[score as keyof typeof msgs] || 'Interacción procesada.',
+        score: score,
+        ok: score > 0,
+        onContinue: () => {
+          setFeedback(f => ({ ...f, show: false }));
+          if (score > 0) {
+            setFeedback({
+              show: true,
+              msg: '¡GOLAAAAAZO! El Delantero (Frontend) facilita que cada interacción se sienta natural.',
+              score: 0,
+              ok: true,
+              onContinue: () => {
+                setFeedback(f => ({ ...f, show: false }));
+                setBallParams({ top: '50%', left: isSecondHalf ? '95%' : '5%', scale: 1, text: '⚽' });
+                setFeedback({
+                  show: true,
+                  msg: '¡Gol del Delantero (Frontend)! Pero el rival saca rápido aprovechando un descuido...',
+                  score: 0,
+                  ok: false,
+                  onContinue: () => {
+                    setFeedback(f => ({ ...f, show: false }));
+                    setBallParams({ top: '50%', left: '50%', scale: 1, text: '⚽' });
+                    const rival1 = getJugadorPos('b-medio-centro-1');
+                    setBallParams({ top: rival1.top, left: rival1.left, scale: 1, text: '⚽' });
                     setTimeout(() => {
-                      const rival3 = getJugadorPos('b-delantero-1');
-                      setBallParams({ top: rival3.top, left: rival3.left, scale: 1.2, text: '⚽' });
+                      const rival2 = getJugadorPos('b-volante-ofensivo');
+                      setBallParams({ top: rival2.top, left: rival2.left, scale: 1, text: '⚽' });
                       setTimeout(() => {
-                        setGameState('devops_act2_frozen');
+                        const rival3 = getJugadorPos('b-delantero-1');
+                        setBallParams({ top: rival3.top, left: rival3.left, scale: 1.2, text: '⚽' });
+                        setTimeout(() => {
+                          setGameState('devops_act2_frozen');
+                        }, 1000);
                       }, 1000);
                     }, 1000);
-                  }, 1000);
-                }
-              });
-            }
-          });
-        } else {
-          setGameState('frontend_act2_frozen');
+                  }
+                });
+              }
+            });
+          } else {
+            setGameState('frontend_act2_frozen');
+          }
         }
-      }
+      });
     });
   };
 
   const handleDevopsAct2Choice = (score: number) => {
-    setGameState('devops_act2_resolving');
+    showRoleDialog('devops', 2, () => {
+      setPendingRoleDialog(null);
+      setGameState('devops_act2_resolving');
 
-    // Guardar respuesta en PostgreSQL
-    saveAnswer('devops-actividad-2', { score }, score > 0, score);
+      saveAnswer('devops-actividad-2', { score }, score > 0, score);
 
-    setTotalScore(prev => prev + score);
+      setTotalScore(prev => prev + score);
 
-    setFeedback({ 
-      show: true, 
-      msg: score > 0 ? '¡El despliegue está asegurado! El partido ha finalizado.' : '¡Caída del sistema! No pudiste mantener el servicio.', 
-      score: score, 
-      ok: score > 0,
-      onContinue: () => {
-        setFeedback(f => ({ ...f, show: false }));
-        if (score > 0) {
-          setGameState('game_over');
-        } else {
-          setGameState('devops_act2_frozen');
+      setFeedback({
+        show: true,
+        msg: score > 0 ? '¡El despliegue está asegurado! El partido ha finalizado.' : '¡Caída del sistema! No pudiste mantener el servicio.',
+        score: score,
+        ok: score > 0,
+        onContinue: () => {
+          setFeedback(f => ({ ...f, show: false }));
+          if (score > 0) {
+            setGameState('game_over');
+          } else {
+            setGameState('devops_act2_frozen');
+          }
         }
-      }
+      });
     });
   };
 
@@ -889,6 +901,13 @@ export const Cancha: React.FC = () => {
       </div>
 
       <AnimatePresence>
+            {pendingRoleDialog && (
+              <RoleDialogueOverlay
+                role={pendingRoleDialog.role}
+                activity={pendingRoleDialog.activity}
+                onContinue={pendingRoleDialog.onContinue}
+              />
+            )}
 
             {/* Actividad 1 - El Grito de la Barrera OVERLAY */}
             {gameState === 'po_act1_frozen' && (
