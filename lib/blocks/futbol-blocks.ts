@@ -53,7 +53,7 @@ export function defineFutbolBlocks() {
   Blocks['futbol_repetir_4'] = {
     init: function() {
       this.appendStatementInput('DO')
-        .appendField('REPETIR 4 VECES');
+        .appendField('REPETIR 4 VECES (avanzar 5 metros)');
       this.setPreviousStatement(true, null);
       this.setNextStatement(true, null);
       this.setColour(270); // Naranja
