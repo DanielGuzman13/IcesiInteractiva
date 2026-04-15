@@ -1090,10 +1090,10 @@ export const Cancha: React.FC = () => {
                 <div className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-yellow-500 text-center p-12">
                   <h2 className="font-black text-6xl mb-4 text-yellow-500">🏆 VICTORIA 🏆</h2>
                   <p className="text-2xl font-medium text-gray-700 mb-8 leading-relaxed">
-                    ¡Has recorrido todos los perfiles de ingeniería y construido el partido perfecto! El gol es seguro y el sistema está desplegado de forma permanente.
+                    ¡Felicidades! Has recorrido todos los perfiles de ingeniería. El partido ha terminado y has conseguido el resultado necesario para avanzar.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-6 justify-center">
-                    <button
+                    {/* <button
                       onClick={() => {
                         localStorage.clear();
                         window.location.reload();
@@ -1101,7 +1101,7 @@ export const Cancha: React.FC = () => {
                       className="bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold py-4 px-8 rounded-full transition-all text-xl shadow-lg active:scale-95 border-2 border-gray-200"
                     >
                       JUGAR DE NUEVO
-                    </button>
+                    </button> */}
                     <button
                       onClick={() => router.push('/game/resumen-roles')}
                       className="bg-yellow-500 hover:bg-yellow-600 text-white font-black py-4 px-10 rounded-full transition-all text-2xl shadow-2xl active:scale-95 border-b-4 border-yellow-700"

@@ -27,6 +27,7 @@ export default function ResumenRolesPage() {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [showFinalize, setShowFinalize] = React.useState(false);
   const [showSuccessModal, setShowSuccessModal] = React.useState(false);
+  const [showIntroModal, setShowIntroModal] = React.useState(true);
 
   // Cargar respuestas previas para evitar duplicados
   React.useEffect(() => {
@@ -39,7 +40,10 @@ export default function ResumenRolesPage() {
               .filter((ans: any) => ans.challengeId.startsWith('role-feedback-'))
               .map((ans: any) => ans.challengeId.replace('role-feedback-', ''));
             setAnsweredRoles(roles);
-            if (roles.length > 0) setShowFinalize(true);
+            if (roles.length > 0) {
+              setShowFinalize(true);
+              setShowIntroModal(false); // No mostrar intro si ya respondió
+            }
           }
         })
         .catch(err => console.error('Error fetching answers:', err));
@@ -71,7 +75,12 @@ export default function ResumenRolesPage() {
   };
 
   return (
-    <main className="h-screen w-full max-w-full bg-[#F8FAFC] flex flex-col font-sans text-slate-900 border-t-[6px] border-blue-600 overflow-hidden overflow-x-hidden">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8 }}
+      className="h-screen w-full max-w-full bg-[#F8FAFC] flex flex-col font-sans text-slate-900 border-t-[6px] border-blue-600 overflow-hidden overflow-x-hidden"
+    >
       <div className="flex-1 flex flex-col max-w-7xl mx-auto w-full px-4 md:px-6 py-4 md:py-6 overflow-hidden">
         {/* Header Section (Compact) */}
         <header className="text-center mb-4 flex-none">
@@ -199,6 +208,42 @@ export default function ResumenRolesPage() {
         )}
       </AnimatePresence>
 
+      {/* Intro Modal Overlay */}
+      <AnimatePresence>
+        {showIntroModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.6, delay: 0.8 }}
+            className="fixed inset-0 z-[300] bg-blue-900/40 backdrop-blur-xl flex items-center justify-center p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.8, y: 50 }}
+              animate={{ scale: 1, y: 0 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300, delay: 1.0 }}
+              className="bg-white rounded-[3rem] shadow-2xl w-full max-w-lg overflow-hidden text-center p-10 border-b-[12px] border-blue-600"
+            >
+              <div className="w-24 h-24 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-8 text-4xl">
+                👋
+              </div>
+              <h3 className="text-3xl font-black text-slate-800 mb-6 leading-tight">
+                ¡Bienvenido!
+              </h3>
+              <p className="text-xl text-slate-600 mb-10 font-medium leading-relaxed">
+                Estás en una página donde debes seleccionar solo uno de los roles, específicamente el que más te guste.
+              </p>
+              <button
+                onClick={() => setShowIntroModal(false)}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-6 rounded-2xl transition-all shadow-xl shadow-blue-200 active:scale-95 text-lg"
+              >
+                ENTENDIDO
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Success Modal Overlay */}
       <AnimatePresence>
         {showSuccessModal && (
@@ -232,6 +277,6 @@ export default function ResumenRolesPage() {
           </motion.div>
         )}
       </AnimatePresence>
-    </main>
+    </motion.div>
   );
 }
