@@ -14,6 +14,7 @@ export default function Home() {
   const handleJoin = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError('');
+    setIsLoading(true);
 
     const trimmedName = name.trim();
 
