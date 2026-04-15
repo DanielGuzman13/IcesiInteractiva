@@ -173,7 +173,7 @@ export default function FutbolPage() {
       return 'Lógica 2 – Construye una jugada de contraataque que avance 20 metros en tramos de 5 metros usando un bloque de repetición de 4 veces. En cada repetición, evalúa si hay defensa cerca para decidir entre pasar o seguir avanzando. Al finalizar el ciclo, cierra la jugada con una decisión por distancia al arco: si es menor a 20, dispara; si no, pasa el balón. La secuencia debe comenzar con INICIO y terminar con FIN.';
     }
 
-    return 'Lógica 1 – Construye una jugada ofensiva que comience en INICIO y termine en FIN. Primero, evalúa si hay defensa cerca para decidir la acción inicial: si hay defensa, pasa el balón; si no hay defensa, avanza. Luego, toma una decisión final según la distancia al arco: si la distancia es menor a 20, debes disparar; si no, debes mantener la jugada con un pase. Organiza la secuencia con bloques SI/SINO de forma clara y en el orden correcto.';
+    return 'Lógica 1 – Construye una jugada ofensiva que comience en INICIO y termine en FIN. Primero, evalúa si hay defensa cerca para decidir la acción inicial: si hay defensa, pasa el balón; si no hay defensa, avanza. Luego, hay que volver a evaluar para la decisión final según la distancia al arco: si la distancia es menor a 20, debes disparar al arco; si no, debes mantener la jugada con un pase. Organiza la secuencia con bloques disponibles que se encuentran en CONTROL, ACCIONES Y CONDICIONES, hazlo de forma clara y en el orden correcto.';
   };
 
   return (
