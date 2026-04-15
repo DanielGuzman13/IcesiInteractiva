@@ -30,7 +30,7 @@ const ZONAS: Zona[] = [
   {
     id: 'centro',
     label: 'Centro',
-    emoji: '🟡',
+    emoji: '🟡2️⃣',
     descripcion: 'Centro del arco',
     score: 50,
     resultado: 'regular',
@@ -41,7 +41,7 @@ const ZONAS: Zona[] = [
   {
     id: 'derecho',
     label: 'Poste Derecho',
-    emoji: '🔴',
+    emoji: '🔴3️⃣',
     descripcion: 'Cubres el ángulo superior',
     score: 0,
     resultado: 'incorrecto',

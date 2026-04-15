@@ -72,7 +72,7 @@ class FutbolRenderer extends Blockly.zelos.Renderer {
 }
 
 class FutbolRenderInfo extends Blockly.zelos.RenderInfo {
-  protected override measure() {
+  public override measure() {
     const renderer = this.getRenderer() as FutbolRenderer;
 
     if (this.block_.type === 'futbol_repetir_4') {
