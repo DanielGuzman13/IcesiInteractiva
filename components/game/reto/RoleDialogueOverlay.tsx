@@ -38,7 +38,7 @@ const ROLE_CONTENT: Record<RoleKey, { title: string; image: string; dialogues: {
     image: '/devops.png',
     dialogues: {
       1: 'Buen centro técnico. Tu pipeline va tomando forma con decisiones más confiables y repetibles.',
-      2: 'Gran cierre. Si quieres ser un DevOps completo, debes entender que yo conecto desarrollo con operación para que el software llegue a producción de forma segura y constante. Yo automatizo procesos, monitoreo el sistema y respondo rápido cuando algo falla. Eso significa menos errores manuales, despliegues más confiables y recuperaciones más rápidas ante incidentes. En la industria esta función es crítica, porque cada minuto de caída puede costar dinero, reputación y clientes. Mi misión es mantener el sistema estable bajo presión y permitir que el equipo entregue valor continuamente. Ese equilibrio entre velocidad y estabilidad es lo que define a un DevOps profesional.'
+      2: 'Gran cierre. Si quieres ser un DevOps completo, debes entender que yo conecto desarrollo con operación para que el software llegue a producción de forma segura y constante.Yo automatizo procesos, monitoreo el sistema y respondo rápido cuando algo falla. Eso significa que de la misma forma que ayudo a las aeronaves a circular por la pista de despliegue y todo fluya, el desarrollo de software puede sentirse igual.'
     }
   },
   manager: {
@@ -54,7 +54,7 @@ const ROLE_CONTENT: Record<RoleKey, { title: string; image: string; dialogues: {
     image: '/qa.png',
     dialogues: {
       1: 'Yo pruebo el sistema para detectar errores antes de que lleguen a los usuarios. Mi trabajo es clave porque evita fallos costosos y protege la confianza en el producto.',
-      2: 'Bien hecho, querido aspirante al mundo de la seguridad y la calidad. Si quieres convertirte en un PRO como yo, debes entender muy bien cuál es mi misión dentro del equipo. Yo no solo busco errores: yo protejo el producto y a los usuarios en cada cambio que hacemos. Cuando hago esto correctamente, evitamos caídas del sistema, retrabajos innecesarios, pérdidas de tiempo, costos extras y molestias para los clientes. En la industria, eso vale muchísimo, porque un pequeño fallo puede afectar a miles de personas y dañar la confianza en la empresa. Por eso, ser QA no es ‘probar por probar’; es asegurar calidad, estabilidad y confianza en cada entrega. Ese es el nivel al que quiero llevarte.'
+      2: 'Bien hecho, querido aspirante al mundo de la seguridad y la calidad. Si quieres convertirte en un PRO como yo, debes entender muy bien cuál es mi misión dentro del equipo. Yo no solo busco errores: yo protejo el producto y a los usuarios en cada cambio que hacemos. Cuando hago esto correctamente, evitamos caídas del sistema, retrabajos innecesarios, pérdidas de tiempo, costos extras y molestias para los clientes. En la industria, eso vale muchísimo, porque un pequeño fallo puede afectar a miles de personas y dañar la confianza en la empresa.'
     }
   },
   'product-owner': {
@@ -62,7 +62,7 @@ const ROLE_CONTENT: Record<RoleKey, { title: string; image: string; dialogues: {
     image: '/product-owner.png',
     dialogues: {
       1: 'Buena priorización. Elegir bien en momentos críticos mantiene al producto enfocado en valor.',
-      2: 'Muy bien. Para pensar como un Product Owner profesional, debes entender que yo tomo decisiones sobre qué construir primero y por qué eso importa para el negocio y para el usuario. Mi función es convertir necesidades reales en prioridades claras para que el equipo no trabaje a ciegas. Yo escucho al cliente, ordeno el backlog y defino el rumbo del producto en cada etapa. En la industria esto es fundamental porque construir funcionalidades sin prioridad correcta desperdicia tiempo y presupuesto. Mi trabajo asegura que cada entrega tenga impacto real, y que el producto crezca con propósito. Ese enfoque en valor es lo que diferencia un proyecto ocupado de un producto exitoso.'
+      2: 'Muy bien. Para pensar como un Product Owner profesional, debes entender que yo tomo decisiones sobre qué construir primero y por qué eso importa para el negocio y para el usuario. Mi función es convertir necesidades reales en prioridades claras para que el equipo no trabaje a ciegas. Mi trabajo asegura que cada entrega tenga impacto real, y que el producto crezca con propósito. Ese enfoque en valor es lo que diferencia un proyecto ocupado de un producto exitoso.'
     }
   }
 };

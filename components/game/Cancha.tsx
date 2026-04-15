@@ -903,6 +903,7 @@ export const Cancha: React.FC = () => {
       <AnimatePresence>
             {pendingRoleDialog && (
               <RoleDialogueOverlay
+                key={`role-dialog-${pendingRoleDialog.role}-${pendingRoleDialog.activity}`}
                 role={pendingRoleDialog.role}
                 activity={pendingRoleDialog.activity}
                 onContinue={pendingRoleDialog.onContinue}
@@ -979,7 +980,7 @@ export const Cancha: React.FC = () => {
 
             {/* DevOps Actividad 1 - Pipeline OVERLAY */}
             {gameState === 'devops_act1_frozen' && (
-              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
+              <motion.div key="devops-act1-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
                 className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
               >
                 <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-blue-400">
@@ -996,7 +997,7 @@ export const Cancha: React.FC = () => {
 
             {/* Manager Actividad 1 - OVERLAY */}
             {gameState === 'manager_act1_frozen' && (
-              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
+              <motion.div key="manager-act1-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
                 className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
               >
                 <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-amber-400">
@@ -1013,7 +1014,7 @@ export const Cancha: React.FC = () => {
 
             {/* Manager Actividad 2 - OVERLAY */}
             {gameState === 'manager_act2_frozen' && (
-              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
+              <motion.div key="manager-act2-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
                 className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
               >
                 <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-amber-600">
@@ -1030,7 +1031,7 @@ export const Cancha: React.FC = () => {
 
             {/* Halftime Modal OVERLAY */}
             {gameState === 'halftime_idle' && (
-              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
+              <motion.div key="halftime-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
                 className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
               >
                 <div className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-red-500 text-center p-8">
@@ -1052,7 +1053,7 @@ export const Cancha: React.FC = () => {
 
             {/* Frontend Actividad 1 - OVERLAY */}
             {gameState === 'frontend_act1_frozen' && (
-              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
+              <motion.div key="frontend-act1-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
                 className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
               >
                 <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-emerald-500">
@@ -1069,7 +1070,7 @@ export const Cancha: React.FC = () => {
 
             {/* Frontend Actividad 2 - OVERLAY */}
             {gameState === 'frontend_act2_frozen' && (
-              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
+              <motion.div key="frontend-act2-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
                 className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
               >
                 <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-emerald-600">
@@ -1086,7 +1087,7 @@ export const Cancha: React.FC = () => {
 
             {/* DevOps Actividad 2 - OVERLAY */}
             {gameState === 'devops_act2_frozen' && (
-              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
+              <motion.div key="devops-act2-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
                 className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
               >
                 <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-indigo-600">
@@ -1103,7 +1104,7 @@ export const Cancha: React.FC = () => {
 
             {/* GAME OVER OVERLAY */}
             {gameState === 'game_over' && (
-              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
+              <motion.div key="game-over-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
                 className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 overflow-y-auto"
               >
                 <div className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-yellow-500 text-center p-12">
