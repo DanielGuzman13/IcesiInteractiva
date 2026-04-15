@@ -28,9 +28,30 @@ npm install
 
 ### 3. Configurar PostgreSQL
 
-Tienes dos opciones: instalación local o Docker.
+Tienes tres opciones: instalación local, Docker, o script de automatización.
 
-#### Opción A: Instalación Local
+#### Opción A: Script de Automatización (Recomendado)
+
+Esta opción configura automáticamente la base de datos y el archivo de configuración.
+
+```bash
+# Usar configuración por defecto (postgres/postgres)
+npm run setup-db
+
+# O especificar contraseña, usuario, host y puerto personalizados
+node setup-database.js <contraseña> <usuario> <host> <puerto>
+
+# Ejemplo con configuración personalizada
+node setup-database.js mi_contraseña postgres localhost 5432
+```
+
+El script:
+- ✅ Crea la base de datos `icesi_interactiva`
+- ✅ Ejecuta el schema.sql automáticamente
+- ✅ Crea el archivo `.env.local` con la configuración correcta
+- ✅ Verifica que PostgreSQL esté ejecutándose
+
+#### Opción B: Instalación Local
 
 ##### 3.1. Crear la base de datos
 
@@ -53,7 +74,15 @@ CREATE DATABASE icesi_interactiva;
 psql -U postgres -d icesi_interactiva -f lib/database/schema.sql
 ```
 
-#### Opción B: Docker (Recomendado)
+##### 3.3. Crear archivo .env.local
+
+Crea un archivo `.env.local` en la raíz del proyecto:
+
+```env
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/icesi_interactiva
+```
+
+#### Opción C: Docker (Recomendado)
 
 Si prefieres usar Docker para PostgreSQL, ejecuta:
 
@@ -254,4 +283,4 @@ npm run lint     # Ejecutar linter
 
 ## 📄 Licencia
 
-Este proyecto es propiedad de la Universidad Icesi.
+Este proyecto es propiedad del Programa de Ingeniería de Sistemas de la Universidad Icesi.

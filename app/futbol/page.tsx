@@ -35,6 +35,8 @@ export default function FutbolPage() {
     pseudocode: '// Tu jugada aparecerá aquí'
   });
   const [timeLeft, setTimeLeft] = useState<number>(TIMER_SECONDS);
+  const [shouldRedirect, setShouldRedirect] = useState(false);
+  const [shouldRedirectAfterValidation, setShouldRedirectAfterValidation] = useState(false);
   const workspaceRef = useRef<Workspace | null>(null);
 
   useEffect(() => {
@@ -42,7 +44,7 @@ export default function FutbolPage() {
       setTimeLeft((previous) => {
         if (previous <= 1) {
           window.clearInterval(intervalId);
-          router.replace('/game');
+          setShouldRedirect(true);
           return 0;
         }
 
@@ -53,7 +55,19 @@ export default function FutbolPage() {
     return () => {
       window.clearInterval(intervalId);
     };
-  }, [router]);
+  }, []);
+
+  useEffect(() => {
+    if (shouldRedirect) {
+      router.replace('/game');
+    }
+  }, [shouldRedirect, router]);
+
+  useEffect(() => {
+    if (shouldRedirectAfterValidation) {
+      router.replace('/game');
+    }
+  }, [shouldRedirectAfterValidation, router]);
 
   const formattedMinutes = String(Math.floor(timeLeft / 60)).padStart(2, '0');
   const formattedSeconds = String(timeLeft % 60).padStart(2, '0');
@@ -122,7 +136,7 @@ export default function FutbolPage() {
             
             // Redirect to game page
             setTimeout(() => {
-              router.replace('/game');
+              setShouldRedirectAfterValidation(true);
             }, 500);
             
             return;

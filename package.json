@@ -6,7 +6,8 @@
     "dev": "node show-ips.js && next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "setup-db": "node setup-database.js"
   },
   "dependencies": {
     "@blockly/theme-dark": "^8.0.4",

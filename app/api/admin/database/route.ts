@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getPostgresPool } from '../../../lib/database/postgres';
+import { getPostgresPool } from '@/lib/database/postgres';
 
 // Limpiar toda la base de datos (PELIGROSO)
 export async function DELETE(request: NextRequest) {
