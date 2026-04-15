@@ -13,6 +13,7 @@ const HeaderLogo = () => {
           width={64}
           height={64}
           className="rounded-lg"
+          style={{ height: 'auto' }}
         /> 
         <div className="flex flex-col">
           <div className="text-sm font-bold text-gray-700">Ingeniería de Sistemas</div>
