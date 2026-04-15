@@ -591,29 +591,30 @@ export const Cancha: React.FC = () => {
         0: '¡Micromanagement! Intentaste hacerlo todo solo y perdiste el balón.'
       };
 
-    setFeedback({ 
-      show: true, 
-      msg: msgs[score as keyof typeof msgs] || 'Gestión finalizada.', 
-      score: score, 
-      ok: score > 0,
-      onContinue: () => {
-        setFeedback(f => ({ ...f, show: false }));
-        if (score > 0) {
-          const backend = getJugadorPos('a-medio-centro-2');
-          setBallParams({ top: backend.top, left: backend.left, scale: 1, text: '⚽' });
-          setFeedback({ 
-            show: true, 
-            msg: `!Estrategia definida! El Mediocampista (Team Manager) deja el balón servido para el Mediocentro (Backend).`, 
-            score: 0, 
-            ok: true,
-            onContinue: () => {
-              setFeedback(f => ({ ...f, show: false }));
-              setGameState('next_roles'); 
-              router.push('/futbol');
-            }
-          });
-        } else {
-          startManagerAct2();
+      setFeedback({
+        show: true,
+        msg: msgs[score as keyof typeof msgs] || 'Gestión finalizada.',
+        score: score,
+        ok: score > 0,
+        onContinue: () => {
+          setFeedback(f => ({ ...f, show: false }));
+          if (score > 0) {
+            const backend = getJugadorPos('a-medio-centro-2');
+            setBallParams({ top: backend.top, left: backend.left, scale: 1, text: '⚽' });
+            setFeedback({
+              show: true,
+              msg: '¡Estrategia definida! El Mediocampista (Team Manager) deja el balón servido para el Mediocentro (Backend).',
+              score: 0,
+              ok: true,
+              onContinue: () => {
+                setFeedback(f => ({ ...f, show: false }));
+                setGameState('next_roles');
+                router.push('/futbol');
+              }
+            });
+          } else {
+            startManagerAct2();
+          }
         }
       });
     });
