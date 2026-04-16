@@ -39,16 +39,6 @@ export function defineFutbolBlocks() {
     }
   };
 
-  Blocks['futbol_fin_si'] = {
-    init: function() {
-      this.appendDummyInput()
-        .appendField('FIN SI');
-      this.setPreviousStatement(true, null);
-      this.setColour(270); // Naranja
-      this.setTooltip('Fin del bloque condicional');
-      //this.setNextStatement(true, null); //-------------------------------------
-    }
-  };
 
   Blocks['futbol_repetir_4'] = {
     init: function() {

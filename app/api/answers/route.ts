@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { UserAnswerRepository } from '../../../repositories/UserAnswerRepository';
 import { UserRepository } from '../../../repositories/UserRepository';
+import { GameSessionRepository } from '../../../repositories/GameSessionRepository';
 
 const userAnswerRepository = new UserAnswerRepository();
 const userRepository = new UserRepository();
+const gameSessionRepository = new GameSessionRepository();
 
 // Guardar respuesta de usuario
 export async function POST(request: NextRequest) {
@@ -21,12 +23,34 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Fallback para playStepId si llega nulo (evitar error de base de datos)
+    let effectivePlayStepId = playStepId;
+    if (!effectivePlayStepId) {
+      console.log('playStepId is null, searching for active session for user:', userId);
+      const sessions = await gameSessionRepository.findByUserId(userId);
+      const activeSession = sessions.find(s => s.status === 'active');
+      
+      if (activeSession) {
+        effectivePlayStepId = activeSession.id;
+        console.log('Found active session to use as playStepId:', effectivePlayStepId);
+      } else {
+        // Si no hay sesión activa, creamos una de emergencia para no perder la respuesta
+        console.log('No active session found, creating emergency session...');
+        const newSession = await gameSessionRepository.create({
+          userId,
+          currentPlayId: challengeId
+        });
+        effectivePlayStepId = newSession.id;
+        console.log('Created emergency session:', effectivePlayStepId);
+      }
+    }
+
     // Guardar respuesta
     console.log('Creating user answer...');
     const userAnswer = await userAnswerRepository.create({
       userId,
       challengeId,
-      playStepId,
+      playStepId: effectivePlayStepId,
       answer,
       isCorrect,
       responseTime: responseTime || 0,

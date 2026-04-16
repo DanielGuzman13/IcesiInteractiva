@@ -22,10 +22,6 @@ export const futbolToolbox = {
           kind: 'block',
           type: 'futbol_repetir_4'
         },
-        {
-          kind: 'block',
-          type: 'futbol_fin_si'
-        }
       ]
     },
     {

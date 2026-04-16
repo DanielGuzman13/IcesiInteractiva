@@ -8,7 +8,7 @@ const courierPrime = Courier_Prime({
   weight: ['400', '700'],
 });
 
-type RoleKey = 'arquitecto' | 'frontend' | 'devops' | 'manager' | 'qa' | 'product-owner';
+type RoleKey = 'arquitecto' | 'frontend' | 'backend' | 'devops' | 'manager' | 'qa' | 'product-owner';
 
 interface RoleDialogueOverlayProps {
   role: RoleKey;
@@ -31,6 +31,14 @@ const ROLE_CONTENT: Record<RoleKey, { title: string; image: string; dialogues: {
     dialogues: {
       1: 'Buena lectura del juego visual. Tu decisión mejora la claridad para que el usuario entienda qué hacer.',
       2: 'Muy bien hecho. Para llegar al nivel PRO en Frontend, debes pensar siempre en la persona que está al otro lado de la pantalla. Yo construyo la parte visible del producto, y mi objetivo es que todo sea claro, rápido y fácil de usar. No se trata solo de que “se vea bonito”, sino de que cada botón, cada texto y cada interacción ayuden al usuario a lograr su objetivo sin frustración. Mi trabajo convierte la tecnología en algo realmente útil para las personas.'
+    }
+  },
+  backend: {
+    title: 'Backend',
+    image: '/images/roles/backend.png',
+    dialogues: {
+      1: 'Muy bien hecho. Para ser un Backend Developer de alto nivel, debes entender que eres el motor oculto del sistema. Yo gestiono los datos, aseguro la seguridad del servidor y construyo la lógica que hace que todo funcione detrás de escena. Mi misión es que la comunicación entre las partes sea fluida, escalable y protegida contra fallos. Un backend sólido permite que miles de usuarios se conecten sin problemas, y esa es la responsabilidad que quiero que asumas.',
+      2: 'Muy bien hecho. Para ser un Backend Developer de alto nivel, debes entender que eres el motor oculto del sistema. Yo gestiono los datos, aseguro la seguridad del servidor y construyo la lógica que hace que todo funcione detrás de escena. Mi misión es que la comunicación entre las partes sea fluida, escalable y protegida contra fallos. Un backend sólido permite que miles de usuarios se conecten sin problemas, y esa es la responsabilidad que quiero que asumas.'
     }
   },
   devops: {

@@ -64,7 +64,7 @@ type GameFlowState =
   | 'next_roles';
 
 type PendingRoleDialog = {
-  role: 'product-owner' | 'qa' | 'devops' | 'manager' | 'frontend';
+  role: 'product-owner' | 'qa' | 'devops' | 'manager' | 'frontend' | 'backend';
   activity: 1 | 2;
   onContinue: () => void;
 } | null;
@@ -102,7 +102,7 @@ export const Cancha: React.FC = () => {
   const [pre, setPre] = useState('guest');
 
   const showRoleDialog = (
-    role: 'product-owner' | 'qa' | 'devops' | 'manager' | 'frontend',
+    role: 'product-owner' | 'qa' | 'devops' | 'manager' | 'frontend' | 'backend',
     activity: 1 | 2,
     onContinue: () => void
   ) => {
@@ -216,7 +216,10 @@ export const Cancha: React.FC = () => {
 
   const handleContinueFromFutbol = () => {
     setFutbolAnimation((prev) => ({ ...prev, show: false }));
-    setGameState('halftime_idle');
+    showRoleDialog('backend', 1, () => {
+      setPendingRoleDialog(null);
+      setGameState('halftime_idle');
+    });
   };
 
   // KICK-OFF MOVIE
