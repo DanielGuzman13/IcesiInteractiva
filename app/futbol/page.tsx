@@ -36,7 +36,6 @@ export default function FutbolPage() {
   });
   const [timeLeft, setTimeLeft] = useState<number>(TIMER_SECONDS);
   const [shouldRedirect, setShouldRedirect] = useState(false);
-  const [shouldRedirectAfterValidation, setShouldRedirectAfterValidation] = useState(false);
   const workspaceRef = useRef<Workspace | null>(null);
 
   useEffect(() => {
@@ -62,12 +61,6 @@ export default function FutbolPage() {
       router.replace('/game');
     }
   }, [shouldRedirect, router]);
-
-  useEffect(() => {
-    if (shouldRedirectAfterValidation) {
-      router.replace('/game');
-    }
-  }, [shouldRedirectAfterValidation, router]);
 
   const formattedMinutes = String(Math.floor(timeLeft / 60)).padStart(2, '0');
   const formattedSeconds = String(timeLeft % 60).padStart(2, '0');
@@ -117,13 +110,13 @@ export default function FutbolPage() {
         if (result.isValid) {
           const award = asignarPuntosSiAplica(validationMode);
 
-          if (award.assigned) {
+            if (award.assigned) {
             setValidationResult({
               ...result,
               messages: [...result.messages, `¡Excelente! Has completado ${validationMode === 'logica_disparo' ? 'la Lógica 1' : 'la Lógica 2'}.`],
             });
-            
-            // Store animation data in localStorage and redirect to game
+
+            // Store animation data in localStorage so Cancha shows the overlay when the user navigates back
             const currentPlayer = localStorage.getItem('currentPlayer') || 'guest';
             localStorage.setItem(
               `${currentPlayer}_futbol_animation`,
@@ -133,12 +126,7 @@ export default function FutbolPage() {
                 logicMode: validationMode
               })
             );
-            
-            // Redirect to game page
-            setTimeout(() => {
-              setShouldRedirectAfterValidation(true);
-            }, 500);
-            
+
             return;
           }
 

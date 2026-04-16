@@ -29,7 +29,7 @@ const DESTINOS: Destino[] = [
     label: 'Punto Ganador',
     emoji: '🎯',
     descripcion: 'Centro perfecto al segundo palo',
-    feedback: '¡Centro perfecto! Como Lateral (DevOps), automatizaste el envío del código (CI/CD) para que llegara exactamente donde se necesitaba. El pipeline hizo su trabajo.',
+    feedback: '¡Jugada impecable! Tu sistema de pases funcionó a la perfección y el balón llegó a su destino por la vía rápida.',
     score: 100,
     resultado: 'correcto',
     cx: 92,

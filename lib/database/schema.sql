@@ -91,7 +91,7 @@ CREATE TABLE user_answers (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID REFERENCES users(id) ON DELETE CASCADE,
     challenge_id VARCHAR(255) NOT NULL,
-    play_step_id VARCHAR(255) NOT NULL,
+    play_step_id VARCHAR(255),
     answer JSONB NOT NULL,
     is_correct BOOLEAN NOT NULL,
     response_time INTEGER NOT NULL, -- segundos
