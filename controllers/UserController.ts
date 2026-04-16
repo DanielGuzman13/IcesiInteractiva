@@ -39,22 +39,18 @@ export class UserController {
       // Buscar usuario por nombre
       let user = await this.userRepository.findByName(name.trim());
 
-      // Si ya existe, retornar error
+      // Si ya existe, permitir continuar (actualizar último login)
       if (user) {
-        return NextResponse.json(
-          { error: 'Este nombre de usuario ya está en uso. Por favor elige otro nombre.' },
-          { status: 409 } // 409 Conflict
-        );
+        await this.userRepository.updateLastLogin(user.id);
+      } else {
+        // Crear nuevo usuario
+        user = await this.userRepository.create({
+          name: name.trim(),
+          salon: salon as '205M' | '206M'
+        });
+        // Actualizar último login para nuevos usuarios
+        await this.userRepository.updateLastLogin(user.id);
       }
-
-      // Crear nuevo usuario
-      user = await this.userRepository.create({ 
-        name: name.trim(),
-        salon: salon as '205M' | '206M'
-      });
-
-      // Actualizar último login
-      await this.userRepository.updateLastLogin(user.id);
 
       const response = NextResponse.json({
         user: {
@@ -73,6 +69,10 @@ export class UserController {
         path: '/',
         maxAge: 60 * 60 * 8,
       };
+
+      // Limpiar cookies existentes antes de establecer nuevas
+      response.cookies.delete('player_id');
+      response.cookies.delete('player_name');
 
       response.cookies.set('player_id', user.id, cookieOptions);
       response.cookies.set('player_name', user.name, cookieOptions);
