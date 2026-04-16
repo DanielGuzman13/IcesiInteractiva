@@ -60,22 +60,24 @@ export class UserAnswerRepository extends BaseRepository<UserAnswer> {
     }
 
     const pool = getPostgresPool();
+
+    // Build query dynamically: omit play_step_id if null to avoid NOT NULL constraint on existing DBs
+    const hasPlayStep = answerData.playStepId != null;
+    const columns = hasPlayStep
+      ? 'user_id, challenge_id, play_step_id, answer, is_correct, response_time, attempts, score'
+      : 'user_id, challenge_id, answer, is_correct, response_time, attempts, score';
+    const placeholders = hasPlayStep ? '$1, $2, $3, $4, $5, $6, $7, $8' : '$1, $2, $3, $4, $5, $6, $7';
+    const values = hasPlayStep
+      ? [answerData.userId, answerData.challengeId, answerData.playStepId, JSON.stringify(answerData.answer), answerData.isCorrect, answerData.responseTime, answerData.attempts, answerData.score]
+      : [answerData.userId, answerData.challengeId, JSON.stringify(answerData.answer), answerData.isCorrect, answerData.responseTime, answerData.attempts, answerData.score];
+
     const result = await pool.query<UserAnswerRow>(
       `
-        INSERT INTO user_answers (user_id, challenge_id, play_step_id, answer, is_correct, response_time, attempts, score)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        INSERT INTO user_answers (${columns})
+        VALUES (${placeholders})
         RETURNING id, user_id, challenge_id, play_step_id, answer, is_correct, response_time, attempts, score, answered_at
       `,
-      [
-        answerData.userId,
-        answerData.challengeId,
-        answerData.playStepId,
-        JSON.stringify(answerData.answer),
-        answerData.isCorrect,
-        answerData.responseTime,
-        answerData.attempts,
-        answerData.score,
-      ]
+      values
     );
 
     return mapUserAnswer(result.rows[0]);

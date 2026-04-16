@@ -216,7 +216,7 @@ export const Cancha: React.FC = () => {
 
   const handleContinueFromFutbol = () => {
     setFutbolAnimation((prev) => ({ ...prev, show: false }));
-    router.push('/game/reto/arquitecto');
+    setGameState('halftime_idle');
   };
 
   // KICK-OFF MOVIE
@@ -495,7 +495,7 @@ export const Cancha: React.FC = () => {
     setTotalScore(prev => prev + score);
 
     const msgs = {
-      100: '¡Centro perfecto! El pipeline hizo su trabajo. Automatización CI/CD sin intervención manual.',
+      100: '¡Pase de oro! No perdimos tiempo moviendo el balón paso a paso; gracias a tu elección llegó directo al objetivo.',
       50: 'Centro al primer palo. El equipo llegó al objetivo pero con riesgo de errores humanos (despliegue manual).',
       0: '¡Despliegue fallido! El código llegó roto al servidor.'
     };
@@ -512,7 +512,7 @@ export const Cancha: React.FC = () => {
           setBallParams({ top: manager.top, left: manager.left, scale: 1.5, text: '⚽' });
           setFeedback({
             show: true,
-            msg: 'El balón viaja por el pipeline y llega al mediocampo. Ahora el Mediocampista (Team Manager) debe gestionar el esfuerzo del equipo.',
+            msg: '¡Pase perfecto! El balón fluye sin problemas hasta el mediocampo. Es el momento del Estratega (Team Manager) para decidir cómo mover al equipo.',
             score: 0,
             ok: true,
             onContinue: () => {
@@ -1060,12 +1060,18 @@ export const Cancha: React.FC = () => {
                   <p className="text-xl font-medium text-gray-700 mb-8">
                     Has completado la primera mitad del partido. Puedes ir a la sala de máquinas del Backend o dirigirte al Vestuario para planificar tu Arquitectura.
                   </p>
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button
+                      onClick={() => router.push('/futbol')}
+                      className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full transition-colors text-lg shadow-lg active:scale-95"
+                    >
+                      Ir al Backend (Blockly)
+                    </button>
                     <button
                       onClick={() => setGameState('arquitecto_frozen')}
                       className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-full transition-colors text-lg shadow-lg active:scale-95"
                     >
-                      Ir al Vestuario (Técnico (Arquitecto))
+                      Continuar al Vestuario (Técnico (Arquitecto))
                     </button>
                   </div>
                 </div>
