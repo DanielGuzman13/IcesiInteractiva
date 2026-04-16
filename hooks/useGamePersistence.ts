@@ -78,8 +78,8 @@ export const useGamePersistence = () => {
 
   const saveAnswer = useCallback(async (challengeId: string, answer: any, isCorrect: boolean, score: number) => {
     console.log('saveAnswer called:', { challengeId, userId, sessionId, score });
-    if (!userId || !sessionId) {
-      console.warn('Cannot save answer: userId or sessionId not available', { userId, sessionId });
+    if (!userId) {
+      console.warn('Cannot save answer: userId not available', { userId });
       return;
     }
 
@@ -90,7 +90,7 @@ export const useGamePersistence = () => {
         body: JSON.stringify({
           userId,
           challengeId,
-          playStepId: sessionId,
+          playStepId: sessionId || null, // Allow null for open-ended questions
           answer,
           isCorrect,
           responseTime: 0,

@@ -13,10 +13,10 @@ export async function POST(request: NextRequest) {
 
     console.log('POST /api/answers received:', { userId, challengeId, playStepId, score });
 
-    if (!userId || !challengeId || !playStepId) {
-      console.error('Missing required fields:', { userId, challengeId, playStepId });
+    if (!userId || !challengeId) {
+      console.error('Missing required fields:', { userId, challengeId });
       return NextResponse.json(
-        { error: 'userId, challengeId, and playStepId are required' },
+        { error: 'userId and challengeId are required' },
         { status: 400 }
       );
     }
