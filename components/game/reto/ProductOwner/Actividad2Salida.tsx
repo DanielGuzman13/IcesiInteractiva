@@ -21,7 +21,7 @@ const COMPANEROS: Companero[] = [
     emoji: '🟢',
     label: 'Pase Corto',
     descripcion: 'Al compañero más cercano — seguro y controlado.',
-    equivalencia: 'mejorar y estabilizar lo que ya funciona. Menos risk, avance gradual y mayor confianza del equipo.',
+    equivalencia: 'mejorar y estabilizar lo que ya funciona. Menos riesgo, avance gradual y mayor confianza del equipo.',
     score: 10,
     cx: 35,
     cy: 50,

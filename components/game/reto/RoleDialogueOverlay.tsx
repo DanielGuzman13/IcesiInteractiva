@@ -54,7 +54,7 @@ const ROLE_CONTENT: Record<RoleKey, { title: string; image: string; dialogues: {
     image: '/images/roles/qa.png',
     dialogues: {
       1: 'Yo pruebo el sistema para detectar errores antes de que lleguen a los usuarios. Mi trabajo es clave porque evita fallos costosos y protege la confianza en el producto.',
-      2: 'Bien hecho, querido aspirante al mundo de la seguridad y la calidad. Si quieres convertirte en un PRO como yo, debes entender muy bien cuál es mi misión dentro del equipo. Yo no solo busco errores: yo protejo el producto y a los usuarios en cada cambio que hacemos. Cuando hago esto correctamente, evitamos caídas del sistema, retrabajos innecesarios, pérdidas de tiempo, costos extras y molestias para los clientes. En la industria, eso vale muchísimo, porque un pequeño fallo puede afectar a miles de personas y dañar la confianza en la empresa.'
+      2: 'Si quieres convertirte en un PRO como yo, debes entender muy bien cuál es mi misión dentro del equipo. Yo no solo busco errores: yo protejo el producto y a los usuarios en cada cambio que hacemos. Cuando hago esto correctamente, evitamos caídas del sistema, retrabajos innecesarios, pérdidas de tiempo, costos extras y molestias para los clientes. En la industria, eso vale muchísimo, porque un pequeño fallo puede afectar a miles de personas y dañar la confianza en la empresa.'
     }
   },
   'product-owner': {
@@ -78,8 +78,8 @@ export default function RoleDialogueOverlay({ role, activity, onContinue }: Role
             <Image
               src={content.image}
               alt={content.title}
-              width={4280}
-              height={4280}
+              width={3280}
+              height={3280}
               className="w-full max-w-[4320px] md:max-w-[5040px] h-auto object-contain"
               priority
             />
