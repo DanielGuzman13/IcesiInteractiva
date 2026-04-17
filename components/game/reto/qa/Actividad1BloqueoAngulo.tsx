@@ -18,36 +18,36 @@ type Zona = {
 const ZONAS: Zona[] = [
   {
     id: 'izquierdo',
-    label: 'Poste Izquierdo',
-    emoji: '🟢1️⃣',
-    descripcion: 'Cubres el ángulo inferior',
+    label: 'Zona 1',
+    emoji: '1',
+    descripcion: 'Bloqueo Lateral Inferior',
     score: 100,
     resultado: 'correcto',
     feedback: '¡Gran bloqueo! Como Defensa (QA), te posicionaste donde el error era más probable. Detectar un fallo antes de que el usuario lo vea es como evitar un gol en el último minuto.',
-    ballTarget: { x: 14, y: 37 },
-    defensaTarget: { x: 13, y: 38 },
+    ballTarget: { x: 14, y: 40.5 },
+    defensaTarget: { x: 13, y: 40.5 },
   },
   {
     id: 'centro',
-    label: 'Centro',
-    emoji: '🟡2️⃣',
-    descripcion: 'Centro del arco',
+    label: 'Zona 2',
+    emoji: '2',
+    descripcion: 'Bloqueo Central',
     score: 50,
     resultado: 'regular',
     feedback: 'Balón desviado. Encontraste el error, pero no lo solucionaste del todo. Como Defensa (QA), el riesgo sigue ahí, igual que un bug que se parchea mal.',
-    ballTarget: { x: 14, y: 50 },
-    defensaTarget: { x: 13, y: 50 },
+    ballTarget: { x: 14, y: 28.5 },
+    defensaTarget: { x: 13, y: 28.5 },
   },
   {
     id: 'derecho',
-    label: 'Poste Derecho',
-    emoji: '🔴3️⃣',
-    descripcion: 'Cubres el ángulo superior',
+    label: 'Zona 3',
+    emoji: '3',
+    descripcion: 'Bloqueo Lateral Superior',
     score: 0,
     resultado: 'incorrecto',
     feedback: '¡Gol en contra! No probaste la zona crítica. Como Defensa (QA), si no revisas donde es más peligroso, el error llega al cliente y el sistema falla.',
-    ballTarget: { x: 14, y: 62 },
-    defensaTarget: { x: 13, y: 62 },
+    ballTarget: { x: -3, y: 16.5 },
+    defensaTarget: { x: 13, y: 28.5 }, // Defensa se queda en el centro o falla
   },
 ];
 
@@ -55,9 +55,10 @@ const ZONAS: Zona[] = [
 const VB_W = 100;
 const VB_H = 56.25;
 
-const DELANTERO_START = { x: 40, y: 50 };
-const DEFENSA_START = { x: 16, y: 50 };
-const BALL_START = { x: 40, y: 50 };
+const DELANTERO_START = { x: 60, y: 28.5 };
+const DEFENSA_START = { x: 30, y: 28.5 };
+const PORTERO_START = { x: 4, y: 28.5 };
+const BALL_START = { x: 60, y: 28.5 };
 
 interface Props {
   onComplete: (score: number) => void;
@@ -68,6 +69,7 @@ export const Actividad1BloqueoAngulo: React.FC<Props> = ({ onComplete }) => {
   const [elegida, setElegida] = useState<Zona | null>(null);
   const [ballPos, setBallPos] = useState(BALL_START);
   const [defensaPos, setDefensaPos] = useState(DEFENSA_START);
+  const [porteroPos, setPorteroPos] = useState(PORTERO_START);
   const [golazo, setGolazo] = useState(false);
 
   const handleElegir = (zona: Zona) => {
@@ -83,12 +85,19 @@ export const Actividad1BloqueoAngulo: React.FC<Props> = ({ onComplete }) => {
       localStorage.setItem(`${pre}_qa_answers`, JSON.stringify(answers));
     }
 
+    // Todo ocurre de forma coordinada al elegir
+    setBallPos(zona.ballTarget);
     setDefensaPos(zona.defensaTarget);
-    setTimeout(() => {
-      setBallPos(zona.ballTarget);
-      if (zona.resultado === 'incorrecto') setGolazo(true);
-    }, 700);
-    setTimeout(() => setFase('modal'), 2000);
+    
+    // El portero reacciona
+    if (zona.resultado === 'incorrecto') {
+      setGolazo(true);
+      setPorteroPos({ x: 4, y: zona.ballTarget.y > 28.5 ? 35 : 22 }); // Portero se lanza pero no llega
+    } else {
+      setPorteroPos({ x: 4, y: zona.ballTarget.y }); // Portero acompaña
+    }
+
+    setTimeout(() => setFase('modal'), 1600);
   };
 
   const resultadoColor = {
@@ -139,49 +148,58 @@ export const Actividad1BloqueoAngulo: React.FC<Props> = ({ onComplete }) => {
           {/* Área chica */}
           <rect x="0" y={VB_H * 0.36} width={VB_W * 0.08} height={VB_H * 0.28}
             fill="none" stroke="white" strokeWidth="0.4" opacity="0.5" />
-          {/* Arco izquierdo */}
-          <rect x="0" y={VB_H * 0.38} width="2" height={VB_H * 0.24}
+          {/* Arco izquierdo (más grande) */}
+          <rect x="0" y="10" width="2" height="37"
             fill="#888" stroke="white" strokeWidth="0.6" rx="0.3" />
 
           {/* Zonas de bloqueo sombreadas (solo en fase 'elige') */}
           {fase === 'elige' && (
             <>
-              {/* Poste izquierdo */}
-              <rect x="10" y={VB_H * 0.56} width="12" height={VB_H * 0.22}
-                fill="#22c55e" opacity="0.25" rx="1"
-                className="cursor-pointer" onClick={() => handleElegir(ZONAS[0])}
-              />
-              {/* Centro */}
-              <rect x="10" y={VB_H * 0.39} width="12" height={VB_H * 0.22}
-                fill="#eab308" opacity="0.25" rx="1"
-                className="cursor-pointer" onClick={() => handleElegir(ZONAS[1])}
-              />
-              {/* Poste derecho */}
-              <rect x="10" y={VB_H * 0.22} width="12" height={VB_H * 0.22}
-                fill="#ef4444" opacity="0.25" rx="1"
-                className="cursor-pointer" onClick={() => handleElegir(ZONAS[2])}
-              />
-              {/* Etiquetas de zona */}
-              <text x="16" y={VB_H * 0.72} textAnchor="middle" fontSize="2.2" fill="white" fontWeight="bold">Poste Izq.</text>
-              <text x="16" y={VB_H * 0.52} textAnchor="middle" fontSize="2.2" fill="white" fontWeight="bold">Centro</text>
-              <text x="16" y={VB_H * 0.34} textAnchor="middle" fontSize="2.2" fill="white" fontWeight="bold">Poste Der.</text>
+              {[
+                { y: 35, zona: ZONAS[0], n: '1' },
+                { y: 23, zona: ZONAS[1], n: '2' },
+                { y: 11, zona: ZONAS[2], n: '3' }
+              ].map((item) => (
+                <g key={item.zona.id} className="cursor-pointer group" onClick={() => handleElegir(item.zona)}>
+                  <rect
+                    x="10" y={item.y} width="14" height="11"
+                    fill="white" opacity="0.1" rx="2" stroke="white" strokeWidth="0.5"
+                    className="transition-all duration-300 group-hover:opacity-30 group-hover:fill-blue-100"
+                  />
+                  <text x="17" y={item.y + 7.5} textAnchor="middle" fontSize="8" fill="black" opacity="0.2" fontWeight="900" style={{ pointerEvents: 'none' }}>
+                    {item.n}
+                  </text>
+                  <text x="17" y={item.y + 7} textAnchor="middle" fontSize="8" fill="white" fontWeight="900" style={{ pointerEvents: 'none' }}>
+                    {item.n}
+                  </text>
+                </g>
+              ))}
             </>
           )}
 
           {/* Delantero rival (rojo) */}
           <motion.g
-            animate={{ x: fase === 'animar' ? -15 : 0 }}
-            transition={{ duration: 0.6, ease: 'easeIn' }}
+            animate={{ x: fase === 'animar' ? -5 : 0 }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
           >
             <circle cx={DELANTERO_START.x} cy={DELANTERO_START.y} r="3.5" fill="#c0392b" stroke="white" strokeWidth="0.6" />
             <text x={DELANTERO_START.x} y={DELANTERO_START.y + 1.2} textAnchor="middle" fontSize="3" fill="white" fontWeight="bold">R</text>
             <text x={DELANTERO_START.x} y={DELANTERO_START.y + 5.5} textAnchor="middle" fontSize="2.2" fill="white" opacity="0.85">Rival</text>
           </motion.g>
 
+          {/* Portero (verde) */}
+          <motion.g
+            animate={{ x: porteroPos.x - PORTERO_START.x, y: porteroPos.y - PORTERO_START.y }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+          >
+            <circle cx={PORTERO_START.x} cy={PORTERO_START.y} r="3" fill="#27ae60" stroke="#2ecc71" strokeWidth="0.8" />
+            <text x={PORTERO_START.x} y={PORTERO_START.y + 1} textAnchor="middle" fontSize="2.5" fill="white" fontWeight="bold">P</text>
+          </motion.g>
+
           {/* Defensa (azul) con aura — se mueve a la zona elegida */}
           <motion.g
             animate={{ x: defensaPos.x - DEFENSA_START.x, y: defensaPos.y - DEFENSA_START.y }}
-            transition={{ duration: 0.5, ease: 'easeOut' }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
           >
             {/* Aura azul pulsante — indica jugador activo */}
             <circle cx={DEFENSA_START.x} cy={DEFENSA_START.y} r="6.5" fill="#3b82f6" opacity="0.25">
@@ -195,7 +213,7 @@ export const Actividad1BloqueoAngulo: React.FC<Props> = ({ onComplete }) => {
           {/* Balón animado */}
           <motion.g
             animate={{ x: ballPos.x - BALL_START.x, y: ballPos.y - BALL_START.y }}
-            transition={{ duration: 1, ease: 'easeIn', delay: 0.7 }}
+            transition={{ duration: 0.7, ease: 'easeOut' }}
           >
             <text
               x={BALL_START.x}
@@ -235,14 +253,13 @@ export const Actividad1BloqueoAngulo: React.FC<Props> = ({ onComplete }) => {
             <button
               key={z.id}
               onClick={() => handleElegir(z)}
-              className={`flex flex-col items-center gap-1 rounded-xl border-2 border-dashed p-3 text-sm font-bold transition-all hover:scale-105 active:scale-95 cursor-pointer
-                ${z.resultado === 'correcto' ? 'border-gray-300 hover:bg-gray-50 text-gray-800' :
-                  z.resultado === 'regular' ? 'border-gray-300 hover:bg-gray-50 text-gray-800' :
-                    'border-gray-300 hover:bg-gray-50 text-gray-800'}`}
+              className="flex flex-col items-center gap-1 rounded-2xl border-2 border-gray-200 bg-white/40 p-4 text-sm font-bold transition-all hover:scale-105 active:scale-95 cursor-pointer hover:bg-white hover:shadow-xl group grow backdrop-blur-sm"
             >
-              <span className="text-2xl">{z.emoji}</span>
-              <span>{z.label}</span>
-              <span className="text-xs text-gray-500 font-normal">{z.descripcion}</span>
+              <div className="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center font-black text-2xl mb-1 shadow-lg group-hover:bg-blue-700 transition-colors">
+                {z.emoji}
+              </div>
+              <span className="text-gray-800 text-base">{z.label}</span>
+              <span className="text-[15px] text-gray-500 font-normal leading-tight text-center">{z.descripcion}</span>
             </button>
           ))}
         </div>

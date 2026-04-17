@@ -92,7 +92,7 @@ docker run --name icesi-postgres \
   -e POSTGRES_USER=postgres \
   -e POSTGRES_PASSWORD=postgres \
   -e POSTGRES_DB=icesi_interactiva \
-  -p 5432:5432 \
+  -p 5433:5432 \
   -d postgres:14
 
 # Esperar unos segundos para que el contenedor inicie

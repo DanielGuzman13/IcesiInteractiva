@@ -18,39 +18,39 @@ type Companero = {
 const COMPANEROS: Companero[] = [
   {
     id: 'corto',
-    emoji: '🟢',
+    emoji: 'A',
     label: 'Pase Corto',
     descripcion: 'Al compañero más cercano — seguro y controlado.',
     equivalencia: 'mejorar y estabilizar lo que ya funciona. Menos riesgo, avance gradual y mayor confianza del equipo.',
     score: 10,
     cx: 35,
     cy: 50,
-    color: 'border-green-400',
-    dotColor: '#22c55e',
+    color: 'border-blue-300',
+    dotColor: '#3b82f6',
   },
   {
     id: 'medio',
-    emoji: '🟡',
+    emoji: 'B',
     label: 'Avance Medio',
     descripcion: 'A un compañero en el medio — equilibrio y progreso.',
     equivalencia: 'crear nuevas herramientas útiles que amplían las capacidades del equipo sin jugarse todo de una.',
     score: 20,
-    cx: 50,
-    cy: 25,
-    color: 'border-yellow-400',
-    dotColor: '#eab308',
+    cx: 52,
+    cy: 30,
+    color: 'border-blue-300',
+    dotColor: '#3b82f6',
   },
   {
     id: 'largo',
-    emoji: '🔴',
+    emoji: 'C',
     label: 'Pase Largo',
     descripcion: 'Al compañero más adelantado — ambicioso y directo.',
     equivalencia: 'ir directamente por el objetivo principal del cliente. Alto impacto, pero requiere ejecución precisa.',
     score: 30,
-    cx: 65,
-    cy: 70,
-    color: 'border-red-400',
-    dotColor: '#ef4444',
+    cx: 75,
+    cy: 65,
+    color: 'border-blue-300',
+    dotColor: '#3b82f6',
   },
 ];
 
@@ -111,7 +111,7 @@ export const Actividad2Salida: React.FC<Props> = ({ onComplete }) => {
 
       {/* Campo SVG */}
       <div className="relative w-full rounded-xl overflow-hidden shadow-inner border-4 border-green-800" style={{ background: '#2E7D32' }}>
-        <svg viewBox="0 0 100 100" className="w-full" style={{ display: 'block', aspectRatio: '16/9', maxHeight: '340px' }}>
+        <svg viewBox="25 18 80 64" className="w-full" style={{ display: 'block', aspectRatio: '16/9', maxHeight: '380px' }}>
           <rect width="100" height="100" fill="#2E7D32" />
 
           {/* Línea de medio campo */}
@@ -159,8 +159,8 @@ export const Actividad2Salida: React.FC<Props> = ({ onComplete }) => {
                 strokeWidth={elegido?.id === comp.id ? '1.2' : '0.7'}
                 opacity={elegido && elegido.id !== comp.id ? 0.4 : 1}
               />
-              <text x={comp.cx} y={comp.cy + 1.5} textAnchor="middle" fontSize="3.5" fill="white">
-                {comp.id === 'corto' ? '🟢' : comp.id === 'medio' ? '🟡' : '🔴'}
+              <text x={comp.cx} y={comp.cy + 1.5} textAnchor="middle" fontSize="3.5" fill="white" fontWeight="900">
+                {comp.emoji}
               </text>
               <text x={comp.cx} y={comp.cy + 8} textAnchor="middle" fontSize="2.5" fill="white" opacity="0.9">
                 {comp.label}
@@ -180,11 +180,15 @@ export const Actividad2Salida: React.FC<Props> = ({ onComplete }) => {
             key={comp.id}
             disabled={!!elegido}
             onClick={() => handleElegir(comp)}
-            className={`rounded-xl border-2 p-3 text-center text-xs transition-all cursor-pointer hover:scale-105 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed ${elegido?.id === comp.id ? `${comp.color} bg-yellow-50 shadow` : 'border-gray-200 bg-gray-50 hover:bg-gray-100'}`}
+            className={`rounded-xl border-2 p-3 text-center text-xs transition-all cursor-pointer hover:scale-105 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed ${elegido?.id === comp.id ? `${comp.color} bg-blue-50 shadow` : 'border-gray-200 bg-gray-50 hover:bg-gray-100'}`}
           >
-            <div className="text-2xl mb-1">{comp.emoji}</div>
+            <div className="flex justify-center mb-2">
+              <span className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-black text-lg shadow-sm">
+                {comp.emoji}
+              </span>
+            </div>
             <div className="font-bold text-gray-700">{comp.label}</div>
-            <div className="text-gray-500 mt-1">{comp.descripcion}</div>
+            <div className="text-gray-500 mt-1 line-clamp-2">{comp.descripcion}</div>
           </button>
         ))}
       </div>
@@ -193,7 +197,9 @@ export const Actividad2Salida: React.FC<Props> = ({ onComplete }) => {
       {showModal && elegido && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
           <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center border-t-8 border-blue-500 animate-in fade-in zoom-in duration-300">
-            <div className="text-5xl mb-4">{elegido.emoji}</div>
+            <div className="w-16 h-16 rounded-full bg-blue-500 text-white flex items-center justify-center font-black text-3xl mx-auto mb-4 shadow-lg">
+              {elegido.emoji}
+            </div>
             <h3 className="text-xl font-extrabold text-gray-800 mb-3">
               ¡{elegido.label}!
             </h3>
