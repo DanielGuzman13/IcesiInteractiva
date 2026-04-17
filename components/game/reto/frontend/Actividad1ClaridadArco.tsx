@@ -30,7 +30,7 @@ const PASILLOS: Pasillo[] = [
     score: 100,
     resultado: 'correcto',
     feedback: '¡Qué claridad! Elegiste el camino que todos podían ver y el balón entró limpio. (En el equipo, esto es usar una buena Jerarquía Visual; pusiste lo más importante donde el ojo del usuario lo ve primero)',
-    ballTarget: { x: 97, y: VB_H * 0.5 },
+    ballTarget: { x: 3, y: VB_H * 0.5 },
     colorClass: 'border-cyan-400 text-cyan-800 bg-cyan-50/40 hover:bg-cyan-100/80',
     colorHex: '#0891b2'
   },
@@ -42,7 +42,7 @@ const PASILLOS: Pasillo[] = [
     score: 50,
     resultado: 'regular',
     feedback: '¡Uff, pasó raspando! El balón pegó en el palo y entró de milagro. (Tu interfaz está un poco Saturada; el usuario encontró el botón, pero le costó trabajo distinguirlo entre tantos elementos)',
-    ballTarget: { x: 97, y: VB_H * 0.35 },
+    ballTarget: { x: 3, y: VB_H * 0.35 },
     colorClass: 'border-fuchsia-400 text-fuchsia-800 bg-fuchsia-50/40 hover:bg-fuchsia-100/80',
     colorHex: '#c026d3'
   },
@@ -54,7 +54,7 @@ const PASILLOS: Pasillo[] = [
     score: 0,
     resultado: 'incorrecto',
     feedback: '¡Bloqueado! Le pegaste directo al defensa que tenías enfrente. (El Diseño es Confuso; pusiste tantas cosas en la pantalla que el usuario no supo a qué darle clic y se perdió)',
-    ballTarget: { x: 82, y: VB_H * 0.75 },
+    ballTarget: { x: 18, y: VB_H * 0.75 },
     colorClass: 'border-orange-400 text-orange-800 bg-orange-50/40 hover:bg-orange-100/80',
     colorHex: '#d97706'
   },
@@ -112,27 +112,27 @@ export const Actividad1ClaridadArco: React.FC<Props> = ({ onComplete }) => {
             <rect key={i} x={i * 20} y={0} width={10} height={VB_H} fill="#297528" opacity="0.35" />
           ))}
 
-          {/* Área rival y portería (Ampliada) */}
-          <rect x={VB_W * 0.82} y={VB_H * 0.15} width={VB_W * 0.18} height={VB_H * 0.7} fill="none" stroke="white" strokeWidth="0.5" opacity="0.6" />
-          <rect x={VB_W * 0.9} y={VB_H * 0.28} width={VB_W * 0.1} height={VB_H * 0.44} fill="none" stroke="white" strokeWidth="0.4" opacity="0.5" />
-          <rect x={VB_W * 0.97} y={VB_H * 0.3} width="3" height={VB_H * 0.4} fill="#888" stroke="white" strokeWidth="0.6" rx="0.3" />
+          {/* Área rival y portería (Ampliada - Lado Izquierdo) */}
+          <rect x={0} y={VB_H * 0.15} width={VB_W * 0.18} height={VB_H * 0.7} fill="none" stroke="white" strokeWidth="0.5" opacity="0.6" />
+          <rect x={0} y={VB_H * 0.28} width={VB_W * 0.1} height={VB_H * 0.44} fill="none" stroke="white" strokeWidth="0.4" opacity="0.5" />
+          <rect x={0} y={VB_H * 0.3} width="3" height={VB_H * 0.4} fill="#888" stroke="white" strokeWidth="0.6" rx="0.3" />
 
-          {/* Delantero Frontend (Azul) */}
+          {/* Delantero Frontend (Azul) - Atacando desde la derecha hacia la izquierda */}
           {fase === 'elige' && (
-            <circle cx={BALL_POS.x - 3} cy={BALL_POS.y} r="7" fill="#3b82f6" opacity="0.2">
+            <circle cx={BALL_POS.x + 3} cy={BALL_POS.y} r="7" fill="#3b82f6" opacity="0.2">
               <animate attributeName="r" values="6;9;6" dur="1.2s" repeatCount="indefinite" />
               <animate attributeName="opacity" values="0.2;0.06;0.2" dur="1.2s" repeatCount="indefinite" />
             </circle>
           )}
-          <circle cx={BALL_POS.x - 3} cy={BALL_POS.y} r="3.5" fill="#1d4ed8" stroke="#93c5fd" strokeWidth="1" />
-          <text x={BALL_POS.x - 3} y={BALL_POS.y + 1.2} textAnchor="middle" fontSize="2.8" fill="white" fontWeight="bold">FE</text>
+          <circle cx={BALL_POS.x + 3} cy={BALL_POS.y} r="3.5" fill="#1d4ed8" stroke="#93c5fd" strokeWidth="1" />
+          <text x={BALL_POS.x + 3} y={BALL_POS.y + 1.2} textAnchor="middle" fontSize="2.8" fill="white" fontWeight="bold">FE</text>
 
-          {/* Defensas / Rivales (Rojos con R) */}
+          {/* Defensas / Rivales (Rojos con R) - Espejo */}
           {[
-            { cx: 83, cy: VB_H * 0.75 },
-            { cx: 83, cy: VB_H * 0.82 },
-            { cx: 85, cy: VB_H * 0.25 },
-            { cx: 86, cy: VB_H * 0.45 }
+            { cx: 17, cy: VB_H * 0.75 },
+            { cx: 17, cy: VB_H * 0.82 },
+            { cx: 15, cy: VB_H * 0.25 },
+            { cx: 14, cy: VB_H * 0.45 }
           ].map((p, i) => (
             <g key={i}>
               <circle cx={p.cx} cy={p.cy} r="2.5" fill="#c0392b" stroke="white" strokeWidth="0.5" />
@@ -174,7 +174,7 @@ export const Actividad1ClaridadArco: React.FC<Props> = ({ onComplete }) => {
 
           <AnimatePresence>
             {bloqueoAnim && (
-              <motion.text x={83} y={VB_H * 0.75} textAnchor="middle" fontSize="6"
+              <motion.text x={17} y={VB_H * 0.75} textAnchor="middle" fontSize="6"
                 initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1.5 }} exit={{ opacity: 0 }}>
                 💥
               </motion.text>
@@ -183,7 +183,7 @@ export const Actividad1ClaridadArco: React.FC<Props> = ({ onComplete }) => {
 
           <AnimatePresence>
             {fase === 'animar' && elegido?.resultado === 'correcto' && (
-              <motion.text x={VB_W * 0.93} y={VB_H / 2} textAnchor="middle" fontSize="8" fill="#22c55e" fontWeight="bold"
+              <motion.text x={VB_W * 0.07} y={VB_H / 2} textAnchor="middle" fontSize="8" fill="#22c55e" fontWeight="bold"
                 initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.8 }}>
                 ¡GOL!
               </motion.text>

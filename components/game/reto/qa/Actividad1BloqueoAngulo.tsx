@@ -24,8 +24,8 @@ const ZONAS: Zona[] = [
     score: 100,
     resultado: 'correcto',
     feedback: '¡Gran bloqueo! Como Defensa (QA), te posicionaste donde el error era más probable. Detectar un fallo antes de que el usuario lo vea es como evitar un gol en el último minuto.',
-    ballTarget: { x: 14, y: 40.5 },
-    defensaTarget: { x: 13, y: 40.5 },
+    ballTarget: { x: 14, y: 40.8 },
+    defensaTarget: { x: 13, y: 40.8 },
   },
   {
     id: 'centro',
@@ -46,7 +46,7 @@ const ZONAS: Zona[] = [
     score: 0,
     resultado: 'incorrecto',
     feedback: '¡Gol en contra! No probaste la zona crítica. Como Defensa (QA), si no revisas donde es más peligroso, el error llega al cliente y el sistema falla.',
-    ballTarget: { x: -3, y: 16.5 },
+    ballTarget: { x: -3, y: 16.2 },
     defensaTarget: { x: 13, y: 28.5 }, // Defensa se queda en el centro o falla
   },
 ];
@@ -142,11 +142,11 @@ export const Actividad1BloqueoAngulo: React.FC<Props> = ({ onComplete }) => {
 
           {/* Línea de fondo izquierda */}
           <line x1="0" y1="0" x2="0" y2={VB_H} stroke="white" strokeWidth="0.5" />
-          {/* Área penal izquierda */}
-          <rect x="0" y={VB_H * 0.22} width={VB_W * 0.18} height={VB_H * 0.56}
+          {/* Área penal izquierda (Ampliada) */}
+          <rect x="0" y={VB_H * 0.05} width={VB_W * 0.22} height={VB_H * 0.9}
             fill="none" stroke="white" strokeWidth="0.5" opacity="0.6" />
-          {/* Área chica */}
-          <rect x="0" y={VB_H * 0.36} width={VB_W * 0.08} height={VB_H * 0.28}
+          {/* Área chica (Al tamaño de la portería) */}
+          <rect x="0" y="10" width={VB_W * 0.1} height="37"
             fill="none" stroke="white" strokeWidth="0.4" opacity="0.5" />
           {/* Arco izquierdo (más grande) */}
           <rect x="0" y="10" width="2" height="37"
@@ -156,20 +156,20 @@ export const Actividad1BloqueoAngulo: React.FC<Props> = ({ onComplete }) => {
           {fase === 'elige' && (
             <>
               {[
-                { y: 35, zona: ZONAS[0], n: '1' },
-                { y: 23, zona: ZONAS[1], n: '2' },
-                { y: 11, zona: ZONAS[2], n: '3' }
+                { y: 34.6, zona: ZONAS[0], n: '1' },
+                { y: 22.3, zona: ZONAS[1], n: '2' },
+                { y: 10, zona: ZONAS[2], n: '3' }
               ].map((item) => (
                 <g key={item.zona.id} className="cursor-pointer group" onClick={() => handleElegir(item.zona)}>
                   <rect
-                    x="10" y={item.y} width="14" height="11"
+                    x="10" y={item.y} width="14" height="12.33"
                     fill="white" opacity="0.1" rx="2" stroke="white" strokeWidth="0.5"
                     className="transition-all duration-300 group-hover:opacity-30 group-hover:fill-blue-100"
                   />
-                  <text x="17" y={item.y + 7.5} textAnchor="middle" fontSize="8" fill="black" opacity="0.2" fontWeight="900" style={{ pointerEvents: 'none' }}>
+                  <text x="17" y={item.y + 8.5} textAnchor="middle" fontSize="8" fill="black" opacity="0.2" fontWeight="900" style={{ pointerEvents: 'none' }}>
                     {item.n}
                   </text>
-                  <text x="17" y={item.y + 7} textAnchor="middle" fontSize="8" fill="white" fontWeight="900" style={{ pointerEvents: 'none' }}>
+                  <text x="17" y={item.y + 8} textAnchor="middle" fontSize="8" fill="white" fontWeight="900" style={{ pointerEvents: 'none' }}>
                     {item.n}
                   </text>
                 </g>

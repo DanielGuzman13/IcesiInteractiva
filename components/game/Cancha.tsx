@@ -303,8 +303,8 @@ export const Cancha: React.FC = () => {
         ok: false,
         onContinue: () => {
           setFeedback(f => ({ ...f, show: false }));
-          setGameState('pre_kickoff');
-          setBallParams({ top: '50%', left: '50%', scale: 1, text: '⚽' });
+          // Seguimos a la fase de PO 2
+          startAct2Transition();
         }
       });
     }
@@ -352,7 +352,7 @@ export const Cancha: React.FC = () => {
       setBallParams({ top: target.top, left: target.left, scale: optId === 'largo' ? 2 : 1, text: '⚽' });
       setPoPos({ top: '50%', left: '5%' }); // Portero regresa al arco
 
-      setGoals(g => ({ ...g, a: g.a + 1 }));
+      // En Salida (PO 2) no hay gol directo, es una transición.
 
       setFeedback({
         show: true,
@@ -410,12 +410,13 @@ export const Cancha: React.FC = () => {
       setGoals(g => ({ ...g, b: g.b + 1 }));
       setFeedback({
         show: true,
-        msg: '¡Pipeline de defensa roto! El Bug se ha filtrado a producción. Reiniciando bloque de pruebas...',
+        msg: 'El Bug se ha filtrado a producción. Reiniciando bloque de pruebas...',
         score: 0,
         ok: false,
         onContinue: () => {
           setFeedback(f => ({ ...f, show: false }));
-          startQaAct1();
+          // Procedemos a la siguiente tarea de QA (QA 2)
+          startQaAct2();
         }
       });
     }
@@ -473,7 +474,8 @@ export const Cancha: React.FC = () => {
           ok: false,
           onContinue: () => {
             setFeedback(f => ({ ...f, show: false }));
-            startQaAct2();
+            // Procedemos a la fase de DevOps 1
+            startDevopsAct1();
           }
         });
       }
@@ -503,6 +505,8 @@ export const Cancha: React.FC = () => {
       0: '¡Despliegue fallido! El código llegó roto al servidor.'
     };
 
+    // En Centro (DevOps 1) no hay gol en contra si fallas, solo se pierde el balón.
+
     setFeedback({
       show: true,
       msg: msgs[score as keyof typeof msgs] || 'Resultado promediado.',
@@ -510,23 +514,22 @@ export const Cancha: React.FC = () => {
       ok: score > 0,
       onContinue: () => {
         setFeedback(f => ({ ...f, show: false }));
-        if (score > 0) {
-          const manager = getJugadorPos('a-volante-ofensivo');
-          setBallParams({ top: manager.top, left: manager.left, scale: 1.5, text: '⚽' });
-          setFeedback({
-            show: true,
-            msg: '¡Pase perfecto! El balón fluye sin problemas hasta el mediocampo. Es el momento del Estratega (Team Manager) para decidir cómo mover al equipo.',
-            score: 0,
-            ok: true,
-            onContinue: () => {
-              setBallParams({ top: manager.top, left: manager.left, scale: 1, text: '⚽' });
-              setFeedback(f => ({ ...f, show: false }));
-              startManagerAct1();
-            }
-          });
-        } else {
-          startDevopsAct1();
-        }
+        // Proceso de transición al Manager, incluso si falló el centro
+        const manager = getJugadorPos('a-volante-ofensivo');
+        setBallParams({ top: manager.top, left: manager.left, scale: 1.5, text: '⚽' });
+        setFeedback({
+          show: true,
+          msg: score > 0 
+            ? '¡Pase perfecto! El balón fluye sin problemas hasta el mediocampo. Es el momento del Estratega (Team Manager).'
+            : '¡Recuperación forzada! A pesar del mal centro, el equipo logra recuperar el balón en el mediocampo para el Estratega.',
+          score: 0,
+          ok: true,
+          onContinue: () => {
+            setBallParams({ top: manager.top, left: manager.left, scale: 1, text: '⚽' });
+            setFeedback(f => ({ ...f, show: false }));
+            startManagerAct1();
+          }
+        });
       }
     });
   };
@@ -554,18 +557,17 @@ export const Cancha: React.FC = () => {
       0: '¡Balón perdido! Falta de comunicación técnica.'
     };
 
+    // En Pase (Manager 1) no hay gol en contra.
+
     setFeedback({
       show: true,
-      msg: msgs[score as keyof typeof msgs] || 'Pase procesado.',
+      msg: msgs[score as keyof typeof msgs] || 'Asistencia procesada.',
       score: score,
       ok: score > 0,
       onContinue: () => {
         setFeedback(f => ({ ...f, show: false }));
-        if (score > 0) {
-          startManagerAct2();
-        } else {
-          startManagerAct1();
-        }
+        // Siempre procedemos a Manager 2
+        startManagerAct2();
       }
     });
   };
@@ -595,6 +597,8 @@ export const Cancha: React.FC = () => {
         0: '¡Micromanagement! Intentaste hacerlo todo solo y perdiste el balón.'
       };
 
+      // En Cambio de Frente (Manager 2) no hay gol en contra.
+
       setFeedback({
         show: true,
         msg: msgs[score as keyof typeof msgs] || 'Gestión finalizada.',
@@ -602,23 +606,21 @@ export const Cancha: React.FC = () => {
         ok: score > 0,
         onContinue: () => {
           setFeedback(f => ({ ...f, show: false }));
-          if (score > 0) {
-            const backend = getJugadorPos('a-medio-centro-2');
-            setBallParams({ top: backend.top, left: backend.left, scale: 1, text: '⚽' });
-            setFeedback({
-              show: true,
-              msg: '¡Estrategia definida! El Mediocampista (Team Manager) deja el balón servido para el Mediocentro (Backend).',
-              score: 0,
-              ok: true,
-              onContinue: () => {
-                setFeedback(f => ({ ...f, show: false }));
-                setGameState('next_roles');
-                router.push('/futbol');
-              }
-            });
-          } else {
-            startManagerAct2();
-          }
+          const backend = getJugadorPos('a-medio-centro-2');
+          setBallParams({ top: backend.top, left: backend.left, scale: 1, text: '⚽' });
+          setFeedback({
+            show: true,
+            msg: score > 0 
+              ? '¡Estrategia definida! El Mediocampista (Team Manager) deja el balón servido para el Mediocentro (Backend).'
+              : '¡Jugada accidentada! Tras un mal manejo, el balón le queda dividido al Mediocentro (Backend).',
+            score: 0,
+            ok: true,
+            onContinue: () => {
+              setFeedback(f => ({ ...f, show: false }));
+              setGameState('next_roles');
+              router.push('/futbol');
+            }
+          });
         }
       });
     });
@@ -655,6 +657,11 @@ export const Cancha: React.FC = () => {
       0: '¡Bloqueado! Diseño confuso.'
     };
 
+    if (score > 0) {
+      setGoals(g => ({ ...g, a: g.a + 1 }));
+    }
+    // Si falla el delantero, no se suma gol en contra automático aquí.
+
     setFeedback({
       show: true,
       msg: msgs[score as keyof typeof msgs] || 'Diseño validado.',
@@ -662,11 +669,8 @@ export const Cancha: React.FC = () => {
       ok: score > 0,
       onContinue: () => {
         setFeedback(f => ({ ...f, show: false }));
-        if (score > 0) {
-          setGameState('frontend_act2_frozen');
-        } else {
-          setGameState('frontend_act1_frozen');
-        }
+        // Siempre procedemos a Frontend 2
+        setGameState('frontend_act2_frozen');
       }
     });
   };
@@ -677,13 +681,18 @@ export const Cancha: React.FC = () => {
       setGameState('frontend_act2_resolving');
 
       saveAnswer('frontend-actividad-2', { score }, score > 0, score);
-
       setTotalScore(prev => prev + score);
+
       const msgs = {
         100: '¡Amague Veloz! Interacción ágil, sin fricciones.',
         50: '¡Choque fuerte! La interacción fue pesada.',
         0: '¡Duda! Te quedaste estático.'
       };
+
+      if (score > 0) {
+        setGoals(g => ({ ...g, a: g.a + 1 }));
+      }
+      // Si falla el regate, se pierde el balón pero no es gol en contra automático.
 
       setFeedback({
         show: true,
@@ -692,43 +701,45 @@ export const Cancha: React.FC = () => {
         ok: score > 0,
         onContinue: () => {
           setFeedback(f => ({ ...f, show: false }));
-          if (score > 0) {
-            setFeedback({
-              show: true,
-              msg: '¡GOLAAAAAZO! El Delantero (Frontend) facilita que cada interacción se sienta natural.',
-              score: 0,
-              ok: true,
-              onContinue: () => {
-                setFeedback(f => ({ ...f, show: false }));
-                setBallParams({ top: '50%', left: isSecondHalf ? '95%' : '5%', scale: 1, text: '⚽' });
-                setFeedback({
-                  show: true,
-                  msg: '¡Gol del Delantero (Frontend)! Pero el rival saca rápido aprovechando un descuido...',
-                  score: 0,
-                  ok: false,
-                  onContinue: () => {
-                    setFeedback(f => ({ ...f, show: false }));
-                    setBallParams({ top: '50%', left: '50%', scale: 1, text: '⚽' });
-                    const rival1 = getJugadorPos('b-medio-centro-1');
-                    setBallParams({ top: rival1.top, left: rival1.left, scale: 1, text: '⚽' });
+          // Siempre activamos el contraataque, sea gol o pérdida
+          setFeedback({
+            show: true,
+            msg: score > 0 
+              ? '¡GOLAAAAAZO! Pero el rival saca rápido aprovechando un descuido.'
+              : '¡Balón perdido! El rival recupera y lanza un contraataque fulminante.',
+            score: 0,
+            ok: true,
+            onContinue: () => {
+              setFeedback(f => ({ ...f, show: false }));
+
+              setTimeout(() => {
+                // 2. Reinicio en la mitad
+                setBallParams({ top: '50%', left: '50%', scale: 1.2, text: '⚽' });
+
+                setTimeout(() => {
+                  // 3. Jugador rival recibe en el centro
+                  const rival1 = getJugadorPos('b-medio-2');
+                  setBallParams({ top: rival1.top, left: rival1.left, scale: 1, text: '⚽' });
+
+                  setTimeout(() => {
+                    // 4. Pase al siguiente rival avanzando
+                    const rival2 = getJugadorPos('b-delantero-2');
+                    setBallParams({ top: rival2.top, left: rival2.left, scale: 1, text: '⚽' });
+
                     setTimeout(() => {
-                      const rival2 = getJugadorPos('b-volante-ofensivo');
-                      setBallParams({ top: rival2.top, left: rival2.left, scale: 1, text: '⚽' });
+                      // 6. Pase al delantero rival para el contraataque
+                      const rival3 = getJugadorPos('b-delantero-1');
+                      setBallParams({ top: rival3.top, left: rival3.left, scale: 1.2, text: '⚽' });
+
                       setTimeout(() => {
-                        const rival3 = getJugadorPos('b-delantero-1');
-                        setBallParams({ top: rival3.top, left: rival3.left, scale: 1.2, text: '⚽' });
-                        setTimeout(() => {
-                          setGameState('devops_act2_frozen');
-                        }, 1000);
-                      }, 1000);
+                        setGameState('devops_act2_frozen');
+                      }, 2000);
                     }, 1000);
-                  }
-                });
-              }
-            });
-          } else {
-            setGameState('frontend_act2_frozen');
-          }
+                  }, 1000);
+                }, 1500); // Pausa en el centro para que se vea el reinicio
+              }, 1000); // Pausa en el gol
+            }
+          });
         }
       });
     });
@@ -743,6 +754,10 @@ export const Cancha: React.FC = () => {
 
       setTotalScore(prev => prev + score);
 
+      if (score === 0) {
+        setGoals(g => ({ ...g, b: g.b + 1 }));
+      }
+
       setFeedback({
         show: true,
         msg: score > 0 ? '¡El despliegue está asegurado! El partido ha finalizado.' : '¡Caída del sistema! No pudiste mantener el servicio.',
@@ -750,11 +765,8 @@ export const Cancha: React.FC = () => {
         ok: score > 0,
         onContinue: () => {
           setFeedback(f => ({ ...f, show: false }));
-          if (score > 0) {
-            setGameState('game_over');
-          } else {
-            setGameState('devops_act2_frozen');
-          }
+          // Final del partido, independientemente del score
+          setGameState('game_over');
         }
       });
     });
@@ -801,7 +813,10 @@ export const Cancha: React.FC = () => {
 
             {/* Cancha decor */}
             <div className="absolute top-0 left-1/2 w-1 h-full bg-white/60 -translate-x-1/2"></div>
-            <div className="absolute top-1/2 left-0 w-[13%] h-[55%] border-t-4 border-r-4 border-b-4 border-white/60 -translate-y-1/2"></div>
+            {/* Lado Izquierdo */}
+            <div className="absolute top-1/2 left-0 w-[13%] h-[55%] border-t-4 border-r-4 border-b-4 border-white/60 -translate-y-1/2 opacity-50"></div>
+            {/* Lado Derecho */}
+            <div className="absolute top-1/2 right-0 w-[13%] h-[55%] border-t-4 border-l-4 border-b-4 border-white/60 -translate-y-1/2 opacity-50"></div>
           </div>
 
           {/* Jugadores y Zona Técnica */}
@@ -1002,14 +1017,14 @@ export const Cancha: React.FC = () => {
           </motion.div>
         )}
 
-        {/* DevOps Actividad 1 - Pipeline OVERLAY */}
+        {/* DevOps Actividad 1*/}
         {gameState === 'devops_act1_frozen' && (
           <motion.div key="devops-act1-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
             className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
           >
             <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-blue-400">
               <div className="bg-blue-600 px-4 py-3 text-white flex justify-between items-center shadow">
-                <h2 className="font-black text-xl">🚀 ¡DEVOPS: PIPELINE DE COMUNICACIÓN (CENTRO)!</h2>
+                <h2 className="font-black text-xl">🚀 ¡DEVOPS: DESPLIEGUE DE COMUNICACIÓN (CENTRO)!</h2>
                 <span className="text-sm bg-black/30 px-3 py-1 rounded-full border border-white/20">Jugador: Lateral (DevOps)</span>
               </div>
               <div className="overflow-y-auto bg-blue-50 relative p-4 md:p-6">

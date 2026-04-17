@@ -231,7 +231,7 @@ export default function ResumenRolesPage() {
                 ¡Bienvenido!
               </h3>
               <p className="text-xl text-slate-600 mb-10 font-medium leading-relaxed">
-                Estás en una página donde debes seleccionar solo uno de los roles, específicamente el que más te guste.
+                Selecciona el rol que más te llamó la atención, pero recuerda que solo puedes escoger una opción.
               </p>
               <button
                 onClick={() => setShowIntroModal(false)}

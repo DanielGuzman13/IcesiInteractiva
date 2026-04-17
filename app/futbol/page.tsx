@@ -7,7 +7,7 @@ import { JugadaValidator, ValidationMode } from '@/lib/validation/jugada-validat
 import { Workspace } from 'blockly';
 import Link from 'next/link';
 
-const TIMER_SECONDS = 10 * 60;
+const TIMER_SECONDS = 7 * 60;
 
 interface ValidationResult {
   isValid: boolean;

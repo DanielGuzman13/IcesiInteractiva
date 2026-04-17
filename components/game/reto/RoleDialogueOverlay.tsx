@@ -22,7 +22,7 @@ const ROLE_CONTENT: Record<RoleKey, { title: string; image: string; dialogues: {
     image: '/images/roles/arquitecto.png',
     dialogues: {
       1: 'Gran diseño inicial. Ya trazaste la estructura del sistema y eso facilita cada decisión del equipo.',
-      2: 'Excelente trabajo. Si quieres pensar como un Arquitecto de Software de alto nivel, recuerda que yo no solo dibujo diagramas: yo defino la base sobre la que todo el equipo construye. Mi responsabilidad es organizar el sistema para que sea claro, mantenible y preparado para crecer sin volverse un caos. Cuando esta parte se hace bien, el equipo desarrolla más rápido, comete menos errores y puede agregar nuevas funcionalidades sin romper lo que ya existe. En la industria eso es clave, porque una mala arquitectura hace perder meses de trabajo y mucho dinero. Mi misión es anticipar problemas y convertir la complejidad en una estructura sólida. Ese es el estándar profesional que quiero que domines.'
+      2: 'Excelente trabajo. Si quieres pensar como un Arquitecto de Software de alto nivel, diseña la estructura técnica de alto nivel, asegura la escalabilidad y toma decisiones críticas sobre las tecnologías a utilizar.'
     }
   },
   frontend: {
@@ -30,7 +30,7 @@ const ROLE_CONTENT: Record<RoleKey, { title: string; image: string; dialogues: {
     image: '/images/roles/frontend.png',
     dialogues: {
       1: 'Buena lectura del juego visual. Tu decisión mejora la claridad para que el usuario entienda qué hacer.',
-      2: 'Muy bien hecho. Para llegar al nivel PRO en Frontend, debes pensar siempre en la persona que está al otro lado de la pantalla. Yo construyo la parte visible del producto, y mi objetivo es que todo sea claro, rápido y fácil de usar. No se trata solo de que “se vea bonito”, sino de que cada botón, cada texto y cada interacción ayuden al usuario a lograr su objetivo sin frustración. Mi trabajo convierte la tecnología en algo realmente útil para las personas.'
+      2: 'Muy bien hecho. Para llegar al nivel PRO en Frontend, se debe tener en cuenta la interfaz y la experiencia del usuario, traduciendo el diseño en código interactivo y funcional.'
     }
   },
   backend: {
@@ -38,15 +38,15 @@ const ROLE_CONTENT: Record<RoleKey, { title: string; image: string; dialogues: {
     image: '/images/roles/backend.png',
     dialogues: {
       1: 'Muy bien hecho. Para ser un Backend Developer de alto nivel, debes entender que eres el motor oculto del sistema. Yo gestiono los datos, aseguro la seguridad del servidor y construyo la lógica que hace que todo funcione detrás de escena. Mi misión es que la comunicación entre las partes sea fluida, escalable y protegida contra fallos. Un backend sólido permite que miles de usuarios se conecten sin problemas, y esa es la responsabilidad que quiero que asumas.',
-      2: 'Muy bien hecho. Para ser un Backend Developer de alto nivel, debes entender que eres el motor oculto del sistema. Yo gestiono los datos, aseguro la seguridad del servidor y construyo la lógica que hace que todo funcione detrás de escena. Mi misión es que la comunicación entre las partes sea fluida, escalable y protegida contra fallos. Un backend sólido permite que miles de usuarios se conecten sin problemas, y esa es la responsabilidad que quiero que asumas.'
+      2: 'Muy bien hecho. Para ser un Backend Developer de alto nivel, implementa la lógica del lado del servidor, gestiona la base de datos y garantiza que la comunicación de datos sea fluida y segura.'
     }
   },
   devops: {
     title: 'DevOps',
     image: '/images/roles/devops.png',
     dialogues: {
-      1: 'Buen centro técnico. Tu pipeline va tomando forma con decisiones más confiables y repetibles.',
-      2: 'Gran cierre. Si quieres ser un DevOps completo, debes entender que yo conecto desarrollo con operación para que el software llegue a producción de forma segura y constante.Yo automatizo procesos, monitoreo el sistema y respondo rápido cuando algo falla. Eso significa que de la misma forma que ayudo a las aeronaves a circular por la pista de despliegue y todo fluya, el desarrollo de software puede sentirse igual.'
+      1: 'Buen centro técnico. Todo va tomando forma con decisiones más confiables y repetibles.',
+      2: 'Si quieres ser un DevOps completo como yo, debes saber gestionar la infraestructura, automatizar los despliegues y asegurar que el ciclo de vida del desarrollo sea ágil y eficiente.'
     }
   },
   manager: {
@@ -54,7 +54,7 @@ const ROLE_CONTENT: Record<RoleKey, { title: string; image: string; dialogues: {
     image: '/images/roles/team-manager.png',
     dialogues: {
       1: 'Bien visto. Elegiste una jugada que ordena al equipo y evita retrabajo innecesario.',
-      2: 'Para liderar como un Team Manager de verdad, debes saber que yo no solo reparto tareas: yo alineo al equipo hacia una meta común y elimino bloqueos para que todos avancen. Mi trabajo es priorizar, coordinar y asegurar que cada persona aporte donde genera más valor. Cuando esto se hace bien, hay menos retrabajo, mejor comunicación y resultados más sólidos en menos tiempo. Mi rol convierte esfuerzo individual en rendimiento colectivo.'
+      2: 'Para liderar como un Team Manager de verdad, debes saber que yo lidero y coordino al equipo, gestiono el talento y aseguro que los objetivos del proyecto se cumplan en tiempo y forma.'
     }
   },
   qa: {
@@ -62,7 +62,7 @@ const ROLE_CONTENT: Record<RoleKey, { title: string; image: string; dialogues: {
     image: '/images/roles/qa.png',
     dialogues: {
       1: 'Yo pruebo el sistema para detectar errores antes de que lleguen a los usuarios. Mi trabajo es clave porque evita fallos costosos y protege la confianza en el producto.',
-      2: 'Si quieres convertirte en un PRO como yo, debes entender muy bien cuál es mi misión dentro del equipo. Yo no solo busco errores: yo protejo el producto y a los usuarios en cada cambio que hacemos. Cuando hago esto correctamente, evitamos caídas del sistema, retrabajos innecesarios, pérdidas de tiempo, costos extras y molestias para los clientes. En la industria, eso vale muchísimo, porque un pequeño fallo puede afectar a miles de personas y dañar la confianza en la empresa.'
+      2: 'Si quieres convertirte en un PRO como yo, debes realizar pruebas exhaustivas para asegurar que el sistema esté libre de errores y cumpla con los estándares de calidad definidos.'
     }
   },
   'product-owner': {
@@ -70,7 +70,7 @@ const ROLE_CONTENT: Record<RoleKey, { title: string; image: string; dialogues: {
     image: '/images/roles/product-owner.png',
     dialogues: {
       1: 'Buena priorización. Elegir bien en momentos críticos mantiene al producto enfocado en valor.',
-      2: 'Muy bien. Para pensar como un Product Owner profesional, debes entender que yo tomo decisiones sobre qué construir primero y por qué eso importa para el negocio y para el usuario. Mi función es convertir necesidades reales en prioridades claras para que el equipo no trabaje a ciegas. Mi trabajo asegura que cada entrega tenga impacto real, y que el producto crezca con propósito. Ese enfoque en valor es lo que diferencia un proyecto ocupado de un producto exitoso.'
+      2: 'Mi rol como Product Owner es definir la visión del producto, priorizar los requerimientos y asegurar que el equipo genere el máximo valor para el usuario final.'
     }
   }
 };

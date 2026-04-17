@@ -53,7 +53,7 @@ const DESTINOS: Destino[] = [
     label: 'Destino C',
     emoji: 'C',
     descripcion: 'Balón se va fuera del área',
-    feedback: '¡Despliegue fallido! Como Lateral (DevOps), no confiaste en tus herramientas de automatización, el código llegó roto al servidor. La pipeline es tu mejor aliado.',
+    feedback: '¡Despliegue fallido! Como Lateral (DevOps), no confiaste en tus herramientas de automatización, el código llegó roto al servidor.',
     score: 0,
     resultado: 'incorrecto',
     cx: 80,
@@ -145,20 +145,23 @@ export const Actividad1CentroPrecision: React.FC<Props> = ({ onComplete }) => {
           <rect x={VB_W * 0.9} y={VB_H * 0.36} width={VB_W * 0.1} height={VB_H * 0.28} fill="none" stroke="white" strokeWidth="0.4" opacity="0.5" />
           <rect x={VB_W * 0.97} y={VB_H * 0.38} width="3" height={VB_H * 0.24} fill="#888" stroke="white" strokeWidth="0.6" rx="0.3" />
 
-          {/* Banda derecha */}
-          <line x1={VB_W} y1={0} x2={VB_W} y2={VB_H} stroke="white" strokeWidth="0.5" opacity="0.4" />
-
-          {/* Puntos de destino (solo en fase elige) */}
-          {fase === 'elige' && DESTINOS.map(d => {
+          {/* Puntos de destino (Jugadores Azules) - Siempre visibles */}
+          {DESTINOS.map(d => {
+            const isClickable = fase === 'elige';
             return (
-              <g key={d.id} onClick={() => handleElegir(d)} style={{ cursor: 'pointer' }} className="group">
-                {/* Aura neutral */}
-                <circle cx={d.cx} cy={d.cy} r="5" fill="white" opacity="0.1" className="group-hover:opacity-30 transition-opacity">
-                  <animate attributeName="r" values="4.5;5.5;4.5" dur="1.5s" repeatCount="indefinite" />
-                </circle>
-                {/* Badge blanco premium */}
-                <circle cx={d.cx} cy={d.cy} r="3.5" fill="white" fillOpacity="0.2" stroke="white" strokeWidth="0.5" className="group-hover:fill-blue-500/20 transition-colors" />
-                <text x={d.cx} y={d.cy + 1.8} textAnchor="middle" fontSize="5" fill="white" fontWeight="900" style={{ pointerEvents: 'none', filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.5))' }}>
+              <g key={d.id} onClick={() => handleElegir(d)} style={{ cursor: isClickable ? 'pointer' : 'default' }} className="group">
+                {/* Aura pulsante - Solo en fase elige */}
+                {isClickable && (
+                  <circle cx={d.cx} cy={d.cy} r="5" fill="#0891b2" opacity="0.15" className="group-hover:opacity-40 transition-opacity">
+                    <animate attributeName="r" values="4.8;5.8;4.8" dur="2s" repeatCount="indefinite" />
+                  </circle>
+                )}
+                
+                {/* Círculo de Jugador Azul */}
+                <circle cx={d.cx} cy={d.cy} r="3.5" fill="#0891b2" stroke="#67e8f9" strokeWidth="0.8" className="transition-transform group-hover:scale-110" />
+                
+                {/* Etiqueta A, B, C centrada */}
+                <text x={d.cx} y={d.cy + 1.2} textAnchor="middle" fontSize="3" fill="white" fontWeight="bold" style={{ pointerEvents: 'none' }}>
                   {d.emoji}
                 </text>
               </g>
@@ -250,7 +253,7 @@ export const Actividad1CentroPrecision: React.FC<Props> = ({ onComplete }) => {
               </p>
               <div className={`inline-block rounded-xl border py-3 px-6 mb-6 ${colorBg[elegido.resultado]}`}>
                 <span className={`font-black text-2xl ${elegido.resultado === 'correcto' ? 'text-green-600' : elegido.resultado === 'regular' ? 'text-yellow-600' : 'text-red-500'}`}>
-                  {elegido.score > 0 ? `+${elegido.score} pts` : '0 pts — Pipeline roto'}
+                  {elegido.score > 0 ? `+${elegido.score} pts` : '0 pts — Despliegue fallido'}
                 </span>
               </div>
               <br />

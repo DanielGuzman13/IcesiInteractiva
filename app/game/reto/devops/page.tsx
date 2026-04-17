@@ -53,7 +53,7 @@ export default function DevOpsRetoPage() {
   const progreso = paso === 'intro' ? 0 : paso === 'actividad1' ? 1 : paso === 'actividad2' ? 2 : 3;
 
   const getNivel = () => {
-    if (total >= 180) return { label: '🥇 DevOps Experto — Pipeline perfecto, zero downtime', color: 'text-yellow-600', bg: 'bg-yellow-50 border-yellow-300' };
+    if (total >= 180) return { label: '🥇 DevOps Experto — Sistema perfecto, zero downtime', color: 'text-yellow-600', bg: 'bg-yellow-50 border-yellow-300' };
     if (total >= 100) return { label: '🥈 DevOps Competente — Sistema estable con ayuda', color: 'text-gray-500', bg: 'bg-gray-50 border-gray-300' };
     return { label: '🥉 DevOps en Formación — Sistema en riesgo', color: 'text-red-500', bg: 'bg-red-50 border-red-200' };
   };
@@ -111,7 +111,7 @@ export default function DevOpsRetoPage() {
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left mb-6">
                 {[
-                  { icon: '🏃', title: 'Actividad 1 — Centro de Precisión', desc: 'Elige el punto de destino para el centro. Analogía: configurar tu pipeline de CI/CD' },
+                  { icon: '🏃', title: 'Actividad 1 — Centro de Precisión', desc: 'Elige el punto de destino para el centro. Analogía: configurar tu despliegue de CI/CD' },
                   { icon: '⚡', title: 'Actividad 2 — Regreso Heroico', desc: 'Decide qué hacer cuando el rival avanza. Analogía: detectar un fallo y hacer rollback' },
                 ].map(a => (
                   <div key={a.title} className="bg-gray-50 border border-gray-200 rounded-xl p-4">
@@ -123,7 +123,7 @@ export default function DevOpsRetoPage() {
               </div>
               <div className="bg-cyan-50 border border-cyan-200 rounded-xl p-4 mb-6 text-sm text-cyan-800 text-left">
                 <strong>⚙️ Puntuación máxima: 200 pts.</strong> Cada actividad vale hasta <strong>100 pts</strong>.
-                Las decisiones incorrectas significan <em>pipeline roto</em> o <em>sistema caído</em> — 0 pts.
+                Las decisiones incorrectas significan <em>despliegue fallido</em> o <em>sistema caído</em> — 0 pts.
               </div>
               <button onClick={() => setPaso('actividad1')}
                 className="bg-cyan-600 hover:bg-cyan-700 active:scale-95 text-white font-bold py-4 px-10 rounded-full text-lg transition-all shadow-lg">

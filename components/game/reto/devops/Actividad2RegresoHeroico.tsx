@@ -115,52 +115,74 @@ export const Actividad2RegresoHeroico: React.FC<Props> = ({ onComplete }) => {
             <rect key={i} x={i * 20} y={0} width={10} height={VB_H} fill="#297528" opacity="0.35" />
           ))}
 
-          {/* Área y arco izquierdo */}
-          <rect x={0} y={VB_H * 0.22} width={VB_W * 0.18} height={VB_H * 0.56} fill="none" stroke="white" strokeWidth="0.5" opacity="0.6" />
-          <rect x={0} y={VB_H * 0.36} width={VB_W * 0.08} height={VB_H * 0.28} fill="none" stroke="white" strokeWidth="0.4" opacity="0.5" />
-          <rect x={0} y={VB_H * 0.38} width="2" height={VB_H * 0.24} fill="#888" stroke="white" strokeWidth="0.6" rx="0.3" />
+          {/* Área y arco derecho */}
+          <rect x={VB_W * 0.82} y={VB_H * 0.22} width={VB_W * 0.18} height={VB_H * 0.56} fill="none" stroke="white" strokeWidth="0.5" opacity="0.6" />
+          <rect x={VB_W * 0.92} y={VB_H * 0.36} width={VB_W * 0.08} height={VB_H * 0.28} fill="none" stroke="white" strokeWidth="0.4" opacity="0.5" />
+          <rect x={VB_W - 2} y={VB_H * 0.38} width="2" height={VB_H * 0.24} fill="#888" stroke="white" strokeWidth="0.6" rx="0.3" />
 
-          {/* Portero propio */}
-          <circle cx={4} cy={VB_H * 0.5} r="3" fill="#1d4ed8" stroke="white" strokeWidth="0.5" opacity="0.8" />
-          <text x={4} y={VB_H * 0.5 + 1} textAnchor="middle" fontSize="2.2" fill="white">PO</text>
+          {/* Portero propio (ahora a la derecha) */}
+          <circle cx={96} cy={VB_H * 0.5} r="3" fill="#1d4ed8" stroke="white" strokeWidth="0.5" opacity="0.8" />
+          <text x={96} y={VB_H * 0.5 + 1} textAnchor="middle" fontSize="2.2" fill="white">PO</text>
 
           {/* Compañero de apoyo (visible si eligió apoyo) */}
           {elegida?.id === 'apoyo' && (
-            <motion.g initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.5 }}>
-              <circle cx={30} cy={VB_H * 0.3} r="3" fill="#1d4ed8" stroke="#67e8f9" strokeWidth="0.8" />
-              <text x={30} y={VB_H * 0.3 + 1} textAnchor="middle" fontSize="2.2" fill="white">A</text>
+            <motion.g initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.5 }}>
+              <circle cx={70} cy={VB_H * 0.3} r="3" fill="#1d4ed8" stroke="#67e8f9" strokeWidth="0.8" />
+              <text x={70} y={VB_H * 0.3 + 1} textAnchor="middle" fontSize="2.2" fill="white">A</text>
             </motion.g>
           )}
 
-          {/* Rival avanzando con el balón */}
+          {/* Rival avanzando (ahora de izquierda a derecha) */}
           <motion.g
             animate={rivalAnimate
-              ? { x: RIVAL_PATH_END.x - RIVAL_PATH_START.x, y: 0 }
+              ? (elegida?.id === 'correr'
+                ? { x: 41 - 40, y: 0 } // Para a la izquierda del DO
+                : { x: (VB_W - 8) - 40, y: 0 }
+              )
               : { x: 0, y: 0 }}
-            transition={{ duration: 1.5, ease: 'easeIn' }}
+            transition={{ duration: 1.5, ease: 'linear' }}
           >
-            <circle cx={RIVAL_PATH_START.x} cy={RIVAL_PATH_START.y} r="3.5" fill="#c0392b" stroke="white" strokeWidth="0.7" />
-            <text x={RIVAL_PATH_START.x} y={RIVAL_PATH_START.y + 1.2} textAnchor="middle" fontSize="2.5" fill="white" fontWeight="bold">R</text>
-            {/* Balón junto al rival */}
-            <text x={RIVAL_PATH_START.x + 4} y={RIVAL_PATH_START.y + 1} fontSize="3.5">⚽</text>
+            <circle cx={40} cy={VB_H * 0.5} r="3.5" fill="#c0392b" stroke="white" strokeWidth="0.7" />
+            <text x={40} y={VB_H * 0.5 + 1.2} textAnchor="middle" fontSize="2.5" fill="white" fontWeight="bold">R</text>
           </motion.g>
 
-          {/* Lateral DevOps — solo se mueve si eligió "correr" */}
+          {/* Lateral DevOps (ahora desde la izquierda) */}
           <motion.g
             animate={lateralAnimate
-              ? { x: LATERAL_RECOVER.x - LATERAL_START.x, y: LATERAL_RECOVER.y - LATERAL_START.y }
+              ? { x: 46 - 30, y: (VB_H * 0.5) - (VB_H * 0.85) } // Para a la derecha del Rival
               : { x: 0, y: 0 }}
-            transition={{ duration: 1.0, ease: 'easeOut' }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
           >
-            {/* Aura pulsante solo en fase elige */}
             {fase === 'elige' && (
-              <circle cx={LATERAL_START.x} cy={LATERAL_START.y} r="7" fill="#06b6d4" opacity="0.2">
+              <circle cx={30} cy={VB_H * 0.85} r="7" fill="#3b82f6" opacity="0.2">
                 <animate attributeName="r" values="6;9;6" dur="1.2s" repeatCount="indefinite" />
                 <animate attributeName="opacity" values="0.2;0.06;0.2" dur="1.2s" repeatCount="indefinite" />
               </circle>
             )}
-            <circle cx={LATERAL_START.x} cy={LATERAL_START.y} r="3.5" fill="#0891b2" stroke="#67e8f9" strokeWidth="1" />
-            <text x={LATERAL_START.x} y={LATERAL_START.y + 1.2} textAnchor="middle" fontSize="2.6" fill="white" fontWeight="bold">DO</text>
+            <circle cx={30} cy={VB_H * 0.85} r="3.5" fill="#1d4ed8" stroke="#93c5fd" strokeWidth="1" />
+            <text x={30} y={VB_H * 0.85 + 1.2} textAnchor="middle" fontSize="2.6" fill="white" fontWeight="bold">DO</text>
+          </motion.g>
+
+          {/* BALÓN: Lógica de Intercepción */}
+          <motion.g
+            animate={rivalAnimate ? (
+              elegida?.id === 'correr' ? {
+                // Sigue al rival hasta la intercepción, luego queda en pies de DO (x=46)
+                x: [0, 41 - 44, 46 - 44], 
+                y: [0, 0, 0],
+                transition: {
+                  duration: 1.2,
+                  times: [0, 0.6, 1],
+                  ease: "linear"
+                }
+              } : {
+                // Sigue al rival hasta el final
+                x: (VB_W - 8) - 40,
+                transition: { duration: 1.5, ease: 'linear' }
+              }
+            ) : { x: 0, y: 0 }}
+          >
+             <text x={44} y={VB_H * 0.5 + 1} fontSize="3.5">⚽</text>
           </motion.g>
 
           {/* GOL */}

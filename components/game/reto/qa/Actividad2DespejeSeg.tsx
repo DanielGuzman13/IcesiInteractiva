@@ -79,12 +79,25 @@ export const Actividad2DespejeSeg: React.FC<Props> = ({ onComplete }) => {
       localStorage.setItem(`${pre}_qa_answers`, JSON.stringify(answers));
     }
 
-    setTimeout(() => {
-      setBallPos(dir.ballTarget);
-      if (dir.resultado === 'incorrecto') setGolazo(true);
-    }, 300);
+    if (dir.id === 'atras') {
+      // 1. Intercepción
+      setTimeout(() => {
+        setBallPos({ x: 14, y: VB_H * 0.7 }); 
+      }, 300);
 
-    setTimeout(() => setFase('modal'), 2000);
+      // 2. GOL (dentro de la portería)
+      setTimeout(() => {
+        setBallPos({ x: 1.5, y: VB_H * 0.45 }); 
+        setGolazo(true);
+      }, 900);
+    } else {
+      setTimeout(() => {
+        setBallPos(dir.ballTarget);
+        if (dir.resultado === 'incorrecto') setGolazo(true);
+      }, 300);
+    }
+
+    setTimeout(() => setFase('modal'), 2500);
   };
 
   const resultadoColor = {
@@ -134,10 +147,10 @@ export const Actividad2DespejeSeg: React.FC<Props> = ({ onComplete }) => {
           {/* Rival encima (rojo, próximo al balón) */}
           <motion.g
             animate={fase === 'animar' && elegida?.id === 'atras'
-              ? { x: -10, y: 8 }
+              ? { x: -16, y: 15 }
               : { x: 0, y: 0 }
             }
-            transition={{ duration: 0.8, delay: 0.5 }}
+            transition={{ duration: 0.9, delay: 0.2, ease: "easeOut" }}
           >
             <circle cx={BALL_POS.x + 6} cy={BALL_POS.y - 5} r="2.5" fill="#c0392b" stroke="white" strokeWidth="0.5" />
             <text x={BALL_POS.x + 6} y={BALL_POS.y - 4.1} textAnchor="middle" fontSize="2.2" fill="white" fontWeight="bold">R</text>

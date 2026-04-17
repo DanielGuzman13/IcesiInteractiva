@@ -17,10 +17,10 @@ type Movimiento = {
 const VB_W = 100;
 const VB_H = 56.25;
 
-const FE_START = { x: 70, y: VB_H * 0.8 };
-const FE_END = { x: 92, y: VB_H * 0.4 };
-const DF_START = { x: 80, y: VB_H * 0.2 };
-const DF_END = { x: 80, y: VB_H * 0.6 };
+const FE_START = { x: 40, y: VB_H * 0.8 };
+const FE_END = { x: 2, y: VB_H * 0.4 };
+const DF_START = { x: 25, y: VB_H * 0.5 };
+const DF_END = { x: 25, y: VB_H * 0.5 };
 
 const MOVS: Movimiento[] = [
   {
@@ -98,50 +98,50 @@ export const Actividad2RegateEfectivo: React.FC<Props> = ({ onComplete }) => {
             <rect key={i} x={i * 20} y={0} width={10} height={VB_H} fill="#297528" opacity="0.35" />
           ))}
 
-          {/* Área y arco */}
-          <rect x={VB_W * 0.82} y={VB_H * 0.22} width={VB_W * 0.18} height={VB_H * 0.56} fill="none" stroke="white" strokeWidth="0.5" opacity="0.6" />
-          <rect x={VB_W * 0.9} y={VB_H * 0.36} width={VB_W * 0.1} height={VB_H * 0.28} fill="none" stroke="white" strokeWidth="0.4" opacity="0.5" />
+          {/* Área y arco izquierdo */}
+          <rect x={0} y={VB_H * 0.22} width={VB_W * 0.18} height={VB_H * 0.56} fill="none" stroke="white" strokeWidth="0.5" opacity="0.6" />
+          <rect x={0} y={VB_H * 0.36} width={VB_W * 0.1} height={VB_H * 0.28} fill="none" stroke="white" strokeWidth="0.4" opacity="0.5" />
 
-          {/* Defensa Rival */}
+          {/* Defensa / Rival (Ahora a la izquierda y estático en el duelo) */}
           <motion.g
             animate={
-              fase === 'amague' || fase === 'choque' || fase === 'dudar'
-                ? { x: DF_END.x - DF_START.x, y: DF_END.y - DF_START.y } : { x: 0, y: 0 }
+              fase === 'amague' ? { x: -6, y: 0 } :
+                fase === 'choque' ? { x: 0, y: 0 } : { x: 0, y: 0 }
             }
             transition={{ duration: 1.2, ease: 'linear' }}
           >
-            <circle cx={DF_START.x} cy={DF_START.y} r="3.5" fill="#1d4ed8" stroke="white" strokeWidth="0.7" />
-            <text x={DF_START.x} y={DF_START.y + 1.2} textAnchor="middle" fontSize="2.5" fill="white" fontWeight="bold">D</text>
+            <circle cx={DF_START.x} cy={DF_START.y} r={3.5} fill="#e11d48" stroke="white" strokeWidth="0.7" />
+            <text x={DF_START.x} y={DF_START.y + 1.2} textAnchor="middle" fontSize="2.5" fill="white" fontWeight="bold">R</text>
           </motion.g>
 
           {/* Delantero Frontend (Rojo) con el balón */}
           <motion.g
             animate={
               fase === 'amague' ? {
-                x: [0, 5, 10, 22],
-                y: [0, -15, 0, -20],
+                x: [0, -10, -25, -38],
+                y: [0, -15, 0, -15],
               } :
                 fase === 'choque' ? {
-                  x: [0, 10, 6, 22],
-                  y: [0, -20, -18, -20],
+                  x: [0, -15, -10, -38],
+                  y: [0, -20, -15, -20],
                 } :
                   fase === 'dudar' ? {
-                    x: [0, 5, 2],
+                    x: [0, -5, -2],
                     y: [0, -5, -4],
                   } : { x: 0, y: 0 }
             }
             transition={{ duration: 1.5, ease: 'easeInOut' }}
           >
             {fase === 'elige' && (
-              <circle cx={FE_START.x} cy={FE_START.y} r="7" fill="#f43f5e" opacity="0.2">
+              <circle cx={FE_START.x} cy={FE_START.y} r="7" fill="#3b82f6" opacity="0.2">
                 <animate attributeName="r" values="6;9;6" dur="1.2s" repeatCount="indefinite" />
                 <animate attributeName="opacity" values="0.2;0.06;0.2" dur="1.2s" repeatCount="indefinite" />
               </circle>
             )}
-            <circle cx={FE_START.x} cy={FE_START.y} r="3.5" fill="#e11d48" stroke="#fecdd3" strokeWidth="1" />
+            <circle cx={FE_START.x} cy={FE_START.y} r="3.5" fill="#1d4ed8" stroke="#93c5fd" strokeWidth="1" />
             <text x={FE_START.x} y={FE_START.y + 1.2} textAnchor="middle" fontSize="2.5" fill="white" fontWeight="bold">FE</text>
             {/* Balón pegado */}
-            <text x={FE_START.x + 2} y={FE_START.y - 1} textAnchor="middle" fontSize="2.5">⚽</text>
+            <text x={FE_START.x - 2} y={FE_START.y - 1} textAnchor="middle" fontSize="2.5">⚽</text>
           </motion.g>
 
           <AnimatePresence>
