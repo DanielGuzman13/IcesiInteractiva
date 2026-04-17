@@ -14,7 +14,7 @@ const createPool = () => {
   return new Pool({
     connectionString,
     ssl: false,
-    max: 20, // Reducido para evitar agotar conexiones en red local con múltiples clientes
+    max: 100,
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 2000,
   });
@@ -27,8 +27,9 @@ export const getPostgresPool = (): Pool => {
 
   const pool = createPool();
 
-  // Siempre guardamos en globalThis para reutilizar el pool en todas las peticiones
-  globalForPostgres.__icesiPool = pool;
+  if (process.env.NODE_ENV !== 'production') {
+    globalForPostgres.__icesiPool = pool;
+  }
 
   return pool;
 };
