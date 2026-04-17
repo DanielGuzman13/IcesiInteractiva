@@ -231,19 +231,19 @@ export const Actividad2DespejeSeg: React.FC<Props> = ({ onComplete }) => {
 
       {/* Botones alternativos */}
       {fase === 'elige' && (
-        <div className="grid grid-cols-3 gap-3 mt-4">
+        <div className="grid grid-cols-3 gap-3 mt-4 p-4">
           {DIRECCIONES.map(d => (
             <button
               key={d.id}
               onClick={() => handleElegir(d)}
-              className={`flex flex-col items-center gap-1 rounded-xl border-2 border-dashed p-3 text-sm font-bold transition-all hover:scale-105 active:scale-95
+              className={`flex flex-col items-center gap-1 rounded-xl border-2 border-dashed p-2.5 text-sm font-bold transition-all hover:scale-105 active:scale-95
                 ${d.resultado === 'correcto' ? 'border-gray-300 hover:bg-gray-50 text-gray-800'
                   : d.resultado === 'regular' ? 'border-gray-300 hover:bg-gray-50 text-gray-800'
                     : 'border-gray-300 hover:bg-gray-50 text-gray-800'}`}
             >
-              <span className="text-2xl">{d.emoji}</span>
-              <span>{d.label}</span>
-              <span className="text-xs text-gray-500 font-normal">{d.descripcion}</span>
+              <span className="text-xl">{d.emoji}</span>
+              <span className="leading-tight">{d.label}</span>
+              <span className="text-[11px] text-gray-500 font-normal leading-tight h-8 flex items-center">{d.descripcion}</span>
             </button>
           ))}
         </div>

@@ -88,7 +88,7 @@ export const Actividad1BloqueoAngulo: React.FC<Props> = ({ onComplete }) => {
     // Todo ocurre de forma coordinada al elegir
     setBallPos(zona.ballTarget);
     setDefensaPos(zona.defensaTarget);
-    
+
     // El portero reacciona
     if (zona.resultado === 'incorrecto') {
       setGolazo(true);
@@ -248,18 +248,18 @@ export const Actividad1BloqueoAngulo: React.FC<Props> = ({ onComplete }) => {
 
       {/* Botones de zona (alternativa visual debajo del campo) */}
       {fase === 'elige' && (
-        <div className="grid grid-cols-3 gap-3 mt-4">
+        <div className="grid grid-cols-3 gap-3 mt-4 p-4">
           {ZONAS.map(z => (
             <button
               key={z.id}
               onClick={() => handleElegir(z)}
-              className="flex flex-col items-center gap-1 rounded-2xl border-2 border-gray-200 bg-white/40 p-4 text-sm font-bold transition-all hover:scale-105 active:scale-95 cursor-pointer hover:bg-white hover:shadow-xl group grow backdrop-blur-sm"
+              className="flex flex-col items-center gap-1 rounded-2xl border-2 border-gray-200 bg-white/40 p-2.5 text-sm font-bold transition-all hover:scale-105 active:scale-95 cursor-pointer hover:bg-white hover:shadow-xl group grow backdrop-blur-sm"
             >
-              <div className="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center font-black text-2xl mb-1 shadow-lg group-hover:bg-blue-700 transition-colors">
+              <div className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-black text-xl mb-1 shadow-lg group-hover:bg-blue-700 transition-colors">
                 {z.emoji}
               </div>
-              <span className="text-gray-800 text-base">{z.label}</span>
-              <span className="text-[15px] text-gray-500 font-normal leading-tight text-center">{z.descripcion}</span>
+              <span className="text-gray-800 text-[15px]">{z.label}</span>
+              <span className="text-[11px] text-gray-500 font-normal leading-tight text-center h-8 flex items-center">{z.descripcion}</span>
             </button>
           ))}
         </div>

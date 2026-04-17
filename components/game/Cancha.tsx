@@ -90,12 +90,12 @@ export const Cancha: React.FC = () => {
   const [pendingRoleDialog, setPendingRoleDialog] = useState<PendingRoleDialog>(null);
 
   // Feedback Data
-  const [feedback, setFeedback] = useState<{ 
-    show: boolean, 
-    msg: string, 
-    score: number, 
+  const [feedback, setFeedback] = useState<{
+    show: boolean,
+    msg: string,
+    score: number,
     ok: boolean,
-    onContinue?: () => void 
+    onContinue?: () => void
   }>({ show: false, msg: '', score: 0, ok: true });
 
   // Storage logic
@@ -149,10 +149,10 @@ export const Cancha: React.FC = () => {
       const frontendPos = getJugadorPos('a-delantero-1');
       setGameState('frontend_act1_intro');
       setBallParams({ top: '50%', left: '50%', scale: 1, text: '⚽' });
-      setFeedback({ 
-        show: true, 
-        msg: '¡Inicia el Segundo Tiempo! Tras la charla técnica del Técnico (Arquitecto), el equipo sale con estructura sólida y el Delantero (Frontend) recibe el balón.', 
-        score: 0, 
+      setFeedback({
+        show: true,
+        msg: '¡Inicia el Segundo Tiempo! Tras la charla técnica del Técnico (Arquitecto), el equipo sale con estructura sólida y el Delantero (Frontend) recibe el balón.',
+        score: 0,
         ok: true,
         onContinue: () => {
           setFeedback(f => ({ ...f, show: false }));
@@ -394,10 +394,10 @@ export const Cancha: React.FC = () => {
     setTotalScore(prev => prev + score);
 
     if (score > 0) {
-      setFeedback({ 
-        show: true, 
-        msg: '¡Test superado! Amenaza inicial controlada.', 
-        score: score, 
+      setFeedback({
+        show: true,
+        msg: '¡Test superado! Amenaza inicial controlada.',
+        score: score,
         ok: true,
         onContinue: () => {
           setFeedback(f => ({ ...f, show: false }));
@@ -628,10 +628,10 @@ export const Cancha: React.FC = () => {
     const frontendPos = getJugadorPos('a-delantero-1');
     setGameState('frontend_act1_intro');
     setBallParams({ top: '50%', left: '50%', scale: 1, text: '⚽' });
-    setFeedback({ 
-      show: true, 
-      msg: '¡Inicia el Segundo Tiempo! Tras la charla técnica del Técnico (Arquitecto), el equipo sale con estructura sólida y el Delantero (Frontend) recibe el balón.', 
-      score: 0, 
+    setFeedback({
+      show: true,
+      msg: '¡Inicia el Segundo Tiempo! Tras la charla técnica del Técnico (Arquitecto), el equipo sale con estructura sólida y el Delantero (Frontend) recibe el balón.',
+      score: 0,
       ok: true,
       onContinue: () => {
         setFeedback(f => ({ ...f, show: false }));
@@ -769,7 +769,7 @@ export const Cancha: React.FC = () => {
         )}
       </AnimatePresence>
 
-      <HUD 
+      <HUD
         goalsA={goals.a}
         goalsB={goals.b}
         minuteText={gameState === 'pre_kickoff' || gameState === 'kickoff_anim' ? "00:00" : gameState.includes('act1') ? "15:00" : gameState.includes('act2') ? "15:10" : "30:00"}
@@ -783,8 +783,8 @@ export const Cancha: React.FC = () => {
           }}
           transition={{ duration: 1.5, type: 'spring' }}
           className="relative aspect-video w-full max-h-full rounded-xl border-4 border-white/20 bg-[#2b722d] shadow-2xl"
-          style={{ 
-            maxHeight: '100%', 
+          style={{
+            maxHeight: '100%',
             maxWidth: 'calc(100vh * 16 / 9)',
             backfaceVisibility: 'hidden',
             transformStyle: 'preserve-3d',
@@ -925,234 +925,228 @@ export const Cancha: React.FC = () => {
       </div>
 
       <AnimatePresence>
-            {pendingRoleDialog && (
-              <RoleDialogueOverlay
-                key={`role-dialog-${pendingRoleDialog.role}-${pendingRoleDialog.activity}`}
-                role={pendingRoleDialog.role}
-                activity={pendingRoleDialog.activity}
-                onContinue={pendingRoleDialog.onContinue}
-              />
-            )}
+        {pendingRoleDialog && (
+          <RoleDialogueOverlay
+            key={`role-dialog-${pendingRoleDialog.role}-${pendingRoleDialog.activity}`}
+            role={pendingRoleDialog.role}
+            activity={pendingRoleDialog.activity}
+            onContinue={pendingRoleDialog.onContinue}
+          />
+        )}
 
-            {/* Actividad 1 - El Grito de la Barrera OVERLAY */}
-            {gameState === 'po_act1_frozen' && (
-              <motion.div key="po-act1-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
-                className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
-              >
-                <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-green-500">
-                  <div className="bg-green-600 px-4 py-3 text-white flex justify-between items-center shadow">
-                    <h2 className="font-black text-xl">🔥 ¡RETO ACTIVADO: GESTIÓN DE RIESGOS!</h2>
-                    <span className="text-sm bg-black/30 px-3 py-1 rounded-full border border-white/20">Jugador: Portero (Product Owner)</span>
-                  </div>
-                  <div className="overflow-y-auto bg-green-50 relative p-4 md:p-6">
-                    <Actividad1TiroLibre onComplete={handleAct1Choice} />
-                  </div>
-                </div>
-              </motion.div>
-            )}
+        {/* Actividad 1 - El Grito de la Barrera OVERLAY */}
+        {gameState === 'po_act1_frozen' && (
+          <motion.div key="po-act1-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
+          >
+            <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-green-500">
+              <div className="bg-green-600 px-4 py-3 text-white flex justify-between items-center shadow">
+                <h2 className="font-black text-xl">🔥 ¡RETO ACTIVADO: GESTIÓN DE RIESGOS!</h2>
+                <span className="text-sm bg-black/30 px-3 py-1 rounded-full border border-white/20">Jugador: Portero (Product Owner)</span>
+              </div>
+              <div className="overflow-y-auto bg-green-50 relative p-4 md:p-6">
+                <Actividad1TiroLibre onComplete={handleAct1Choice} />
+              </div>
+            </div>
+          </motion.div>
+        )}
 
-            {/* Actividad 2 - Salida OVERLAY */}
-            {gameState === 'po_act2_frozen' && (
-              <motion.div key="po-act2-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
-                className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
-              >
-                <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-green-500">
-                  <div className="bg-green-600 px-4 py-3 text-white flex justify-between items-center shadow">
-                    <h2 className="font-black text-xl">🎯 ¡RETO ACTIVADO: DIRECCIÓN DE SALIDA!</h2>
-                    <span className="text-sm bg-black/30 px-3 py-1 rounded-full border border-white/20">Jugador: Portero (Product Owner)</span>
-                  </div>
-                  <div className="overflow-y-auto bg-green-50 relative p-4 md:p-6">
-                    <Actividad2Salida onComplete={handleAct2Choice} />
-                  </div>
-                </div>
-              </motion.div>
-            )}
+        {/* Actividad 2 - Salida OVERLAY */}
+        {gameState === 'po_act2_frozen' && (
+          <motion.div key="po-act2-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
+          >
+            <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-green-500">
+              <div className="bg-green-600 px-4 py-3 text-white flex justify-between items-center shadow">
+                <h2 className="font-black text-xl">🎯 ¡RETO ACTIVADO: DIRECCIÓN DE SALIDA!</h2>
+                <span className="text-sm bg-black/30 px-3 py-1 rounded-full border border-white/20">Jugador: Portero (Product Owner)</span>
+              </div>
+              <div className="overflow-y-auto bg-green-50 relative p-4 md:p-6">
+                <Actividad2Salida onComplete={handleAct2Choice} />
+              </div>
+            </div>
+          </motion.div>
+        )}
 
-            {/* QA Actividad 1 - Test OVERLAY */}
-            {gameState === 'qa_act1_frozen' && (
-              <motion.div key="qa-act1-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
-                className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
-              >
-                <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-blue-600">
-                  <div className="bg-blue-700 px-4 py-3 text-white flex justify-between items-center shadow">
-                    <h2 className="font-black text-xl">🛡️ ¡TEST: BLOQUEO RÁPIDO!</h2>
-                    <span className="text-sm bg-black/30 px-3 py-1 rounded-full border border-white/20">Jugador: Defensa (QA)</span>
-                  </div>
-                  <div className="overflow-y-auto bg-blue-50 relative p-4 md:p-6">
-                    <Actividad1BloqueoAngulo onComplete={handleQaAct1Choice} />
-                  </div>
-                </div>
-              </motion.div>
-            )}
+        {/* QA Actividad 1 - Test OVERLAY */}
+        {gameState === 'qa_act1_frozen' && (
+          <motion.div key="qa-act1-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
+          >
+            <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-blue-600">
+              <div className="bg-blue-700 px-4 py-3 text-white flex justify-between items-center shadow">
+                <h2 className="font-black text-xl">🛡️ ¡TEST: BLOQUEO RÁPIDO!</h2>
+                <span className="text-sm bg-black/30 px-3 py-1 rounded-full border border-white/20">Jugador: Defensa (QA)</span>
+              </div>
+              <div className="overflow-y-auto bg-blue-50 relative p-4 md:p-6">
+                <Actividad1BloqueoAngulo onComplete={handleQaAct1Choice} />
+              </div>
+            </div>
+          </motion.div>
+        )}
 
-            {/* QA Actividad 2 - Regression Testing OVERLAY */}
-            {gameState === 'qa_act2_frozen' && (
-              <motion.div key="qa-act2-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
-                className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
-              >
-                <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-teal-600">
-                  <div className="bg-teal-700 px-4 py-3 text-white flex justify-between items-center shadow">
-                    <h2 className="font-black text-xl">🧹 ¡REGRESSION TESTING: DESPEJE ESTABLE!</h2>
-                    <span className="text-sm bg-black/30 px-3 py-1 rounded-full border border-white/20">Jugador: Defensa (QA)</span>
-                  </div>
-                  <div className="overflow-y-auto bg-teal-50 relative p-4 md:p-6">
-                    <Actividad2DespejeSeg onComplete={handleQaAct2Choice} />
-                  </div>
-                </div>
-              </motion.div>
-            )}
+        {/* QA Actividad 2 - Regression Testing OVERLAY */}
+        {gameState === 'qa_act2_frozen' && (
+          <motion.div key="qa-act2-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
+          >
+            <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-teal-600">
+              <div className="bg-teal-700 px-4 py-3 text-white flex justify-between items-center shadow">
+                <h2 className="font-black text-xl">🧹 ¡REGRESSION TESTING: DESPEJE ESTABLE!</h2>
+                <span className="text-sm bg-black/30 px-3 py-1 rounded-full border border-white/20">Jugador: Defensa (QA)</span>
+              </div>
+              <div className="overflow-y-auto bg-teal-50 relative p-4 md:p-6">
+                <Actividad2DespejeSeg onComplete={handleQaAct2Choice} />
+              </div>
+            </div>
+          </motion.div>
+        )}
 
-            {/* DevOps Actividad 1 - Pipeline OVERLAY */}
-            {gameState === 'devops_act1_frozen' && (
-              <motion.div key="devops-act1-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
-                className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
-              >
-                <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-blue-400">
-                  <div className="bg-blue-600 px-4 py-3 text-white flex justify-between items-center shadow">
-                    <h2 className="font-black text-xl">🚀 ¡DEVOPS: PIPELINE DE COMUNICACIÓN (CENTRO)!</h2>
-                    <span className="text-sm bg-black/30 px-3 py-1 rounded-full border border-white/20">Jugador: Lateral (DevOps)</span>
-                  </div>
-                  <div className="overflow-y-auto bg-blue-50 relative p-4 md:p-6">
-                    <Actividad1CentroPrecision onComplete={handleDevopsAct1Choice} />
-                  </div>
-                </div>
-              </motion.div>
-            )}
+        {/* DevOps Actividad 1 - Pipeline OVERLAY */}
+        {gameState === 'devops_act1_frozen' && (
+          <motion.div key="devops-act1-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
+          >
+            <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-blue-400">
+              <div className="bg-blue-600 px-4 py-3 text-white flex justify-between items-center shadow">
+                <h2 className="font-black text-xl">🚀 ¡DEVOPS: PIPELINE DE COMUNICACIÓN (CENTRO)!</h2>
+                <span className="text-sm bg-black/30 px-3 py-1 rounded-full border border-white/20">Jugador: Lateral (DevOps)</span>
+              </div>
+              <div className="overflow-y-auto bg-blue-50 relative p-4 md:p-6">
+                <Actividad1CentroPrecision onComplete={handleDevopsAct1Choice} />
+              </div>
+            </div>
+          </motion.div>
+        )}
 
-            {/* Manager Actividad 1 - OVERLAY */}
-            {gameState === 'manager_act1_frozen' && (
-              <motion.div key="manager-act1-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
-                className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
-              >
-                <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-amber-400">
-                  <div className="bg-amber-500 px-4 py-3 text-white flex justify-between items-center shadow">
-                    <h2 className="font-black text-xl">👟 ¡TEAM MANAGER: EL PASE FILTRADO!</h2>
-                    <span className="text-sm bg-black/30 px-3 py-1 rounded-full border border-white/20">Jugador: Mediocampista (Team Manager)</span>
-                  </div>
-                  <div className="overflow-y-auto bg-amber-50 relative p-4 md:p-6">
-                    <Actividad1PaseFiltrado onComplete={handleManagerAct1Choice} />
-                  </div>
-                </div>
-              </motion.div>
-            )}
+        {/* Manager Actividad 1 - OVERLAY */}
+        {gameState === 'manager_act1_frozen' && (
+          <motion.div key="manager-act1-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
+          >
+            <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-amber-400">
+              <div className="bg-amber-500 px-4 py-3 text-white flex justify-between items-center shadow">
+                <h2 className="font-black text-xl">👟 ¡TEAM MANAGER: EL PASE FILTRADO!</h2>
+                <span className="text-sm bg-black/30 px-3 py-1 rounded-full border border-white/20">Jugador: Mediocampista (Team Manager)</span>
+              </div>
+              <div className="overflow-y-auto bg-amber-50 relative p-4 md:p-6">
+                <Actividad1PaseFiltrado onComplete={handleManagerAct1Choice} />
+              </div>
+            </div>
+          </motion.div>
+        )}
 
-            {/* Manager Actividad 2 - OVERLAY */}
-            {gameState === 'manager_act2_frozen' && (
-              <motion.div key="manager-act2-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
-                className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
-              >
-                <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-amber-600">
-                  <div className="bg-amber-600 px-4 py-3 text-white flex justify-between items-center shadow">
-                    <h2 className="font-black text-xl">🗺️ ¡TEAM MANAGER: EL CAMBIO DE FRENTE!</h2>
-                    <span className="text-sm bg-black/30 px-3 py-1 rounded-full border border-white/20">Jugador: Mediocampista (Team Manager)</span>
-                  </div>
-                  <div className="overflow-y-auto bg-amber-50 relative p-4 md:p-6">
-                    <Actividad2CambioFrente onComplete={handleManagerAct2Choice} />
-                  </div>
-                </div>
-              </motion.div>
-            )}
+        {/* Manager Actividad 2 - OVERLAY */}
+        {gameState === 'manager_act2_frozen' && (
+          <motion.div key="manager-act2-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
+          >
+            <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-amber-600">
+              <div className="bg-amber-600 px-4 py-3 text-white flex justify-between items-center shadow">
+                <h2 className="font-black text-xl">🗺️ ¡TEAM MANAGER: EL CAMBIO DE FRENTE!</h2>
+                <span className="text-sm bg-black/30 px-3 py-1 rounded-full border border-white/20">Jugador: Mediocampista (Team Manager)</span>
+              </div>
+              <div className="overflow-y-auto bg-amber-50 relative p-4 md:p-6">
+                <Actividad2CambioFrente onComplete={handleManagerAct2Choice} />
+              </div>
+            </div>
+          </motion.div>
+        )}
 
-            {/* Halftime Modal OVERLAY */}
-            {gameState === 'halftime_idle' && (
-              <motion.div key="halftime-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
-                className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
-              >
-                <div className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-red-500 text-center p-8">
-                  <h2 className="font-black text-4xl mb-4 text-red-700">⏱️ MEDIO TIEMPO ⏸️</h2>
-                  <p className="text-xl font-medium text-gray-700 mb-8">
-                    Has completado la primera mitad del partido. Puedes ir a la sala de máquinas del Backend o dirigirte al Vestuario para planificar tu Arquitectura.
-                  </p>
-                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <button
-                      onClick={() => router.push('/futbol')}
-                      className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full transition-colors text-lg shadow-lg active:scale-95"
-                    >
-                      Ir al Backend (Blockly)
-                    </button>
-                    <button
-                      onClick={() => setGameState('arquitecto_frozen')}
-                      className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-full transition-colors text-lg shadow-lg active:scale-95"
-                    >
-                      Continuar al Vestuario (Técnico (Arquitecto))
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            )}
+        {/* Halftime Modal OVERLAY */}
+        {gameState === 'halftime_idle' && (
+          <motion.div key="halftime-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
+          >
+            <div className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-red-500 text-center p-8">
+              <h2 className="font-black text-4xl mb-4 text-red-700">⏱️ MEDIO TIEMPO ⏸️</h2>
+              <p className="text-xl font-medium text-gray-700 mb-8">
+                Has completado la primera mitad del partido. Puedes ir a la sala de máquinas del Backend o dirigirte al Vestuario para planificar tu Arquitectura.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <button
+                  onClick={() => setGameState('arquitecto_frozen')}
+                  className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-full transition-colors text-lg shadow-lg active:scale-95"
+                >
+                  Continuar al Vestuario
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
 
-            {/* Arquitecto OVERLAY */}
-            {gameState === 'arquitecto_frozen' && (
-              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
-                className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
-              >
-                 <RetoArquitectoFlow onFinish={handleArquitectoDone} />
-              </motion.div>
-            )}
+        {/* Arquitecto OVERLAY */}
+        {gameState === 'arquitecto_frozen' && (
+          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
+          >
+            <RetoArquitectoFlow onFinish={handleArquitectoDone} />
+          </motion.div>
+        )}
 
-            {/* Frontend Actividad 1 - OVERLAY */}
-            {gameState === 'frontend_act1_frozen' && (
-              <motion.div key="frontend-act1-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
-                className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
-              >
-                <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-emerald-500">
-                  <div className="bg-emerald-600 px-4 py-3 text-white flex justify-between items-center shadow">
-                    <h2 className="font-black text-xl">🎯 ¡FRONTEND: CLARIDAD DEL ARCO!</h2>
-                    <span className="text-sm bg-black/30 px-3 py-1 rounded-full border border-white/20">Jugador: Delantero 1</span>
-                  </div>
-                  <div className="overflow-y-auto bg-emerald-50 relative">
-                    <Actividad1ClaridadArco onComplete={handleFrontendAct1Choice} />
-                  </div>
-                </div>
-              </motion.div>
-            )}
+        {/* Frontend Actividad 1 - OVERLAY */}
+        {gameState === 'frontend_act1_frozen' && (
+          <motion.div key="frontend-act1-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
+          >
+            <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-emerald-500">
+              <div className="bg-emerald-600 px-4 py-3 text-white flex justify-between items-center shadow">
+                <h2 className="font-black text-xl">🎯 ¡FRONTEND: CLARIDAD DEL ARCO!</h2>
+                <span className="text-sm bg-black/30 px-3 py-1 rounded-full border border-white/20">Jugador: Delantero 1</span>
+              </div>
+              <div className="overflow-y-auto bg-emerald-50 relative">
+                <Actividad1ClaridadArco onComplete={handleFrontendAct1Choice} />
+              </div>
+            </div>
+          </motion.div>
+        )}
 
-            {/* Frontend Actividad 2 - OVERLAY */}
-            {gameState === 'frontend_act2_frozen' && (
-              <motion.div key="frontend-act2-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
-                className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
-              >
-                <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-emerald-600">
-                  <div className="bg-emerald-700 px-4 py-3 text-white flex justify-between items-center shadow">
-                    <h2 className="font-black text-xl">⚡ ¡FRONTEND: REGATE EFECTIVO!</h2>
-                    <span className="text-sm bg-black/30 px-3 py-1 rounded-full border border-white/20">Jugador: Delantero 1</span>
-                  </div>
-                  <div className="overflow-y-auto bg-emerald-50 relative">
-                    <Actividad2RegateEfectivo onComplete={handleFrontendAct2Choice} />
-                  </div>
-                </div>
-              </motion.div>
-            )}
+        {/* Frontend Actividad 2 - OVERLAY */}
+        {gameState === 'frontend_act2_frozen' && (
+          <motion.div key="frontend-act2-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
+          >
+            <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-emerald-600">
+              <div className="bg-emerald-700 px-4 py-3 text-white flex justify-between items-center shadow">
+                <h2 className="font-black text-xl">⚡ ¡FRONTEND: REGATE EFECTIVO!</h2>
+                <span className="text-sm bg-black/30 px-3 py-1 rounded-full border border-white/20">Jugador: Delantero 1</span>
+              </div>
+              <div className="overflow-y-auto bg-emerald-50 relative">
+                <Actividad2RegateEfectivo onComplete={handleFrontendAct2Choice} />
+              </div>
+            </div>
+          </motion.div>
+        )}
 
-            {/* DevOps Actividad 2 - OVERLAY */}
-            {gameState === 'devops_act2_frozen' && (
-              <motion.div key="devops-act2-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
-                className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
-              >
-                <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-indigo-600">
-                  <div className="bg-indigo-700 px-4 py-3 text-white flex justify-between items-center shadow">
-                    <h2 className="font-black text-xl">🛡️ ¡DEVOPS: REGRESO HEROICO!</h2>
-                    <span className="text-sm bg-black/30 px-3 py-1 rounded-full border border-white/20">Jugador: DevOps</span>
-                  </div>
-                  <div className="overflow-y-auto bg-indigo-50 relative">
-                    <Actividad2RegresoHeroico onComplete={handleDevopsAct2Choice} />
-                  </div>
-                </div>
-              </motion.div>
-            )}
+        {/* DevOps Actividad 2 - OVERLAY */}
+        {gameState === 'devops_act2_frozen' && (
+          <motion.div key="devops-act2-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
+          >
+            <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-indigo-600">
+              <div className="bg-indigo-700 px-4 py-3 text-white flex justify-between items-center shadow">
+                <h2 className="font-black text-xl">🛡️ ¡DEVOPS: REGRESO HEROICO!</h2>
+                <span className="text-sm bg-black/30 px-3 py-1 rounded-full border border-white/20">Jugador: DevOps</span>
+              </div>
+              <div className="overflow-y-auto bg-indigo-50 relative">
+                <Actividad2RegresoHeroico onComplete={handleDevopsAct2Choice} />
+              </div>
+            </div>
+          </motion.div>
+        )}
 
-            {/* GAME OVER OVERLAY */}
-            {gameState === 'game_over' && (
-              <motion.div key="game-over-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
-                className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 overflow-y-auto"
-              >
-                <div className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-yellow-500 text-center p-12">
-                  <h2 className="font-black text-6xl mb-4 text-yellow-500">🏆 VICTORIA 🏆</h2>
-                  <p className="text-2xl font-medium text-gray-700 mb-8 leading-relaxed">
-                    ¡Felicidades! Has recorrido todos los perfiles de ingeniería. El partido ha terminado y has conseguido el resultado necesario para avanzar.
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-6 justify-center">
-                    {/* <button
+        {/* GAME OVER OVERLAY */}
+        {gameState === 'game_over' && (
+          <motion.div key="game-over-overlay" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 overflow-y-auto"
+          >
+            <div className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden mt-8 mb-8 border-[6px] border-yellow-500 text-center p-12">
+              <h2 className="font-black text-6xl mb-4 text-yellow-500">🏆 VICTORIA 🏆</h2>
+              <p className="text-2xl font-medium text-gray-700 mb-8 leading-relaxed">
+                ¡Felicidades! Has recorrido todos los perfiles de ingeniería. El partido ha terminado y has conseguido el resultado necesario para avanzar.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-6 justify-center">
+                {/* <button
                       onClick={() => {
                         localStorage.clear();
                         window.location.reload();
@@ -1161,85 +1155,85 @@ export const Cancha: React.FC = () => {
                     >
                       JUGAR DE NUEVO
                     </button> */}
-                    <button
-                      onClick={() => router.push('/game/resumen-roles')}
-                      className="bg-yellow-500 hover:bg-yellow-600 text-white font-black py-4 px-10 rounded-full transition-all text-2xl shadow-2xl active:scale-95 border-b-4 border-yellow-700"
-                    >
-                      CONTINUAR →
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            )}
-
-            {/* Feedback Popups */}
-            {feedback.show && (
-              <motion.div key="feedback-popup" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }}
-                className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-6 rounded-2xl shadow-2xl border-4 z-[200] text-center ${feedback.ok ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'}`}
-              >
-                <div className="flex flex-col items-center gap-4 justify-center">
-                  <div className="flex items-center gap-3 justify-center">
-                    <div className="text-3xl sm:text-4xl">{feedback.ok ? '✅' : '❌'}</div>
-                    <h2 className={`font-black text-xl sm:text-2xl ${feedback.ok ? 'text-green-800' : 'text-red-800'}`}>{feedback.msg}</h2>
-                  </div>
-                  {/* Score badge removed as requested by user - redundant */}
-                  
-                  <button
-                    onClick={() => {
-                      if (feedback.onContinue) {
-                        feedback.onContinue();
-                      } else {
-                        setFeedback(f => ({ ...f, show: false }));
-                      }
-                    }}
-                    className={`mt-2 ${feedback.ok ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'} text-white font-bold py-2 px-8 rounded-full transition-all shadow-md active:scale-95`}
-                  >
-                    Continuar →
-                  </button>
-                </div>
-              </motion.div>
-            )}
-
-            {/* Futbol Logic Points Animation Overlay */}
-            {futbolAnimation.show && (
-              <motion.div
-                key="futbol-points-overlay"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="fixed inset-0 z-[250] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
-              >
-                <motion.div
-                  initial={{ scale: 0.7, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-                  className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center border-t-8 border-green-500"
+                <button
+                  onClick={() => router.push('/game/resumen-roles')}
+                  className="bg-yellow-500 hover:bg-yellow-600 text-white font-black py-4 px-10 rounded-full transition-all text-2xl shadow-2xl active:scale-95 border-b-4 border-yellow-700"
                 >
-                  <div className="text-5xl mb-3">⚽</div>
-                  <h3 className="text-xl font-extrabold text-gray-800 mb-2">
-                    {futbolAnimation.logicMode === 'logica_disparo' ? 'Lógica 1 Completada' : 'Lógica 2 Completada'}
-                  </h3>
-                  <div className="inline-block bg-blue-100 text-blue-700 text-xs font-bold px-2 py-0.5 rounded-full mb-2 uppercase tracking-wide">
-                    🔗 Relación con el Rol (Backend)
-                  </div>
-                  <p className="text-sm leading-relaxed mb-4 text-green-700">
-                    ¡Buena lectura de juego! Validaste correctamente la lógica y tomaste una decisión técnica sólida para continuar el flujo del partido.
-                  </p>
-                  <div className="inline-block rounded-xl border py-3 px-6 mb-6 bg-green-50 border-green-200">
-                    <span className="font-black text-2xl text-green-600">
-                      +{futbolAnimation.points} pts
-                    </span>
-                  </div>
-                  <br />
-                  <button
-                    onClick={handleContinueFromFutbol}
-                    className="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold py-3 px-8 rounded-full transition-all shadow-md"
-                  >
-                    Continuar a siguiente actividad →
-                  </button>
-                </motion.div>
-              </motion.div>
-            )}
+                  CONTINUAR →
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Feedback Popups */}
+        {feedback.show && (
+          <motion.div key="feedback-popup" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }}
+            className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-6 rounded-2xl shadow-2xl border-4 z-[200] text-center ${feedback.ok ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'}`}
+          >
+            <div className="flex flex-col items-center gap-4 justify-center">
+              <div className="flex items-center gap-3 justify-center">
+                <div className="text-3xl sm:text-4xl">{feedback.ok ? '✅' : '❌'}</div>
+                <h2 className={`font-black text-xl sm:text-2xl ${feedback.ok ? 'text-green-800' : 'text-red-800'}`}>{feedback.msg}</h2>
+              </div>
+              {/* Score badge removed as requested by user - redundant */}
+
+              <button
+                onClick={() => {
+                  if (feedback.onContinue) {
+                    feedback.onContinue();
+                  } else {
+                    setFeedback(f => ({ ...f, show: false }));
+                  }
+                }}
+                className={`mt-2 ${feedback.ok ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'} text-white font-bold py-2 px-8 rounded-full transition-all shadow-md active:scale-95`}
+              >
+                Continuar →
+              </button>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Futbol Logic Points Animation Overlay */}
+        {futbolAnimation.show && (
+          <motion.div
+            key="futbol-points-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[250] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.7, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+              className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center border-t-8 border-green-500"
+            >
+              <div className="text-5xl mb-3">⚽</div>
+              <h3 className="text-xl font-extrabold text-gray-800 mb-2">
+                {futbolAnimation.logicMode === 'logica_disparo' ? 'Lógica 1 Completada' : 'Lógica 2 Completada'}
+              </h3>
+              <div className="inline-block bg-blue-100 text-blue-700 text-xs font-bold px-2 py-0.5 rounded-full mb-2 uppercase tracking-wide">
+                🔗 Relación con el Rol (Backend)
+              </div>
+              <p className="text-sm leading-relaxed mb-4 text-green-700">
+                ¡Buena lectura de juego! Validaste correctamente la lógica y tomaste una decisión técnica sólida para continuar el flujo del partido.
+              </p>
+              <div className="inline-block rounded-xl border py-3 px-6 mb-6 bg-green-50 border-green-200">
+                <span className="font-black text-2xl text-green-600">
+                  +{futbolAnimation.points} pts
+                </span>
+              </div>
+              <br />
+              <button
+                onClick={handleContinueFromFutbol}
+                className="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold py-3 px-8 rounded-full transition-all shadow-md"
+              >
+                Continuar
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
 
       </AnimatePresence>
     </div>

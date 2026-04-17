@@ -204,13 +204,13 @@ export const Actividad1TiroLibre: React.FC<Props> = ({ onComplete }) => {
       </div>
 
       {fase === 'elige' && (
-        <div className="grid grid-cols-3 gap-3 mt-4">
+        <div className="grid grid-cols-3 gap-3 mt-4 p-4">
           {OPCIONES.map(o => (
             <button key={o.id} onClick={() => handleElegir(o)}
-              className={`flex flex-col items-center gap-1 rounded-xl border-2 border-dashed p-3 text-sm font-bold transition-all hover:scale-105 active:scale-95 ${o.colorClass}`}>
-              <span className="text-2xl">{o.emoji}</span>
-              <span>{o.label}</span>
-              <span className="text-xs text-gray-500 font-normal">{o.descripcion}</span>
+              className={`flex flex-col items-center gap-1 rounded-xl border-2 border-dashed p-2.5 text-sm font-bold transition-all hover:scale-105 active:scale-95 ${o.colorClass}`}>
+              <span className="text-xl">{o.emoji}</span>
+              <span className="leading-tight">{o.label}</span>
+              <span className="text-[11px] text-gray-500 font-normal leading-tight h-8 flex items-center text-center">{o.descripcion}</span>
             </button>
           ))}
         </div>

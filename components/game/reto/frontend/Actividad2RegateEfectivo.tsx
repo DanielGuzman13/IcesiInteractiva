@@ -169,13 +169,13 @@ export const Actividad2RegateEfectivo: React.FC<Props> = ({ onComplete }) => {
       </div>
 
       {fase === 'elige' && (
-        <div className="grid grid-cols-3 gap-3 mt-4">
+        <div className="grid grid-cols-3 gap-3 mt-4 p-4">
           {MOVS.map(m => (
             <button key={m.id} onClick={() => handleElegir(m)}
-              className={`flex flex-col items-center gap-1 rounded-xl border-2 border-dashed p-3 text-sm font-bold transition-all hover:scale-105 active:scale-95 ${m.colorClass}`}>
-              <span className="text-2xl">{m.emoji}</span>
-              <span>{m.label}</span>
-              <span className="text-xs text-gray-500 font-normal">{m.descripcion}</span>
+              className={`flex flex-col items-center gap-1 rounded-xl border-2 border-dashed p-2.5 text-sm font-bold transition-all hover:scale-105 active:scale-95 ${m.colorClass}`}>
+              <span className="text-xl">{m.emoji}</span>
+              <span className="leading-tight">{m.label}</span>
+              <span className="text-[11px] text-gray-500 font-normal leading-tight h-8 flex items-center">{m.descripcion}</span>
             </button>
           ))}
         </div>
@@ -203,7 +203,7 @@ export const Actividad2RegateEfectivo: React.FC<Props> = ({ onComplete }) => {
               <br />
               <button onClick={() => onComplete(elegido.score)}
                 className="bg-pink-600 hover:bg-pink-700 active:scale-95 text-white font-bold py-3 px-8 rounded-full transition-all shadow-md">
-                Ver Goleadores 🏆
+                Continuar
               </button>
             </motion.div>
           </motion.div>

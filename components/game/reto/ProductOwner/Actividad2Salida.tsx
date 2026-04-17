@@ -173,22 +173,21 @@ export const Actividad2Salida: React.FC<Props> = ({ onComplete }) => {
         </svg>
       </div>
 
-      {/* Descripción de opciones */}
-      <div className="grid grid-cols-3 gap-3 mt-4">
+      <div className="grid grid-cols-3 gap-3 mt-4 p-4">
         {COMPANEROS.map(comp => (
           <button
             key={comp.id}
             disabled={!!elegido}
             onClick={() => handleElegir(comp)}
-            className={`rounded-xl border-2 p-3 text-center text-xs transition-all cursor-pointer hover:scale-105 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed ${elegido?.id === comp.id ? `${comp.color} bg-blue-50 shadow` : 'border-gray-200 bg-gray-50 hover:bg-gray-100'}`}
+            className={`rounded-xl border-2 p-2.5 text-center text-xs transition-all cursor-pointer hover:scale-105 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed ${elegido?.id === comp.id ? `${comp.color} bg-blue-50 shadow` : 'border-gray-200 bg-gray-50 hover:bg-gray-100'}`}
           >
-            <div className="flex justify-center mb-2">
-              <span className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-black text-lg shadow-sm">
+            <div className="flex justify-center mb-1">
+              <span className="w-7 h-7 rounded-full bg-blue-500 text-white flex items-center justify-center font-black text-base shadow-sm">
                 {comp.emoji}
               </span>
             </div>
-            <div className="font-bold text-gray-700">{comp.label}</div>
-            <div className="text-gray-500 mt-1 line-clamp-2">{comp.descripcion}</div>
+            <div className="font-bold text-gray-700 leading-tight">{comp.label}</div>
+            <div className="text-[10px] text-gray-500 mt-0.5 line-clamp-2 leading-tight h-6 flex items-center justify-center">{comp.descripcion}</div>
           </button>
         ))}
       </div>

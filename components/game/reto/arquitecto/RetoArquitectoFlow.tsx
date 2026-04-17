@@ -186,8 +186,7 @@ export default function RetoArquitectoFlow({ onFinish }: RetoArquitectoFlowProps
                   onClick={onFinish}
                   className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-10 rounded-full transition-all shadow-lg text-center flex flex-col items-center leading-tight active:scale-95"
                 >
-                  <span className="text-lg">Confirmar Estructura &larr;</span>
-                  <span className="text-xs font-medium mt-1 opacity-90">(Volver a la cancha)</span>
+                  <span className="text-lg">Continuar</span>
                 </button>
               </div>
             </div>

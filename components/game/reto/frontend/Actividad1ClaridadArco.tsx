@@ -13,46 +13,50 @@ type Pasillo = {
   feedback: string;
   ballTarget: { x: number; y: number };
   colorClass: string;
+  colorHex: string;
 };
 
 const VB_W = 100;
 const VB_H = 56.25;
 
-const BALL_POS = { x: 75, y: VB_H * 0.5 };
+const BALL_POS = { x: 50, y: VB_H * 0.5 };
 
 const PASILLOS: Pasillo[] = [
   {
     id: 'iluminado',
-    label: 'Pasillo Iluminado',
-    emoji: '✨',
+    label: 'Pasillo Vacio',
+    emoji: '',
     descripcion: 'Camino despejado, remate limpio',
     score: 100,
     resultado: 'correcto',
     feedback: '¡Qué claridad! Elegiste el camino que todos podían ver y el balón entró limpio. (En el equipo, esto es usar una buena Jerarquía Visual; pusiste lo más importante donde el ojo del usuario lo ve primero)',
-    ballTarget: { x: 92, y: VB_H * 0.5 },
-    colorClass: 'border-gray-300 hover:bg-gray-50 text-gray-800',
+    ballTarget: { x: 97, y: VB_H * 0.5 },
+    colorClass: 'border-cyan-400 text-cyan-800 bg-cyan-50/40 hover:bg-cyan-100/80',
+    colorHex: '#0891b2'
   },
   {
     id: 'estrecho',
     label: 'Pasillo Estrecho',
-    emoji: '🤏',
+    emoji: '',
     descripcion: 'Pocos espacios, remate apretado',
     score: 50,
     resultado: 'regular',
     feedback: '¡Uff, pasó raspando! El balón pegó en el palo y entró de milagro. (Tu interfaz está un poco Saturada; el usuario encontró el botón, pero le costó trabajo distinguirlo entre tantos elementos)',
-    ballTarget: { x: 92, y: VB_H * 0.35 },
-    colorClass: 'border-gray-300 hover:bg-gray-50 text-gray-800',
+    ballTarget: { x: 97, y: VB_H * 0.35 },
+    colorClass: 'border-fuchsia-400 text-fuchsia-800 bg-fuchsia-50/40 hover:bg-fuchsia-100/80',
+    colorHex: '#c026d3'
   },
   {
     id: 'bloqueado',
     label: 'Pasillo Bloqueado',
-    emoji: '🧱',
+    emoji: '',
     descripcion: 'Camino con muchos rivales',
     score: 0,
     resultado: 'incorrecto',
     feedback: '¡Bloqueado! Le pegaste directo al defensa que tenías enfrente. (El Diseño es Confuso; pusiste tantas cosas en la pantalla que el usuario no supo a qué darle clic y se perdió)',
     ballTarget: { x: 82, y: VB_H * 0.75 },
-    colorClass: 'border-gray-300 hover:bg-gray-50 text-gray-800',
+    colorClass: 'border-orange-400 text-orange-800 bg-orange-50/40 hover:bg-orange-100/80',
+    colorHex: '#d97706'
   },
 ];
 
@@ -108,37 +112,56 @@ export const Actividad1ClaridadArco: React.FC<Props> = ({ onComplete }) => {
             <rect key={i} x={i * 20} y={0} width={10} height={VB_H} fill="#297528" opacity="0.35" />
           ))}
 
-          {/* Área rival y portería */}
-          <rect x={VB_W * 0.82} y={VB_H * 0.22} width={VB_W * 0.18} height={VB_H * 0.56} fill="none" stroke="white" strokeWidth="0.5" opacity="0.6" />
-          <rect x={VB_W * 0.9} y={VB_H * 0.36} width={VB_W * 0.1} height={VB_H * 0.28} fill="none" stroke="white" strokeWidth="0.4" opacity="0.5" />
-          <rect x={VB_W * 0.97} y={VB_H * 0.38} width="3" height={VB_H * 0.24} fill="#888" stroke="white" strokeWidth="0.6" rx="0.3" />
+          {/* Área rival y portería (Ampliada) */}
+          <rect x={VB_W * 0.82} y={VB_H * 0.15} width={VB_W * 0.18} height={VB_H * 0.7} fill="none" stroke="white" strokeWidth="0.5" opacity="0.6" />
+          <rect x={VB_W * 0.9} y={VB_H * 0.28} width={VB_W * 0.1} height={VB_H * 0.44} fill="none" stroke="white" strokeWidth="0.4" opacity="0.5" />
+          <rect x={VB_W * 0.97} y={VB_H * 0.3} width="3" height={VB_H * 0.4} fill="#888" stroke="white" strokeWidth="0.6" rx="0.3" />
 
-          {/* Delantero Frontend (Rojo) */}
+          {/* Delantero Frontend (Azul) */}
           {fase === 'elige' && (
-            <circle cx={BALL_POS.x - 3} cy={BALL_POS.y} r="7" fill="#f43f5e" opacity="0.2">
+            <circle cx={BALL_POS.x - 3} cy={BALL_POS.y} r="7" fill="#3b82f6" opacity="0.2">
               <animate attributeName="r" values="6;9;6" dur="1.2s" repeatCount="indefinite" />
               <animate attributeName="opacity" values="0.2;0.06;0.2" dur="1.2s" repeatCount="indefinite" />
             </circle>
           )}
-          <circle cx={BALL_POS.x - 3} cy={BALL_POS.y} r="3.5" fill="#e11d48" stroke="#fecdd3" strokeWidth="1" />
-          <text x={BALL_POS.x - 3} y={BALL_POS.y + 1.2} textAnchor="middle" fontSize="2.6" fill="white" fontWeight="bold">FE</text>
+          <circle cx={BALL_POS.x - 3} cy={BALL_POS.y} r="3.5" fill="#1d4ed8" stroke="#93c5fd" strokeWidth="1" />
+          <text x={BALL_POS.x - 3} y={BALL_POS.y + 1.2} textAnchor="middle" fontSize="2.8" fill="white" fontWeight="bold">FE</text>
 
-          {/* Defensas (Obstáculos) */}
-          {/* Defensas bloqueando el pasillo inferior */}
-          <circle cx={83} cy={VB_H * 0.75} r="2.5" fill="#1d4ed8" stroke="white" strokeWidth="0.5" />
-          <circle cx={83} cy={VB_H * 0.82} r="2.5" fill="#1d4ed8" stroke="white" strokeWidth="0.5" />
+          {/* Defensas / Rivales (Rojos con R) */}
+          {[
+            { cx: 83, cy: VB_H * 0.75 },
+            { cx: 83, cy: VB_H * 0.82 },
+            { cx: 85, cy: VB_H * 0.25 },
+            { cx: 86, cy: VB_H * 0.45 }
+          ].map((p, i) => (
+            <g key={i}>
+              <circle cx={p.cx} cy={p.cy} r="2.5" fill="#c0392b" stroke="white" strokeWidth="0.5" />
+              <text x={p.cx} y={p.cy + 1} textAnchor="middle" fontSize="2.2" fill="white" fontWeight="bold">R</text>
+            </g>
+          ))}
 
-          {/* Defensa bloqueando parcialmente el pasillo superior */}
-          <circle cx={85} cy={VB_H * 0.3} r="2.5" fill="#1d4ed8" stroke="white" strokeWidth="0.5" />
-          <circle cx={86} cy={VB_H * 0.42} r="2.5" fill="#1d4ed8" stroke="white" strokeWidth="0.5" />
-
-          {/* Zonas de Pasillos */}
+          {/* Carriles de remate (Pasillos visuales) */}
           {fase === 'elige' && PASILLOS.map(p => {
-            const colors = { correcto: '#22c55e', regular: '#eab308', incorrecto: '#ef4444' };
             return (
-              <g key={p.id} onClick={() => handleElegir(p)} style={{ cursor: 'pointer' }}>
-                <circle cx={p.ballTarget.x} cy={p.ballTarget.y} r="4" fill={colors[p.resultado]} opacity="0.3" />
-                <text x={p.ballTarget.x} y={p.ballTarget.y + 1.5} textAnchor="middle" fontSize="4">{p.emoji}</text>
+              <g key={p.id} onClick={() => handleElegir(p)} style={{ cursor: 'pointer' }} className="group">
+                {/* Línea de trayectoria sutil con su respectivo color */}
+                <line
+                  x1={BALL_POS.x} y1={BALL_POS.y}
+                  x2={p.ballTarget.x} y2={p.ballTarget.y}
+                  stroke={p.colorHex} strokeWidth="4" strokeLinecap="round" opacity="0.1"
+                  className="group-hover:opacity-40 transition-opacity"
+                />
+                <line
+                  x1={BALL_POS.x} y1={BALL_POS.y}
+                  x2={p.ballTarget.x} y2={p.ballTarget.y}
+                  stroke={p.colorHex} strokeWidth="1" strokeDasharray="3 2" opacity="0.4"
+                  className="group-hover:opacity-100 transition-opacity"
+                />
+                {/* Zona de impacto final */}
+                <circle
+                  cx={p.ballTarget.x} cy={p.ballTarget.y} r="3.5"
+                  fill={p.colorHex} opacity="0.15" className="group-hover:opacity-60 transition-opacity"
+                />
               </g>
             );
           })}
@@ -171,13 +194,15 @@ export const Actividad1ClaridadArco: React.FC<Props> = ({ onComplete }) => {
       </div>
 
       {fase === 'elige' && (
-        <div className="grid grid-cols-3 gap-3 mt-4">
+        <div className="grid grid-cols-3 gap-3 mt-4 p-4">
           {PASILLOS.map(p => (
             <button key={p.id} onClick={() => handleElegir(p)}
-              className={`flex flex-col items-center gap-1 rounded-xl border-2 border-dashed p-3 text-sm font-bold transition-all hover:scale-105 active:scale-95 ${p.colorClass}`}>
-              <span className="text-2xl">{p.emoji}</span>
-              <span>{p.label}</span>
-              <span className="text-xs text-gray-500 font-normal">{p.descripcion}</span>
+              className={`flex flex-col items-center gap-1 rounded-2xl border-b-4 border-2 p-2.5 text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-md hover:shadow-xl backdrop-blur-sm ${p.colorClass}`}>
+              <div className="w-8 h-8 rounded-full mb-1 flex items-center justify-center text-white font-black" style={{ backgroundColor: p.colorHex }}>
+                ⚽
+              </div>
+              <span className="text-gray-800 text-[13px] leading-tight">{p.label}</span>
+              <span className="text-[11px] font-normal opacity-80 leading-tight text-center h-8 flex items-center">{p.descripcion}</span>
             </button>
           ))}
         </div>

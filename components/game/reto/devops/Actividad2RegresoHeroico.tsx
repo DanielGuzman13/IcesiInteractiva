@@ -179,13 +179,13 @@ export const Actividad2RegresoHeroico: React.FC<Props> = ({ onComplete }) => {
 
       {/* Botones */}
       {fase === 'elige' && (
-        <div className="grid grid-cols-3 gap-3 mt-4">
+        <div className="grid grid-cols-3 gap-3 mt-4 p-4">
           {ACCIONES.map(a => (
             <button key={a.id} onClick={() => handleElegir(a)}
-              className={`flex flex-col items-center gap-1 rounded-xl border-2 border-dashed p-3 text-sm font-bold transition-all hover:scale-105 active:scale-95 ${a.color}`}>
-              <span className="text-2xl">{a.emoji}</span>
-              <span>{a.label}</span>
-              <span className="text-xs text-gray-500 font-normal">{a.descripcion}</span>
+              className={`flex flex-col items-center gap-1 rounded-xl border-2 border-dashed p-2.5 text-sm font-bold transition-all hover:scale-105 active:scale-95 ${a.color}`}>
+              <span className="text-xl">{a.emoji}</span>
+              <span className="leading-tight">{a.label}</span>
+              <span className="text-[11px] text-gray-500 font-normal leading-tight h-8 flex items-center">{a.descripcion}</span>
             </button>
           ))}
         </div>

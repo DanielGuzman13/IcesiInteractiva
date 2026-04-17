@@ -18,44 +18,46 @@ type Destino = {
 const VB_W = 100;
 const VB_H = 56.25;
 
-// Lateral DevOps empieza en la banda derecha y avanza
-const LATERAL_START = { x: 72, y: 90 };
-const LATERAL_RUN = { x: 85, y: 72 };
-const BALL_START = { x: 72, y: 90 };
+// Posiciones clave
+const DO1_START = { x: 0, y: 5 };
+const DO1_RUN = { x: 70, y: 5 };
+const DO2_START = { x: 0, y: 50 };
+const DO2_RUN = { x: 70, y: 50 };
+const BALL_START = DO1_START;
 
 const DESTINOS: Destino[] = [
   {
     id: 'ganador',
-    label: 'Punto Ganador',
-    emoji: '🎯',
+    label: 'Destino A',
+    emoji: 'A',
     descripcion: 'Centro perfecto al segundo palo',
     feedback: '¡Jugada impecable! Tu sistema de pases funcionó a la perfección y el balón llegó a su destino por la vía rápida.',
     score: 100,
     resultado: 'correcto',
-    cx: 92,
-    cy: VB_H * 0.4,
+    cx: 93,
+    cy: VB_H * 0.35,
   },
   {
     id: 'lento',
-    label: 'Punto Lento',
-    emoji: '🐢',
+    label: 'Destino B',
+    emoji: 'B',
     descripcion: 'Centro al primer palo, difícil de rematar',
     feedback: 'Funcionó, pero fue lento. Como Lateral (DevOps), hiciste un despliegue manual sin automatización. El equipo llegó al objetivo pero con más esfuerzo.',
     score: 50,
     resultado: 'regular',
-    cx: 88,
-    cy: VB_H * 0.65,
+    cx: 87,
+    cy: VB_H * 0.75,
   },
   {
     id: 'error',
-    label: 'Centro Fallido',
-    emoji: '❌',
+    label: 'Destino C',
+    emoji: 'C',
     descripcion: 'Balón se va fuera del área',
     feedback: '¡Despliegue fallido! Como Lateral (DevOps), no confiaste en tus herramientas de automatización, el código llegó roto al servidor. La pipeline es tu mejor aliado.',
     score: 0,
     resultado: 'incorrecto',
-    cx: 82,
-    cy: VB_H * 0.15,
+    cx: 80,
+    cy: VB_H * 0.1,
   },
 ];
 
@@ -64,11 +66,34 @@ interface Props {
 }
 
 export const Actividad1CentroPrecision: React.FC<Props> = ({ onComplete }) => {
-  const [fase, setFase] = useState<'elige' | 'animando' | 'modal'>('elige');
+  const [fase, setFase] = useState<'intro' | 'elige' | 'animando' | 'modal'>('intro');
   const [elegido, setElegido] = useState<Destino | null>(null);
-  const [lateralPos, setLateralPos] = useState(LATERAL_START);
   const [ballPos, setBallPos] = useState(BALL_START);
+  const [do1Pos, setDo1Pos] = useState(DO1_START);
+  const [do2Pos, setDo2Pos] = useState(DO2_START);
   const [lateralAnimate, setLateralAnimate] = useState(false);
+
+  // Secuencia de Intro
+  React.useEffect(() => {
+    if (fase === 'intro') {
+      // 1. Empezar carrera (0s)
+      setTimeout(() => {
+        setDo1Pos(DO1_RUN);
+        setDo2Pos(DO2_RUN);
+        setBallPos(DO1_RUN);
+      }, 100);
+
+      // 2. Pase vertical (1.5s)
+      setTimeout(() => {
+        setBallPos(DO2_RUN);
+      }, 1600);
+
+      // 3. Habilitar elección (2.2s)
+      setTimeout(() => {
+        setFase('elige');
+      }, 2300);
+    }
+  }, [fase]);
 
   const handleElegir = (dest: Destino) => {
     if (fase !== 'elige') return;
@@ -83,15 +108,14 @@ export const Actividad1CentroPrecision: React.FC<Props> = ({ onComplete }) => {
       localStorage.setItem(`${pre}_devops_answers`, JSON.stringify(answers));
     }
 
-    // 1. Lateral sube por la banda
+    // 1. El DevOps 2 (abajo) realiza el centro de una
     setLateralAnimate(true);
-    setTimeout(() => setLateralPos(LATERAL_RUN), 0);
 
-    // 2. Balón se centra al destino
-    setTimeout(() => setBallPos({ x: dest.cx, y: dest.cy }), 900);
+    // 2. Balón se centra al destino inmediatamente
+    setBallPos({ x: dest.cx, y: dest.cy });
 
     // 3. Modal
-    setTimeout(() => setFase('modal'), 2200);
+    setTimeout(() => setFase('modal'), 2000);
   };
 
   const colorBorde = { correcto: 'border-green-500', regular: 'border-yellow-500', incorrecto: 'border-red-500' };
@@ -126,61 +150,66 @@ export const Actividad1CentroPrecision: React.FC<Props> = ({ onComplete }) => {
 
           {/* Puntos de destino (solo en fase elige) */}
           {fase === 'elige' && DESTINOS.map(d => {
-            const cols = { correcto: '#22c55e', regular: '#eab308', incorrecto: '#ef4444' };
             return (
-              <g key={d.id} onClick={() => handleElegir(d)} style={{ cursor: 'pointer' }}>
-                <circle cx={d.cx} cy={d.cy} r="5" fill={cols[d.resultado]} opacity="0.3">
-                  <animate attributeName="r" values="4;6;4" dur="1.3s" repeatCount="indefinite" />
+              <g key={d.id} onClick={() => handleElegir(d)} style={{ cursor: 'pointer' }} className="group">
+                {/* Aura neutral */}
+                <circle cx={d.cx} cy={d.cy} r="5" fill="white" opacity="0.1" className="group-hover:opacity-30 transition-opacity">
+                  <animate attributeName="r" values="4.5;5.5;4.5" dur="1.5s" repeatCount="indefinite" />
                 </circle>
-                <circle cx={d.cx} cy={d.cy} r="2.5" fill={cols[d.resultado]} stroke="white" strokeWidth="0.6" />
-                <text x={d.cx} y={d.cy + 6.5} textAnchor="middle" fontSize="2.2" fill="white" fontWeight="bold">{d.label}</text>
+                {/* Badge blanco premium */}
+                <circle cx={d.cx} cy={d.cy} r="3.5" fill="white" fillOpacity="0.2" stroke="white" strokeWidth="0.5" className="group-hover:fill-blue-500/20 transition-colors" />
+                <text x={d.cx} y={d.cy + 1.8} textAnchor="middle" fontSize="5" fill="white" fontWeight="900" style={{ pointerEvents: 'none', filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.5))' }}>
+                  {d.emoji}
+                </text>
               </g>
             );
           })}
 
-          {/* Compañeros en el área */}
-          {[{ cx: 90, cy: VB_H * 0.5 }, { cx: 88, cy: VB_H * 0.32 }].map((p, i) => (
+          {/* Rivales en el área (Rojos con R) */}
+          {[
+            { cx: 90, cy: VB_H * 0.53 },
+            { cx: 86, cy: VB_H * 0.32 },
+            { cx: 89, cy: VB_H * 0.68 }
+          ].map((p, i) => (
             <g key={i}>
-              <circle cx={p.cx} cy={p.cy} r="2.5" fill="#1d4ed8" stroke="white" strokeWidth="0.5" opacity="0.7" />
-              <text x={p.cx} y={p.cy + 1} textAnchor="middle" fontSize="2" fill="white">A</text>
+              <circle cx={p.cx} cy={p.cy} r="2.5" fill="#c0392b" stroke="white" strokeWidth="0.5" opacity="0.8" />
+              <text x={p.cx} y={p.cy + 1} textAnchor="middle" fontSize="2.2" fill="white" fontWeight="bold">R</text>
             </g>
           ))}
 
-          {/* Defensa rival */}
-          <circle cx={89} cy={VB_H * 0.6} r="2.5" fill="#c0392b" stroke="white" strokeWidth="0.5" opacity="0.7" />
-          <text x={89} y={VB_H * 0.6 + 1} textAnchor="middle" fontSize="2" fill="white">R</text>
-
-          {/* Trayectoria del centro */}
-          {elegido && (
-            <motion.line
-              x1={LATERAL_RUN.x} y1={LATERAL_RUN.y}
-              x2={elegido.cx} y2={elegido.cy}
-              stroke="yellow" strokeWidth="0.5" strokeDasharray="2 1" opacity="0.7"
-              initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-              transition={{ duration: 0.8, delay: 0.9 }}
-            />
-          )}
-
-          {/* Lateral DevOps — sube por banda con Framer Motion */}
+          {/* DevOps 1 (Banda Superior) */}
           <motion.g
-            animate={lateralAnimate ? { x: LATERAL_RUN.x - LATERAL_START.x, y: LATERAL_RUN.y - LATERAL_START.y } : { x: 0, y: 0 }}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
+            animate={{ x: do1Pos.x - DO1_START.x, y: do1Pos.y - DO1_START.y }}
+            transition={{ duration: 1.5, ease: 'linear' }}
           >
-            {/* Aura cyan pulsante */}
+            <circle cx={DO1_START.x} cy={DO1_START.y} r="3" fill="#0891b2" stroke="#67e8f9" strokeWidth="0.8" />
+            <text x={DO1_START.x} y={DO1_START.y + 1} textAnchor="middle" fontSize="2.2" fill="white">DO</text>
+          </motion.g>
+
+          {/* DevOps 2 (Banda Inferior) */}
+          <motion.g
+            animate={{ x: do2Pos.x - DO2_START.x, y: do2Pos.y - DO2_START.y }}
+            transition={{ duration: 1.5, ease: 'linear' }}
+          >
+            {/* Aura cyan pulsante solo para el que tiene el balón en fase de elección */}
             {fase === 'elige' && (
-              <circle cx={LATERAL_START.x} cy={LATERAL_START.y} r="7" fill="#06b6d4" opacity="0.2">
-                <animate attributeName="r" values="6;9;6" dur="1.2s" repeatCount="indefinite" />
-                <animate attributeName="opacity" values="0.2;0.06;0.2" dur="1.2s" repeatCount="indefinite" />
+              <circle cx={DO2_START.x} cy={DO2_START.y} r="7" fill="#06b6d4" opacity="0.25">
+                <animate attributeName="r" values="6;8.5;6" dur="1.2s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.25;0.08;0.25" dur="1.2s" repeatCount="indefinite" />
               </circle>
             )}
-            <circle cx={LATERAL_START.x} cy={LATERAL_START.y} r="3.5" fill="#0891b2" stroke="#67e8f9" strokeWidth="1" />
-            <text x={LATERAL_START.x} y={LATERAL_START.y + 1.2} textAnchor="middle" fontSize="2.6" fill="white" fontWeight="bold">DO</text>
+            <circle cx={DO2_START.x} cy={DO2_START.y} r="3.2" fill="#0891b2" stroke="#67e8f9" strokeWidth="1" />
+            <text x={DO2_START.x} y={DO2_START.y + 1.2} textAnchor="middle" fontSize="2.4" fill="white" fontWeight="bold">DO</text>
           </motion.g>
 
           {/* Balón */}
           <motion.text textAnchor="middle" fontSize="4"
             animate={{ x: ballPos.x, y: ballPos.y }}
-            transition={{ duration: 0.8, ease: 'easeIn', delay: 0.9 }}>
+            transition={
+              fase === 'intro'
+                ? (ballPos.y === DO2_RUN.y ? { duration: 0.5, ease: 'easeIn' } : { duration: 1.5, ease: 'linear' })
+                : { duration: 0.5, ease: 'easeOut' }
+            }>
             ⚽
           </motion.text>
         </svg>
@@ -188,16 +217,16 @@ export const Actividad1CentroPrecision: React.FC<Props> = ({ onComplete }) => {
 
       {/* Botones alternativos */}
       {fase === 'elige' && (
-        <div className="grid grid-cols-3 gap-3 mt-4">
+        <div className="grid grid-cols-3 gap-3 mt-4 p-4">
           {DESTINOS.map(d => (
             <button key={d.id} onClick={() => handleElegir(d)}
-              className={`flex flex-col items-center gap-1 rounded-xl border-2 border-dashed p-3 text-sm font-bold transition-all hover:scale-105 active:scale-95
+              className={`flex flex-col items-center gap-1 rounded-xl border-2 border-dashed p-2.5 text-sm font-bold transition-all hover:scale-105 active:scale-95
                 ${d.resultado === 'correcto' ? 'border-gray-300 hover:bg-gray-50 text-gray-800'
                   : d.resultado === 'regular' ? 'border-gray-300 hover:bg-gray-50 text-gray-800'
                     : 'border-gray-300 hover:bg-gray-50 text-gray-800'}`}>
-              <span className="text-2xl">{d.emoji}</span>
-              <span>{d.label}</span>
-              <span className="text-xs text-gray-500 font-normal">{d.descripcion}</span>
+              <span className="text-xl">{d.emoji}</span>
+              <span className="leading-tight">{d.label}</span>
+              <span className="text-[11px] text-gray-500 font-normal leading-tight h-8 flex items-center">{d.descripcion}</span>
             </button>
           ))}
         </div>
