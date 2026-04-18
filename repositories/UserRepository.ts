@@ -13,7 +13,7 @@ interface UserRow {
 
 const normalizeName = (name: string): string => name.trim().toLocaleLowerCase('es-CO');
 
-const hasDatabaseConfig = (): boolean => Boolean(process.env.DATABASE_URL);
+const hasDatabaseConfig = (): boolean => process.env.STORAGE_MODE === 'postgres';
 
 const globalForUserRepo = globalThis as typeof globalThis & {
   __icesiUsersById?: Map<string, User>;

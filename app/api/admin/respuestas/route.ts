@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getPostgresPool } from '@/lib/database/postgres';
+import { UserRepository } from '@/repositories/UserRepository';
+import { UserAnswerRepository } from '@/repositories/UserAnswerRepository';
 
 interface UserAnswer {
   id: string;
@@ -11,6 +12,9 @@ interface UserAnswer {
   answeredAt: string;
   role: string | null;
 }
+
+const userRepository = new UserRepository();
+const userAnswerRepository = new UserAnswerRepository();
 
 interface UserWithAnswers {
   id: string;
@@ -35,31 +39,28 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const pool = getPostgresPool();
+    const [usersInSalon, allAnswers] = await Promise.all([
+      userRepository.findAll({ salon: salon as '205M' | '206M' }),
+      userAnswerRepository.findAll(),
+    ]);
 
-    // Obtener usuarios del salón con sus respuestas de pregunta abierta (role-feedback)
-    const query = `
-      SELECT 
-        u.id as user_id,
-        u.name as user_name,
-        u.salon,
-        u.total_score,
-        ua.id as answer_id,
-        ua.challenge_id,
-        ua.play_step_id,
-        ua.answer,
-        ua.is_correct,
-        ua.score as answer_score,
-        ua.answered_at
-      FROM users u
-      INNER JOIN user_answers ua ON u.id = ua.user_id
-      WHERE u.salon = $1
-        AND ua.challenge_id LIKE 'role-feedback-%'
-      ORDER BY ua.answered_at DESC
-    `;
-
-    const result = await pool.query(query, [salon]);
-    const rows = result.rows;
+    const rows = usersInSalon.flatMap(user =>
+      allAnswers
+        .filter(answer => answer.userId === user.id && answer.challengeId.startsWith('role-feedback-'))
+        .map(answer => ({
+          user_id: user.id,
+          user_name: user.name,
+          salon: user.salon,
+          total_score: user.totalScore,
+          answer_id: answer.id,
+          challenge_id: answer.challengeId,
+          play_step_id: answer.playStepId,
+          answer: answer.answer,
+          is_correct: answer.isCorrect,
+          answer_score: answer.score,
+          answered_at: answer.answeredAt,
+        }))
+    ).sort((a, b) => new Date(b.answered_at).getTime() - new Date(a.answered_at).getTime());
 
     // Agrupar respuestas por usuario
     const usersMap = new Map();
@@ -140,20 +141,4 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     );
   }
-}
-
-// Función auxiliar para extraer el rol de un ID
-function extractRoleFromId(id: string): string | null {
-  if (!id) return null;
-
-  const roles = ['arquitecto', 'devops', 'frontend', 'manager', 'portero', 'qa', 'product_owner'];
-  
-  for (const role of roles) {
-    if (id.toLowerCase().includes(role)) {
-      return role;
-    }
-  }
-
-  // Si no encuentra rol conocido, retorna null
-  return null;
 }

@@ -30,6 +30,14 @@ export async function DELETE(
 
     // Eliminar usuario directamente
     console.log('Deleting user...');
+
+    const [userAnswers, sessions] = await Promise.all([
+      userAnswerRepository.findByUserId(userId),
+      gameSessionRepository.findByUserId(userId),
+    ]);
+
+    await Promise.all(userAnswers.map(answer => userAnswerRepository.delete(answer.id)));
+    await Promise.all(sessions.map(session => gameSessionRepository.delete(session.id)));
     await userRepository.delete(userId);
     console.log('User deleted successfully');
 

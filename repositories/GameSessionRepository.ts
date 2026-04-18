@@ -13,7 +13,7 @@ interface GameSessionRow {
   completed_at: Date | null;
 }
 
-const hasDatabaseConfig = (): boolean => Boolean(process.env.DATABASE_URL);
+const hasDatabaseConfig = (): boolean => process.env.STORAGE_MODE === 'postgres';
 
 const globalForSessionRepo = globalThis as typeof globalThis & {
   __icesiSessionsById?: Map<string, GameSession>;

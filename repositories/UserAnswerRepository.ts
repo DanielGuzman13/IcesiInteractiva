@@ -15,7 +15,7 @@ interface UserAnswerRow {
   answered_at: Date;
 }
 
-const hasDatabaseConfig = (): boolean => Boolean(process.env.DATABASE_URL);
+const hasDatabaseConfig = (): boolean => process.env.STORAGE_MODE === 'postgres';
 
 const globalForAnswerRepo = globalThis as typeof globalThis & {
   __icesiAnswersById?: Map<string, UserAnswer>;

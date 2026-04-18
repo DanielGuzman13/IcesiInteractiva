@@ -1,5 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getPostgresPool } from '@/lib/database/postgres';
+import { UserRepository } from '@/repositories/UserRepository';
+import { UserAnswerRepository } from '@/repositories/UserAnswerRepository';
+import { GameSessionRepository } from '@/repositories/GameSessionRepository';
+
+const userRepository = new UserRepository();
+const userAnswerRepository = new UserAnswerRepository();
+const gameSessionRepository = new GameSessionRepository();
 
 // Limpiar toda la base de datos (PELIGROSO)
 export async function DELETE(request: NextRequest) {
@@ -15,18 +21,13 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const pool = getPostgresPool();
+    const users = await userRepository.findAll();
+    const sessions = await gameSessionRepository.findAll();
+    const answers = await userAnswerRepository.findAll();
 
-    // Eliminar datos en orden correcto por foreign keys
-    await pool.query('DELETE FROM user_answers');
-    await pool.query('DELETE FROM user_play_progress');
-    await pool.query('DELETE FROM match_states');
-    await pool.query('DELETE FROM game_sessions');
-    await pool.query('DELETE FROM play_steps');
-    await pool.query('DELETE FROM plays');
-    await pool.query('DELETE FROM challenges');
-    await pool.query('DELETE FROM game_config');
-    await pool.query('DELETE FROM users');
+    await Promise.all(answers.map(answer => userAnswerRepository.delete(answer.id)));
+    await Promise.all(sessions.map(session => gameSessionRepository.delete(session.id)));
+    await Promise.all(users.map(user => userRepository.delete(user.id)));
 
     return NextResponse.json({ 
       message: 'Base de datos limpiada exitosamente' 

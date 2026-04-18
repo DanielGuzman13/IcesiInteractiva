@@ -1,41 +1,71 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getPostgresPool } from '@/lib/database/postgres';
+import { UserRepository } from '@/repositories/UserRepository';
+import { UserAnswerRepository } from '@/repositories/UserAnswerRepository';
+
+const userRepository = new UserRepository();
+const userAnswerRepository = new UserAnswerRepository();
+
+type DebugResponseRow = {
+  user_id: string;
+  user_name: string;
+  salon: string | undefined;
+  answer_id: string | null;
+  challenge_id: string | null;
+  play_step_id: string | null;
+  answer: unknown;
+  is_correct: boolean | null;
+  answer_score: number | null;
+  answered_at: Date | null;
+};
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const salon = searchParams.get('salon');
 
-    const pool = getPostgresPool();
+    const [users, answers] = await Promise.all([
+      salon
+        ? userRepository.findAll({ salon: salon as '205M' | '206M' })
+        : userRepository.findAll(),
+      userAnswerRepository.findAll(),
+    ]);
 
-    // Obtener todas las respuestas sin filtrar
-    let query = `
-      SELECT 
-        u.id as user_id,
-        u.name as user_name,
-        u.salon,
-        ua.id as answer_id,
-        ua.challenge_id,
-        ua.play_step_id,
-        ua.answer,
-        ua.is_correct,
-        ua.score as answer_score,
-        ua.answered_at
-      FROM users u
-      LEFT JOIN user_answers ua ON u.id = ua.user_id
-    `;
+    const rows: DebugResponseRow[] = users.flatMap((user): DebugResponseRow[] => {
+      const userAnswers = answers.filter(answer => answer.userId === user.id);
 
-    const params: any[] = [];
+      if (userAnswers.length === 0) {
+        return [{
+          user_id: user.id,
+          user_name: user.name,
+          salon: user.salon,
+          answer_id: null,
+          challenge_id: null,
+          play_step_id: null,
+          answer: null,
+          is_correct: null,
+          answer_score: null,
+          answered_at: null,
+        }];
+      }
 
-    if (salon) {
-      query += ` WHERE u.salon = $1`;
-      params.push(salon);
-    }
-
-    query += ` ORDER BY ua.answered_at DESC`;
-
-    const result = await pool.query(query, params);
-    const rows = result.rows;
+      return userAnswers.map(answer => ({
+        user_id: user.id,
+        user_name: user.name,
+        salon: user.salon,
+        answer_id: answer.id,
+        challenge_id: answer.challengeId,
+        play_step_id: answer.playStepId,
+        answer: answer.answer,
+        is_correct: answer.isCorrect,
+        answer_score: answer.score,
+        answered_at: answer.answeredAt,
+      }));
+    }).sort((a, b) => {
+      if (!a.answered_at && !b.answered_at) return 0;
+      if (!a.answered_at) return 1;
+      if (!b.answered_at) return -1;
+      return new Date(b.answered_at).getTime() - new Date(a.answered_at).getTime();
+    });
 
     return NextResponse.json({
       total: rows.length,
